@@ -45,7 +45,9 @@ public abstract class ControllerIntegrationTestsBase<TController> where TControl
             // Replace the database with test database
             services.AddDbContext<AzulDbContext>(options =>
             {
-                options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AzulDb_IntegrationTest;Integrated Security=True").EnableSensitiveDataLogging(true);
+                options.UseSqlServer(
+                        "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AzulDb_IntegrationTest;Integrated Security=True")
+                    .EnableSensitiveDataLogging(true);
             });
 
             // Make sure the test database is deleted before each test run
@@ -94,7 +96,7 @@ public abstract class ControllerIntegrationTestsBase<TController> where TControl
         //User A creates a table
         var tablePreferences = new TablePreferences();
         Assert.That(tablePreferences.NumberOfPlayers, Is.EqualTo(2), "The default number of players should be 2");
-        Assert.That(tablePreferences.NumberOfArtificialPlayers, Is.EqualTo(0), "The default number of AI players should be 0");
+        Assert.That(tablePreferences.NumberOfArtificialPlayers, Is.EqualTo(0), "The default number of artificial players should be 0");
 
         HttpResponseMessage response = ClientA.PostAsJsonAsync("api/tables/join-or-create", tablePreferences).Result;
         Assert.That((int)response.StatusCode, Is.EqualTo(StatusCodes.Status200OK), "User A could not correctly create a table.");
