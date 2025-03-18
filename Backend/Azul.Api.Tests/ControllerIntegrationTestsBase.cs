@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -45,6 +46,7 @@ public abstract class ControllerIntegrationTestsBase<TController> where TControl
             // Replace the database with test database
             services.AddDbContext<AzulDbContext>(options =>
             {
+                Debug.WriteLine("Changes from the student team");
                 options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AzulDb_IntegrationTest;Integrated Security=True").EnableSensitiveDataLogging(true);
             });
 
