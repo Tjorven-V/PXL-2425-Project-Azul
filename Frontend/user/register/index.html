@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registreer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../login"> login</a>
+        </nav>
+    </header>
+    <main>
+        <form>
+            <div>
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="gebruikersnaam">Username:</label>
+                <input type="text" id="gebruikersnaam" name="userName" required>
+            </div>
+            <div>
+                <label for="wachtwoord">Password:</label>
+                <input type="password" id="wachtwoord" name="password" minlength="6" required>
+            </div>
+            <div>
+                <label for="wachtwoord-verificatie">Password verification:</label>
+                <input type="password" id="wachtwoord-verificatie" name="wachtwoord-verificatie" minlength="6" required>
+            </div>
+            <label for="portugal-check">Have you ever been to Portugal?</label>
+            <input type="checkbox" id="portugal-check" name="portugal-check">
+            <div id="datum-wrapper">
+                <label for="datum">Date of last visit:</label>
+                <input type="date" id="datum" name="lastVisitToPortugal">
+            </div>
+            <input type="submit" value="Register">
+            <p id="error"></p>
+        </form>
+    </main>
+    <footer>
+
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

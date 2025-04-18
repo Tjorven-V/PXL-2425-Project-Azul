@@ -1,3 +1,12 @@
+header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav a {
+    color: inherit;
+}
+
 .login-form-container {
     font-family: Arial, Helvetica, sans-serif;
 

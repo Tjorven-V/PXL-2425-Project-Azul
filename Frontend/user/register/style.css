@@ -1,0 +1,29 @@
+header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav a {
+    color: inherit;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+}
+form div {
+    display: flex;
+    flex-direction: column;
+}
+#datum-wrapper {
+    display: none;
+}
+#portugal-check:checked ~ #datum-wrapper {
+    display: flex;
+}
+
+#error {
+    color: red;
+}
