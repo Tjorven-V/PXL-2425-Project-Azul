@@ -1,0 +1,18 @@
+{
+  "source": {
+    "include": ["Frontend", "README_DOCS.md"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./Documentation",
+    "recurse": true
+  },
+  "templates": {
+    "default": {
+      "outputSourceFiles": false
+    },
+    "cleverLinks": true,
+    "monospaceLinks": false
+  }
+}
