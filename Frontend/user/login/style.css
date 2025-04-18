@@ -1,0 +1,40 @@
+.login-form-container {
+    font-family: Arial, Helvetica, sans-serif;
+
+    position: absolute;
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+    align-content: center;
+}
+
+.entry-error {
+    color: red;
+    display: block;
+}
+
+.login-form-header {
+    display: block;
+    position: relative;
+    padding: 8px 8px 16px;
+
+    .title-header {
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .sub-title-header {
+        display: block;
+        font-size: 16px;
+    }
+}
+
+.login-form-entry {
+    margin-bottom: 16px;
+}
+
+#login-message {
+    display: block;
+    margin-bottom: 16px;
+}

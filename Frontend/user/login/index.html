@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+<div id="login-form-container" class="login-form-container">
+    <div id="login-form" class="login-form">
+        <div class="login-form-header">
+            <span class="title-header">Login</span>
+            <span class="sub-title-header">This page is still a work in progress.<br>Don't have an account? <a href="../registration">Create one!</a></span>
+        </div>
+        <div class="login-form-body">
+            <div class="login-form-entry">
+                <label>
+                    E-Mail<br>
+                    <span class="entry-error" id="email-message"></span>
+                    <input id="email" type="text">
+                </label>
+            </div>
+            <div class="login-form-entry">
+                <label>
+                    Password<br>
+                    <span class="entry-error" id="password-message"></span>
+                    <input id="password" type="password">
+                </label>
+            </div>
+<!--            <div class="login-form-entry">-->
+<!--                <label>-->
+<!--                    Remember Me-->
+<!--                    <input id="remember-me" type="checkbox">-->
+<!--                </label>-->
+<!--            </div>-->
+            <span style="display: block;" id="login-message"></span>
+            <button id="login-button">Login</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
