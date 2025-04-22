@@ -90,7 +90,7 @@ const usernameRegex = new RegExp("^[A-Za-z0-9]+([._-][A-Za-z0-9]+)*$");
  * v.validateUsername('; SELECT;--');
  * v.validateUsername(':(){ :|:& };:');
  */
-function validateUsername(username) {
+function validateUsernameFormat(username) {
     if (username === null || typeof username !== 'string') return false;
 
     let usernameLength = username.length;
@@ -101,5 +101,5 @@ function validateUsername(username) {
 export {
     validatePasswordFormat,
     validateEmailFormat,
-    validateUsername
+    validateUsernameFormat
 }
