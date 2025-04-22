@@ -94,6 +94,7 @@ function handleSubmit(e) {
                 antwoord.style.color = "green";
                 antwoord.style.display = "flex";
                 antwoord.textContent = "Account successfully created! Have fun playing!";
+                sessionStorage.setItem("email",form.elements['email'].value);
                 form.querySelector('[type="submit"]').disabled = true;
                 setTimeout(() => {
                     window.location.href = '../login'

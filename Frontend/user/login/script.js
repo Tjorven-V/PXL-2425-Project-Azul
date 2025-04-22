@@ -13,12 +13,19 @@ function clearAllMessages() {
     loginMessage.replaceChildren();
 }
 
+function autoFillLogin () {
+    console.log(sessionStorage.getItem("email"))
+    if (sessionStorage.getItem("email")) {
+        document.getElementById('email').value = sessionStorage.getItem("email");
+    }
+}
+
 // Prompt for the user to create an account if no credentials match the provided ones.
 let registrationMessageElement = document.createElement("div");
 
 let textBeforeLink = document.createTextNode("Visit the ");
 let registrationLink = document.createElement("a");
-registrationLink.setAttribute("href", "../registration/index.html");
+registrationLink.setAttribute("href", "../register");
 registrationLink.textContent = "registration page";
 let textAfterLink = document.createTextNode(" to create an account.");
 
@@ -104,4 +111,6 @@ window.addEventListener('load', async function () {
     loginButton.addEventListener('click', login);
     emailInput.addEventListener('keyup', enterPress);
     passwordInput.addEventListener('keyup', enterPress);
+
+    autoFillLogin();
 });
