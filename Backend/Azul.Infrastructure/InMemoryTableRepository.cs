@@ -35,9 +35,23 @@ internal class InMemoryTableRepository : ITableRepository
 
     public IList<ITable> FindTablesWithAvailableSeats(ITablePreferences preferences)
     {
-        //TODO: loop over all tables (user the Values property of _tableDictionary)
-        //and check if those tables have the same preferences and have seats available.
-        //Put the tables that have the same preferences and have seats available in a list and return that list.
-        throw new System.NotImplementedException();
+        IList<ITable> availableTables = [];
+
+        foreach (var table in _tableDictionary.Values)
+        {
+            if (!table.HasAvailableSeat) continue;
+
+            var tablePreferences = table.Preferences;
+            if (tablePreferences == null) continue;
+
+            if ( // Not-matching preferences
+                tablePreferences.NumberOfPlayers != preferences.NumberOfPlayers ||
+                tablePreferences.NumberOfArtificialPlayers != preferences.NumberOfArtificialPlayers
+                ) continue;
+
+            availableTables.Add(table);
+        }
+
+        return availableTables;
     }
 }
