@@ -53,7 +53,7 @@ function validateEmailFormat(email) {
  */
 function validatePasswordFormat(password) {
     if (password === null || typeof password !== 'string' || password.trim().length === 0) return false;
-    return password.length > 6;
+    return password.length >= 6;
 }
 
 /**
