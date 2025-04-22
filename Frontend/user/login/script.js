@@ -14,7 +14,6 @@ function clearAllMessages() {
 }
 
 function autoFillLogin () {
-    console.log(sessionStorage.getItem("email"))
     if (sessionStorage.getItem("email")) {
         document.getElementById('email').value = sessionStorage.getItem("email");
     }
