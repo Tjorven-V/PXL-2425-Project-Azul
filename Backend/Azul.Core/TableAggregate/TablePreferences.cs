@@ -13,8 +13,12 @@ namespace Azul.Core.TableAggregate
         [DefaultValue(0)]
         public int NumberOfArtificialPlayers { get; set; }
 
-        public int NumberOfFactoryDisplays { get; }
+        public int NumberOfFactoryDisplays => 5 + 2 * (NumberOfPlayers + NumberOfArtificialPlayers - 2);
 
+        public TablePreferences(int NumberOfPlayers = 2, int NumberOfArtificialPlayers = 0) {
+            this.NumberOfPlayers = NumberOfPlayers;
+            this.NumberOfArtificialPlayers = NumberOfArtificialPlayers;
+        }
 
         //DO NOT CHANGE THE CODE BELOW, unless (maybe) when you are working on EXTRA requirements
         public override bool Equals(object other)
