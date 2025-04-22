@@ -30,9 +30,20 @@ internal class TableManager : ITableManager
 
     public ITable JoinOrCreateTable(User user, ITablePreferences preferences)
     {
+        IList<ITable> availableTables = _tableRepository.FindTablesWithAvailableSeats(preferences);
+
+        if (availableTables == null || availableTables.Count == 0) {
+            ITable newTable = _tableFactory.CreateNewForUser(user, preferences);
+            _tableRepository.Add(newTable);
+            return newTable;
+        }
+
+        ITable firstAvailableTable = availableTables[0];
+        firstAvailableTable.Join(user);
+        return firstAvailableTable;
+
         //Find a table with available seats that matches the given preferences
         //If no table is found, create a new table. Otherwise, take the first available table
-        throw new NotImplementedException();
     }
 
     public void LeaveTable(Guid tableId, User user)
