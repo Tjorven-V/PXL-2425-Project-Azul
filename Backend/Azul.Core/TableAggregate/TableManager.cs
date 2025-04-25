@@ -1,4 +1,5 @@
-﻿using Azul.Core.GameAggregate.Contracts;
+﻿using System.Xml.Schema;
+using Azul.Core.GameAggregate.Contracts;
 using Azul.Core.PlayerAggregate.Contracts;
 using Azul.Core.TableAggregate.Contracts;
 using Azul.Core.UserAggregate;
@@ -60,7 +61,26 @@ internal class TableManager : ITableManager
 
     public IGame StartGameForTable(Guid tableId)
     {
-        throw new NotImplementedException();
+        // 1. Getting table from the repository
+        var table = _tableRepository.Get(tableId);
+
+        // 2. Check if there are enough players
+        if (table.SeatedPlayers.Count < table.Preferences.NumberOfPlayers)
+        {
+            throw new InvalidOperationException("Not enough players to start a game.");
+        }
+
+        // 3. Create new game for this table
+        var game = _gameFactory.CreateNewForTable(table);
+
+        // 4. Save the game in the repository
+        _gameRepository.Add(game);
+
+        // 5. Set table's game id to the new game's id
+        table.GameId = game.Id;
+
+        // 6. Return the new game
+        return game;
     }
 
     public void FillWithArtificialPlayers(Guid tableId, User user)
