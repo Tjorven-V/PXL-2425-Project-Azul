@@ -1,4 +1,6 @@
 import {validateEmailFormat, validatePasswordFormat, validateUsernameFormat} from "../../scripts/util/Validation.js";
+import AuthenticationManager from "../../scripts/classes/AuthenticationManager.js";
+import Redirects from "../../scripts/util/Redirects.js";
 
 const form = document.querySelector('form');
 const antwoord = document.querySelector('#error');
@@ -71,43 +73,30 @@ function validateDate() {
 }
 
 // Submit
-function handleSubmit(e) {
+async function handleSubmit(e) {
     e.preventDefault();
     if (!validatePasswords() || !validateDate() || !validateUsername() || !validateEmail()) return;
-    let url = 'https://localhost:5051/api/Authentication/register';
-    let person = {
-        email: form.elements['email'].value,
-        userName: form.elements['userName'].value,
-        password: form.elements['wachtwoord'].value,
-        lastVisitToPortugal: form.elements['datum'].value || null
-    }
-    fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(person),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                antwoord.style.color = "green";
-                antwoord.style.display = "flex";
-                antwoord.textContent = "Account successfully created! Have fun playing!";
-                sessionStorage.setItem("email",form.elements['email'].value);
-                form.querySelector('[type="submit"]').disabled = true;
-                setTimeout(() => {
-                    window.location.href = '../login'
-                }, 3000);
-                return;
-            }
 
-            return response.json().then(errData => {
-                throw new Error(`Registration failed: ${errData.message || response.status}`);
-            });
-        })
-        .catch(error => {
-            antwoord.textContent = error.message;
-            antwoord.style.display = "flex";
-        });
+    try {
+        await AuthenticationManager.Register(
+            form.elements['email'].value,
+            form.elements['wachtwoord'].value,
+            form.elements['userName'].value,
+            form.elements['datum'].value || null
+        );
+
+        antwoord.style.color = "green";
+        antwoord.style.display = "flex";
+        antwoord.textContent = "Account successfully created! Have fun playing!";
+        sessionStorage.setItem("email", form.elements['email'].value);
+        form.querySelector('[type="submit"]').disabled = true;
+
+        setTimeout(() => {
+            window.location.href = Redirects.Login;
+        }, 3000);
+
+    } catch (error) {
+        antwoord.textContent = error.message;
+        antwoord.style.display = "flex";
+    }
 }

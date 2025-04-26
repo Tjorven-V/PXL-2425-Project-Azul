@@ -2,9 +2,33 @@ import {IncorrectCredentialsError, InvalidCredentialsError, MissingCredentialsEr
 import APIEndpoints from "../util/APIEndpoints.js";
 
 class AuthenticationManager {
-    static async Register(email, password, username, lastVisitToPortugal) {
-        // TODO: Implement
-        throw new Error("AuthenticationManager.Register Not Implemented");
+    static async Register(email, password, userName, lastVisitToPortugal) {
+        if (!email || !password || !userName) throw new MissingCredentialsError();
+        if (typeof email !== 'string') throw new InvalidCredentialsError("Email must be a string.");
+        if (typeof password !== 'string') throw new InvalidCredentialsError("Password must be a string.");
+        if (typeof userName !== 'string') throw new InvalidCredentialsError("Username must be a string.");
+
+        const response = await fetch(APIEndpoints.Register, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email,
+                password,
+                userName,
+                lastVisitToPortugal
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+
+            if (errorData.message.includes('Email')) {
+                throw new Error("Email already exists");
+            } else if (errorData.message.includes('Username')) {
+                throw new Error("Username already exists");
+            }
+            throw new Error(` Registration failed: ${response.status} ${errorData.message}`);
+        }
     }
 
     static async Login(email, password) {

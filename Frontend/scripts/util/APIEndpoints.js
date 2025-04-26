@@ -2,7 +2,7 @@ const baseUrl = "http://localhost:5050/api";
 
 const APIEndpoints = {
     // Authentication
-    Registration: baseUrl + "/Authentication/register",
+    Register: baseUrl + "/Authentication/register",
     Authentication: baseUrl + "/Authentication/token",
 
     // Games
