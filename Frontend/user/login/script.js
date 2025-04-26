@@ -34,8 +34,8 @@ registrationMessageElement.appendChild(textAfterLink);
 // ------
 
 
-function redirectToProfile() {
-    let targetUrl = Redirects.OwnProfile;
+function redirectToLobby() {
+    let targetUrl = Redirects.Lobby;
     console.log("Redirecting to " + targetUrl);
 
     setTimeout(() => {
@@ -75,7 +75,7 @@ async function login() {
         // this will throw an error if it fails
         let loggedInUser = await AuthenticationManager.Login(emailInput?.value, passwordInput?.value);
         showWelcomeBackMessage(loggedInUser.user.userName);
-        redirectToProfile();
+        redirectToLobby();
     } catch (e) {
         console.error("Login failed: " + e);
 
