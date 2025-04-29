@@ -142,9 +142,73 @@ internal class Board : IBoard
         AddTilesToFloorLine([.. Enumerable.Repeat(typeToAdd, remainingTiles)], tileFactory);
     }
 
+    private int CalculateColourBonus()
+    {
+        // Flatten the 2D array to a one dimensional array.
+        // This will basically append each row to the last
+        IEnumerable<TileSpot> flattenedWall = Wall.Cast<TileSpot>();
+
+        // LINQ!
+        var tileTypeGroups = flattenedWall
+            .Where(spot => spot.HasTile) // Filter out every tile that isn't placed
+            .GroupBy(spot => spot.Type); // Group them by their type
+
+        int amountOfCompletedGroups = tileTypeGroups
+            .Count(group => group.Count() == 5); // Then check which groups are completed!
+
+        // Add the score
+        return 10 * amountOfCompletedGroups;
+    }
+
+    private int CalculateVerticalBonus()
+    {
+        int verticalLines = 0;
+
+        for (int column = 0; column < 5; column++)
+        {
+            bool isColumnComplete = true;
+            for (int row = 0; row < 5; row++)
+            {
+                if (!Wall[row, column].HasTile)
+                {
+                    isColumnComplete = false;
+                    break;
+                }
+            }
+            if (isColumnComplete) verticalLines++;
+        }
+
+        return 7 * verticalLines;
+    }
+
+    private int CalculateHorizontalBonus()
+    {
+        int horizontalLines = 0;
+
+        for (int column = 0; column < 5; column++)
+        {
+            bool isRowComplete = true;
+            for (int row = 0; row < 5; row++)
+            {
+                if (!Wall[column, row].HasTile)
+                {
+                    isRowComplete = false;
+                    break;
+                }
+            }
+            if (isRowComplete) horizontalLines++;
+        }
+
+        return 2 * horizontalLines;
+    }
+
     public void CalculateFinalBonusScores()
     {
-        Score += 0;
+        int colourBonus = CalculateColourBonus();
+        int verticalBonus = CalculateVerticalBonus();
+        int horizontalBonus = CalculateHorizontalBonus();
+
+        Score = Score + colourBonus + verticalBonus + horizontalBonus;
     }
 
     public void DoWallTiling(ITileFactory tileFactory)
