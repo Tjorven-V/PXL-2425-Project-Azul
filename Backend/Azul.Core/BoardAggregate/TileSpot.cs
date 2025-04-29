@@ -21,15 +21,21 @@ public class TileSpot
 
     public TileSpot(TileType? type = null)
     {
+        Type = type;
     }
 
     public void PlaceTile(TileType type)
     {
-        throw new NotImplementedException();
+        if (HasTile) throw new InvalidOperationException("Tile already placed");
+        if (Type != null && Type != type) throw new InvalidOperationException("Trying to place incorrect tile type");
+
+        Type = type;
+        HasTile = true;
     }
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        Type = null;
+        HasTile = false;
     }
 }
