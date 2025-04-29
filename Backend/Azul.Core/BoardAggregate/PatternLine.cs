@@ -8,23 +8,36 @@ internal class PatternLine : IPatternLine
 {
     public PatternLine(int length)
     {
+        Length = length;
     }
 
-    public int Length => throw new NotImplementedException();
+    public int Length { get; set; }
 
-    public TileType? TileType => throw new NotImplementedException();
+    public TileType? TileType {  get; private set; }
 
-    public int NumberOfTiles => throw new NotImplementedException();
+    public int NumberOfTiles { get; private set; }
 
-    public bool IsComplete => throw new NotImplementedException();
+    public bool IsComplete => NumberOfTiles == Length;
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        TileType = null;
+        NumberOfTiles = 0;
     }
 
     public void TryAddTiles(TileType type, int numberOfTilesToAdd, out int remainingNumberOfTiles)
     {
-        throw new NotImplementedException();
+        if (IsComplete) throw new InvalidOperationException("PatternLine already completed");
+        if (TileType != null && TileType != type) throw new InvalidOperationException("Incorrect tile type");
+
+        TileType = type;
+
+        NumberOfTiles += numberOfTilesToAdd;
+        if (NumberOfTiles > Length)
+        {
+            remainingNumberOfTiles = NumberOfTiles - Length;
+            NumberOfTiles = Length;
+        }
+        else remainingNumberOfTiles = 0;
     }
 }
