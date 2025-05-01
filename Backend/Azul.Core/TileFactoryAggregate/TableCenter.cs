@@ -4,11 +4,13 @@ namespace Azul.Core.TileFactoryAggregate;
 
 internal class TableCenter : ITableCenter
 {
+    private readonly List<TileType> _tiles = new List<TileType>();
+
     public Guid Id => throw new NotImplementedException();
 
     public IReadOnlyList<TileType> Tiles => throw new NotImplementedException();
 
-    public bool IsEmpty => throw new NotImplementedException();
+    public bool IsEmpty => _tiles.Count() == 0;
 
     public void AddStartingTile()
     {
