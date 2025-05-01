@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:5050/api";
+const baseUrl = "https://localhost:5051/api";
 
 const APIEndpoints = {
     // Authentication
@@ -16,8 +16,8 @@ const APIEndpoints = {
 
     // Tables
     GetTable: baseUrl + "/Tables/{id}",
-    JoinOrCreate: baseUrl + "/join-or-create",
-    Leave: baseUrl + "/leave",
+    JoinOrCreate: baseUrl + "/Tables/join-or-create",
+    Leave: baseUrl + "/Tables/{id}/leave",
 }
 
 export default APIEndpoints;

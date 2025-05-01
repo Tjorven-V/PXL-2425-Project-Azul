@@ -10,4 +10,5 @@ export default {
     Login: basePath + "/user/login",
     OwnProfile: basePath + "/user/me",
     Lobby: basePath + "/game/lobby",
+    Game: basePath + "/game/play",
 }
