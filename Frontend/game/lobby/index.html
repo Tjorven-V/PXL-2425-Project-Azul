@@ -2,17 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Lobby</title>
+  <title>Azul Lobby</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="script.js"></script>
+  <!-- temporary css code -->
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    label, select { display: block; margin: .5rem 0; }
+    #status { margin-top: 1rem; font-weight: bold; }
+    button { padding: .5rem 1rem; margin-top: .5rem; }
+  </style>
 </head>
 <body>
-  <header>
+  <h1>Welcome to Azul!</h1>
 
-  </header>
-  <main>
+  <div id="controls">
+    <label for="players">Amount of players:</label>
+    <select id="players">
+      <option value="2">2 players</option>
+      <option value="3">3 players</option>
+      <option value="4">4 players</option>
+    </select>
+    <button id="joinGame">Search a table</button>
+  </div>
 
-  </main>
-  <footer>
+  <button id="leaveGame" style="display: none;">Leave Table</button>
+  <div id="status"></div>
 
-  </footer>
+
 </body>
 </html>
