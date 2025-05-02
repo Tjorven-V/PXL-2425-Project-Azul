@@ -56,9 +56,9 @@ internal class Game : IGame
         }
     }
 
-    public int RoundNumber => throw new NotImplementedException();
+    public int RoundNumber { get; private set; } = 1;
 
-    public bool HasEnded => throw new NotImplementedException();
+    public bool HasEnded => false;
 
     public void PlaceTilesOnFloorLine(Guid playerId)
     {
