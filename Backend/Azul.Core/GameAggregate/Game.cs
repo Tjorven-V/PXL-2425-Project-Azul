@@ -39,21 +39,20 @@ internal class Game : IGame
     {
         get
         {
-            IPlayer player1 = Players[0];
-            IPlayer player2 = Players[1];
+            IPlayer firstPlayer = Players[0];
+            DateOnly? latestDate = null;
 
-            if (!player1.LastVisitToPortugal.HasValue && !player2.LastVisitToPortugal.HasValue)
-                return player1.Id;
+            foreach (var player in Players)
+            {
+                if (player.LastVisitToPortugal == null) continue;
 
-            if (!player1.LastVisitToPortugal.HasValue)
-                return player2.Id;
-
-            if (!player2.LastVisitToPortugal.HasValue)
-                return player1.Id;
-
-            return player1.LastVisitToPortugal > player2.LastVisitToPortugal
-                ? player1.Id
-                : player2.Id;
+                if (latestDate == null || player.LastVisitToPortugal > latestDate)
+                {
+                    latestDate = player.LastVisitToPortugal;
+                    firstPlayer = player;
+                }
+            }
+            return firstPlayer.Id;
         }
     }
 
