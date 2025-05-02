@@ -27,7 +27,18 @@ internal class PlayerBase : IPlayer
 
     public IBoard Board { get ; set; }
 
-    public bool HasStartingTile { get => TilesToPlace.Contains(TileType.StartingTile); set => throw new ArgumentNullException(); }
+    //public bool HasStartingTile { get => TilesToPlace.Contains(TileType.StartingTile); set => throw new ArgumentNullException(); }
+    public bool HasStartingTile
+    {
+        get => TilesToPlace.Contains(TileType.StartingTile);
+        set
+        {
+            if (value && !TilesToPlace.Contains(TileType.StartingTile))
+                TilesToPlace.Add(TileType.StartingTile);
+            if (!value)
+                TilesToPlace.Remove(TileType.StartingTile);
+        }
+    }
 
     public List<TileType> TilesToPlace { get; set; }
 }
