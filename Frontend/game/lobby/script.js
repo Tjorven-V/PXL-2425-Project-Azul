@@ -94,8 +94,7 @@ joinBtn.addEventListener('click', async () => {
             } catch {
                 clearInterval(interval);
             }
-        }, 2000);
-
+        }, 2000); // polling every 2 seconds
     } catch {
         statusEl.innerText = 'Error searching';
         searchTable();

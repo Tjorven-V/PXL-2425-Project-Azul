@@ -21,11 +21,22 @@ internal class FactoryDisplay : IFactoryDisplay
 
     public void AddTiles(IReadOnlyList<TileType> tilesToAdd)
     {
-        throw new NotImplementedException();
+        if (tilesToAdd == null || tilesToAdd.Count == 0)
+        {
+            return;
+        }
+        _tiles.AddRange(tilesToAdd);
     }
 
     public IReadOnlyList<TileType> TakeTiles(TileType tileType)
     {
-        throw new NotImplementedException();
+        var takenTiles = _tiles.Where(t => t == tileType).ToList();
+
+        foreach (var tile in takenTiles)
+        {
+            _tiles.Remove(tile);
+        }
+
+        return takenTiles.AsReadOnly();
     }
 }
