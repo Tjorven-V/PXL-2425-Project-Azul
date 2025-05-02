@@ -2,11 +2,13 @@ import APIEndpoints from '../../scripts/util/APIEndpoints.js';
 import Redirects from '../../scripts/util/Redirects.js';
 
 console.log('Lobby loaded');
+console.log('Token in localStorage:', localStorage.getItem('token'));
+console.log('Token in sessionStorage:', sessionStorage.getItem('token'));
 
 // zorg dat elke tab een eigen sessionStorage-token krijgt (kopie van localStorage bij eerste keer)
-if (!sessionStorage.getItem('token') && localStorage.getItem('token')) {
-    sessionStorage.setItem('token', localStorage.getItem('token'));
-}
+// if (!sessionStorage.getItem('token') && localStorage.getItem('token')) {
+//     sessionStorage.setItem('token', localStorage.getItem('token'));
+// }
 
 const controlsDiv = document.getElementById('controls');
 const joinBtn = document.getElementById('joinGame');
@@ -90,6 +92,11 @@ joinBtn.addEventListener('click', async () => {
                     clearInterval(interval);
                     statusEl.innerText = 'All players ready! Game starting...';
                     leaveBtn.style.display = 'none';
+
+                    // Redirect to game (game.html)
+                    setTimeout(() => {
+                        window.location.href = Redirects.Game + "?id=" + tableId;
+                    }, 1000);
                 }
             } catch {
                 clearInterval(interval);

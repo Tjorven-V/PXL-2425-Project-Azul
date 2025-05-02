@@ -75,6 +75,11 @@ async function login() {
         // this will throw an error if it fails
         let loggedInUser = await AuthenticationManager.Login(emailInput?.value, passwordInput?.value);
         showWelcomeBackMessage(loggedInUser.user.userName);
+        
+        // Belangrijk: token opslaan!
+        // localStorage.setItem('token', loggedInUser.token);
+        sessionStorage.setItem('token', loggedInUser.token);
+
         redirectToLobby();
     } catch (e) {
         console.error("Login failed: " + e);
