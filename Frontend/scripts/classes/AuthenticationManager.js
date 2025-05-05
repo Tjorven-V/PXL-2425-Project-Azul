@@ -54,22 +54,24 @@ class AuthenticationManager {
             }
         }
 
-        return await response.json();
-    }
-
-    static async RenewLogin(email, password) {
-        // TODO: Implement
-        throw new Error("AuthenticationManager.RenewLogin Not Implemented");
-
+        const userData = await response.json();
+        sessionStorage.setItem("loggedInUser", JSON.stringify(userData.user));
+        sessionStorage.setItem("token", userData.token);
+        return userData;
     }
 
     static get LoggedInUser() {
-        // TODO: Implement retrieving currently logged in user
-        throw new Error("AuthenticationManager.LoggedInUser Not Implemented");
-
+        let loggedInUser = sessionStorage.getItem("loggedInUser");
+        try {
+            return JSON.parse(loggedInUser);
+        }
+        catch (error) {
+            return null;
+        }
     }
-
-
+    static get Token() {
+        return sessionStorage.getItem("token");
+    }
 }
 
 export default AuthenticationManager;

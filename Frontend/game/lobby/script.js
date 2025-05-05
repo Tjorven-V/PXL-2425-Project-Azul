@@ -1,9 +1,10 @@
 import APIEndpoints from '../../scripts/util/APIEndpoints.js';
 import Redirects from '../../scripts/util/Redirects.js';
+import AuthenticationManager from "../../scripts/classes/AuthenticationManager.js";
 
 console.log('Lobby loaded');
-console.log('Token in localStorage:', localStorage.getItem('token'));
-console.log('Token in sessionStorage:', sessionStorage.getItem('token'));
+//console.log('Token in localStorage:', localStorage.getItem('token'));
+//console.log('Token in sessionStorage:', sessionStorage.getItem('token'));
 
 // zorg dat elke tab een eigen sessionStorage-token krijgt (kopie van localStorage bij eerste keer)
 // if (!sessionStorage.getItem('token') && localStorage.getItem('token')) {
@@ -46,8 +47,7 @@ joinBtn.addEventListener('click', async () => {
         statusEl.innerText = 'Select number of players first';
         return;
     }
-    const token = sessionStorage.getItem('token');
-    if (!token) {
+    if (!AuthenticationManager) {
         window.location.href = Redirects.Login;
         return;
     }
@@ -60,7 +60,7 @@ joinBtn.addEventListener('click', async () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${AuthenticationManager.Token}`
             },
             body: JSON.stringify({ numberOfPlayers: count })
         });
@@ -68,6 +68,7 @@ joinBtn.addEventListener('click', async () => {
         const table = await res.json();
 
         tableId = table.id;
+        const gameId = table.gameId;
         waitingTable(tableId, table.seatedPlayers.length, table.preferences.numberOfPlayers);
 
         interval = setInterval(async () => {
@@ -79,7 +80,7 @@ joinBtn.addEventListener('click', async () => {
             try {
                 const pollRes = await fetch(
                     APIEndpoints.GetTable.replace('{id}', tableId),
-                    { headers: { 'Authorization': `Bearer ${token}` } }
+                    { headers: { 'Authorization': `Bearer ${AuthenticationManager.Token}` } }
                 );
                 if (!pollRes.ok) {
                     clearInterval(interval);
@@ -92,6 +93,7 @@ joinBtn.addEventListener('click', async () => {
                     clearInterval(interval);
                     statusEl.innerText = 'All players ready! Game starting...';
                     leaveBtn.style.display = 'none';
+                    sessionStorage.setItem("gameId", gameId);
 
                     // Redirect to game (game.html)
                     setTimeout(() => {
@@ -109,7 +111,7 @@ joinBtn.addEventListener('click', async () => {
 });
 
 leaveBtn.addEventListener('click', async () => {
-    const token = sessionStorage.getItem('token');
+    const token = AuthenticationManager.Token;
     if (!token) {
         window.location.href = Redirects.Login;
         return;

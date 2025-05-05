@@ -78,7 +78,6 @@ async function login() {
         
         // Belangrijk: token opslaan!
         // localStorage.setItem('token', loggedInUser.token);
-        sessionStorage.setItem('token', loggedInUser.token);
 
         redirectToLobby();
     } catch (e) {
