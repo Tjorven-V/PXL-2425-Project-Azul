@@ -1,17 +1,13 @@
 import Board from "../scripts/classes/Board.js";
 
-let cv = document.getElementById("table");
-let ctx = cv.getContext("2d");
-
 for (let i = 0; i < 4; i++) {
-    let board = new Board(i.toString(), i === 2);
-    board.CreateCanvasElement();
+    let board = new Board("testBoard", i === 3);
+    let cvElement = board.CreateCanvasElement();
+    document.body.appendChild(cvElement);
 
-    setTimeout(() => {
-        let image = new Image();
-        image.id = "pic";
-        image.src = board.Canvas.toDataURL();
+    // cvElement.style.display = "block";
+    cvElement.style.margin = "32px";
+    cvElement.style.width = i === 3 ? "1200px" : "500px";
 
-        ctx.drawImage(image, 256 + 300 * i, 0, 256, 256);
-    }, 1000);
+    board.Paint();
 }
