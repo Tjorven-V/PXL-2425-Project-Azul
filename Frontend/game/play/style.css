@@ -1,6 +1,35 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 body {
-    background: url("../../media/azul/board_background.png");
-    background-size: 100%;
+    background: url("../../media/azul/table_background.png") no-repeat center center;
+    background-size: cover;
+}
+
+#loading-resources {
+    color: white;
+    text-align: center;
+
+    font-size: 6em;
+    font-family: Century Gothic, sans-serif;
+    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
+
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+
+    .title {
+        font-size: 1em;
+    }
+
+    .subtitle {
+        font-size: 0.3em;
+    }
 }
 
 .board {
@@ -32,15 +61,46 @@ body {
 #remote-boards-container {
     display: flex;
     justify-content: space-evenly;
-    height: 30%;
     width: 100%;
-    padding-bottom: 32px;
+    padding-bottom: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .remote-board {
-    width: 20%;
-    height: 40%;
+    width: 25%;
 
     display: flex;
     flex-direction: row;
+}
+
+#game-information {
+    font-family: Century Gothic, sans-serif;
+    font-weight: bold;
+
+    bottom: 0;
+    left: 0;
+    color: rgba(255, 255, 255, 0.25);
+    margin: 16px;
+}
+
+#tristan {
+    position: fixed;
+    right: 3em;
+    bottom: -4px;
+
+    width: 64px;
+    height: 64px;
+
+    opacity: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+#tristan:hover {
+    opacity: 1;
+    display: flex;
 }

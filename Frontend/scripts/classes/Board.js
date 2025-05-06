@@ -1,35 +1,29 @@
 import ResourceManager from "./ResourceManager.js";
+import ClickableCanvas from "./ClickableCanvas.js";
 
-let basePath;
-if (window.location.hostname === 'localhost') {
-    basePath = window.location.origin + "/Frontend";
-} else {
-    basePath = window.location.hostname;
-}
-
-const TileImages = [
-    basePath + "/media/azul/tiles/11.png",
-    basePath + "/media/azul/tiles/12.png",
-    basePath + "/media/azul/tiles/13.png",
-    basePath + "/media/azul/tiles/14.png",
-    basePath + "/media/azul/tiles/15.png",
-    basePath + "/media/azul/tiles/0.png"
-];
-
-class Board {
+class Board extends  ClickableCanvas{
     #_playerId;
-    #_playerName;
-    #_score;
     #_canvas;
     #_canvasContext;
     #_isLocal;
     #_clickableSpots;
 
+    #_playerName;
+    #_score;
+    #_atTurn;
     #_patternLines;
     #_floorLine;
     #_wall;
 
     constructor(playerId, playerName, isLocal) {
+        let classes = ["board"];
+        if (isLocal) {
+            classes.push("local-board");
+        } else {
+            classes.push("remote-board");
+        }
+
+        super("board-" + playerId, 1200, 800, classes);
         this.#_playerId = playerId;
         this.#_playerName = playerName;
         this.#_isLocal = isLocal;
@@ -41,67 +35,29 @@ class Board {
         this.#_wall = [[], [], [], [], []];
     };
 
-    CreateCanvasElement() {
-        this.#_canvas = document.createElement("canvas");
-        this.#_canvas.id = "board-" + this.#_playerId;
-        this.#_canvas.classList.add("board");
-        this.#_canvas.addEventListener("click", e => this.#Click(e));
-
-        if (this.#_isLocal) {
-            this.#_canvas.classList.add("local-board");
-        } else {
-            this.#_canvas.classList.add("remote-board");
-        }
-
-        // reference resolution of 1200×800
-        // do not change, scale with CSS instead.
-        this.#_canvas.width = 1200;
-        this.#_canvas.height = 800;
-
-        this.#_canvasContext = this.#_canvas.getContext("2d");
-
-        return this.#_canvas;
-    }
-
-    #Click(event) {
-        const rect = event.target.getBoundingClientRect();
-        const scaleX = event.target.width / rect.width;
-        const scaleY = event.target.height / rect.height;
-
-        const relativeX = (event.clientX - rect.left) * scaleX;
-        const relativeY = (event.clientY - rect.top) * scaleY;
-
-        for (let [_, clickRegion] of Object.entries(this.#_clickableSpots)) {
-            const isXInside = relativeX >= clickRegion.x && relativeX <= clickRegion.x + clickRegion.w;
-            const isYInside = relativeY >= clickRegion.y && relativeY <= clickRegion.y + clickRegion.h;
-
-            if (isXInside && isYInside && typeof clickRegion.click === "function") {
-                clickRegion.click();
-            }
-        }
-    }
-
     #ShouldDrawCell(cellData, x, y, w, h) {
+        let ctx = this.CanvasContext;
+
         if (cellData.type === "wall") {
             let boardCellData = this.#_wall[cellData.rowIndex][ cellData.colIndex];
             if (boardCellData == null) return;
 
-            if (!boardCellData.hasTile) this.#_canvasContext.globalAlpha = 0.33;
-            this.#_canvasContext.drawImage(ResourceManager.Tiles[boardCellData.type], x + 2, y + 2, w - 4, h - 4)
-            if (!boardCellData.hasTile) this.#_canvasContext.globalAlpha = 1;
+            if (!boardCellData.hasTile) ctx.globalAlpha = 0.33;
+            ctx.drawImage(ResourceManager.Tiles[boardCellData.type], x + 2, y + 2, w - 4, h - 4)
+            if (!boardCellData.hasTile) ctx.globalAlpha = 1;
         } else if (cellData.type === "floorLine") {
             let boardCellData = this.#_floorLine[cellData.cellIndex];
             if (boardCellData.type == null && boardCellData.type !== 0 || boardCellData.hasTile === false) return;
 
-            this.#_canvasContext.drawImage(ResourceManager.Tiles[boardCellData.type], x + 2, y + 2, w - 4, h - 4)
+            ctx.drawImage(ResourceManager.Tiles[boardCellData.type], x + 2, y + 2, w - 4, h - 4)
 
         } else if (cellData.type === "patternLine") {
             let boardCellData = this.#_patternLines[cellData.patternLine];
             if (boardCellData.tileType == null) return;
 
-            if (cellData.cell >= boardCellData.numberOfTiles) this.#_canvasContext.globalAlpha = 0.33;
-            this.#_canvasContext.drawImage(ResourceManager.Tiles[boardCellData.tileType], x + 2, y + 2, w - 4, h - 4)
-            if (!boardCellData.hasTile) this.#_canvasContext.globalAlpha = 1;
+            if (cellData.cell >= boardCellData.numberOfTiles) ctx.globalAlpha = 0.33;
+            ctx.drawImage(ResourceManager.Tiles[boardCellData.tileType], x + 2, y + 2, w - 4, h - 4)
+            if (!boardCellData.hasTile) ctx.globalAlpha = 1;
         }
     }
 
@@ -118,15 +74,15 @@ class Board {
     }
 
     Clear() {
-        this.#_canvasContext.clearRect(0, 0, this.#_canvas.width, this.#_canvas.height);
-        this.#_clickableSpots = {};
+        this.CanvasContext.clearRect(0, 0, this.Canvas.width, this.Canvas.height);
+        this.ClearClickableRegions();
     }
 
     Paint() {
         this.Clear();
 
-        let cv = this.#_canvas;
-        let ctx = this.#_canvasContext;
+        let cv = this.Canvas;
+        let ctx = this.CanvasContext;
 
         // Tile Cell Size
         let cellSize = cv.width / 11;
@@ -135,9 +91,6 @@ class Board {
         ctx.lineWidth = 4;
 
         ctx.drawImage(ResourceManager.BoardBackground, 0, 0, cv.width, cv.height);
-
-        // ctx.fillStyle = "#3c1d0f";
-        // ctx.fillRect(0, 0, cv.width, cv.height);
 
         // Start Draw PatternLines
         let patternLines = 5;
@@ -153,7 +106,6 @@ class Board {
             patternLineLayout.push(line);
         }
 
-        // ctx.rect(patternLineContainerX, patternLineContainerY, patternLineContainerSize, patternLineContainerSize);
         for (let patternLine in patternLineLayout) {
             patternLine = parseInt(patternLine);
             for (let cellInLine = 0; cellInLine <= patternLine; cellInLine++) {
@@ -164,11 +116,9 @@ class Board {
                 this.#ShouldDrawCell({type: "patternLine", patternLine, cell: patternLine - cellInLine}, x, y, w, h);
 
                 if (!this.#_isLocal) continue;
-                this.#_clickableSpots["patternLine_" + patternLine + "_" + cellInLine] = {
-                    x, y, w, h,
-                    click: () => {
-                        this.#PatternLineClicked(patternLine, patternLine - cellInLine);
-                    }};
+                this.RegisterClickableRegion("patternLine_" + patternLine + "_" + cellInLine, x, y, w, h, () => {
+                    this.#PatternLineClicked(patternLine, patternLine - cellInLine);
+                })
             }
         }
         // End Draw PatternLines
@@ -190,9 +140,9 @@ class Board {
                 this.#ShouldDrawCell({type: "wall", rowIndex, colIndex}, x, y, w, h);
 
                 if (!this.#_isLocal) continue;
-                this.#_clickableSpots["wall_" + colIndex + "_" + rowIndex] = {
-                    x, y, w, h,
-                    click: () => this.#WallClicked(colIndex, rowIndex)};
+                this.RegisterClickableRegion("wall_" + colIndex + "_" + rowIndex, x, y, w, h, () => {
+                    this.#WallClicked(colIndex, rowIndex)
+                });
             }
         }
         // End Draw Wall
@@ -214,9 +164,10 @@ class Board {
             this.#ShouldDrawCell({type: "floorLine", cellIndex: floorLineSpotIndex}, x, y, w, h);
 
             if (!this.#_isLocal) continue;
-            this.#_clickableSpots["floorLine_" + floorLineSpotIndex] = {
-                x, y, w, h,
-                click: () => this.#FloorLineClicked(floorLineSpotIndex)};
+
+            this.RegisterClickableRegion("floorLine_" + floorLineSpotIndex, x, y, w, h, () => {
+                this.#FloorLineClicked(floorLineSpotIndex)
+            });
         }
         // End Draw FloorLine
 
@@ -229,6 +180,14 @@ class Board {
         // End Draw Name & Score
 
         ctx.stroke(); // Execute the drawing operation
+    }
+
+    set AtTurn(toPlay) {
+        this.#_atTurn = toPlay;
+    }
+
+    get AtTurn() {
+        return this.#_atTurn;
     }
 
     set BoardData(data) {
@@ -246,10 +205,6 @@ class Board {
 
     get OwnerId() {
         return this.#_playerId;
-    }
-
-    get Canvas() {
-        return this.#_canvas;
     }
 }
 
