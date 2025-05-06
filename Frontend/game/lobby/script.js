@@ -93,11 +93,16 @@ joinBtn.addEventListener('click', async () => {
                     clearInterval(interval);
                     statusEl.innerText = 'All players ready! Game starting...';
                     leaveBtn.style.display = 'none';
-                    sessionStorage.setItem("gameId", gameId);
 
                     // Redirect to game (game.html)
-                    setTimeout(() => {
-                        window.location.href = Redirects.Game + "?id=" + tableId;
+                    setTimeout(async () => {
+
+                        let res = await fetch(APIEndpoints.GetTable.replace('{id}', tableId),
+                            { headers: { 'Authorization': `Bearer ${AuthenticationManager.Token}` } }
+                        );
+                        let j = await res.json();
+                        sessionStorage.setItem("gameId", j.gameId);
+                        window.location.href = Redirects.Game + "?id=" + j.gameId;
                     }, 1000);
                 }
             } catch {
