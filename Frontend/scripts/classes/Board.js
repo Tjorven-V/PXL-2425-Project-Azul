@@ -1,28 +1,49 @@
+import ResourceManager from "./ResourceManager.js";
+
+let basePath;
+if (window.location.hostname === 'localhost') {
+    basePath = window.location.origin + "/Frontend";
+} else {
+    basePath = window.location.hostname;
+}
+
 const TileImages = [
-    "../media/azul/tiles/11.png",
-    "../media/azul/tiles/12.png",
-    "../media/azul/tiles/13.png",
-    "../media/azul/tiles/14.png",
-    "../media/azul/tiles/15.png",
+    basePath + "/media/azul/tiles/11.png",
+    basePath + "/media/azul/tiles/12.png",
+    basePath + "/media/azul/tiles/13.png",
+    basePath + "/media/azul/tiles/14.png",
+    basePath + "/media/azul/tiles/15.png",
+    basePath + "/media/azul/tiles/0.png"
 ];
 
 class Board {
     #_playerId;
+    #_playerName;
+    #_score;
     #_canvas;
     #_canvasContext;
     #_isLocal;
     #_clickableSpots;
 
-    constructor(playerId, isLocal) {
+    #_patternLines;
+    #_floorLine;
+    #_wall;
+
+    constructor(playerId, playerName, isLocal) {
         this.#_playerId = playerId;
+        this.#_playerName = playerName;
         this.#_isLocal = isLocal;
         this.#_clickableSpots = {};
-        // TODO: Check if this ID is ours. We need to save the logged in player in localStorage
+        this.#_score = 0;
+
+        this.#_patternLines = [];
+        this.#_floorLine = [];
+        this.#_wall = [[], [], [], [], []];
     };
 
     CreateCanvasElement() {
         this.#_canvas = document.createElement("canvas");
-        this.#_canvas.id = this.#_playerId;
+        this.#_canvas.id = "board-" + this.#_playerId;
         this.#_canvas.classList.add("board");
         this.#_canvas.addEventListener("click", e => this.#Click(e));
 
@@ -62,21 +83,25 @@ class Board {
 
     #ShouldDrawCell(cellData, x, y, w, h) {
         if (cellData.type === "wall") {
-            const offset = (cellData.colIndex - cellData.rowIndex + 5) % 5;
+            let boardCellData = this.#_wall[cellData.rowIndex][ cellData.colIndex];
+            if (boardCellData == null) return;
 
-            let isPlaced = Math.random() < 0.333;
-
-            let img = new Image();
-            img.src = TileImages[offset];
-            img.onload = () => {
-                if (!isPlaced) this.#_canvasContext.globalAlpha = 0.2;
-                this.#_canvasContext.drawImage(img, x + 2, y + 2, w - 4, h - 4)
-                if (!isPlaced) this.#_canvasContext.globalAlpha = 1;
-            };
+            if (!boardCellData.hasTile) this.#_canvasContext.globalAlpha = 0.33;
+            this.#_canvasContext.drawImage(ResourceManager.Tiles[boardCellData.type], x + 2, y + 2, w - 4, h - 4)
+            if (!boardCellData.hasTile) this.#_canvasContext.globalAlpha = 1;
         } else if (cellData.type === "floorLine") {
-            console.log("FloorLine is asking if it should draw a cell");
+            let boardCellData = this.#_floorLine[cellData.cellIndex];
+            if (boardCellData.type == null && boardCellData.type !== 0 || boardCellData.hasTile === false) return;
+
+            this.#_canvasContext.drawImage(ResourceManager.Tiles[boardCellData.type], x + 2, y + 2, w - 4, h - 4)
+
         } else if (cellData.type === "patternLine") {
-            console.log(`PatternLine${cellData.patternLine} is asking if it should draw a cell`)
+            let boardCellData = this.#_patternLines[cellData.patternLine];
+            if (boardCellData.tileType == null) return;
+
+            if (cellData.cell >= boardCellData.numberOfTiles) this.#_canvasContext.globalAlpha = 0.33;
+            this.#_canvasContext.drawImage(ResourceManager.Tiles[boardCellData.tileType], x + 2, y + 2, w - 4, h - 4)
+            if (!boardCellData.hasTile) this.#_canvasContext.globalAlpha = 1;
         }
     }
 
@@ -109,6 +134,11 @@ class Board {
         ctx.beginPath(); // Start a new drawing operation
         ctx.lineWidth = 4;
 
+        ctx.drawImage(ResourceManager.BoardBackground, 0, 0, cv.width, cv.height);
+
+        // ctx.fillStyle = "#3c1d0f";
+        // ctx.fillRect(0, 0, cv.width, cv.height);
+
         // Start Draw PatternLines
         let patternLines = 5;
         let [patternLineContainerX, patternLineContainerY] = [32, 32];
@@ -129,6 +159,8 @@ class Board {
             for (let cellInLine = 0; cellInLine <= patternLine; cellInLine++) {
                 let [x, y, w, h] = [patternLineContainerX + patternLineContainerSize - cellSize * cellInLine, patternLineContainerY + cellSize * patternLine, cellSize, cellSize];
                 ctx.rect(x, y, w, h);
+                ctx.fillStyle = "#824121";
+                ctx.fillRect(x, y, w, h);
                 this.#ShouldDrawCell({type: "patternLine", patternLine, cell: patternLine - cellInLine}, x, y, w, h);
 
                 if (!this.#_isLocal) continue;
@@ -153,6 +185,8 @@ class Board {
             for (let colIndex = 0; colIndex < wallSize; colIndex++) {
                 let [x, y, w, h] = [wallContainerX + colIndex * cellSize, wallContainerY + rowIndex * cellSize, cellSize, cellSize];
                 ctx.rect(x, y, w, h);
+                ctx.fillStyle = "#824121";
+                ctx.fillRect(x, y, w, h);
                 this.#ShouldDrawCell({type: "wall", rowIndex, colIndex}, x, y, w, h);
 
                 if (!this.#_isLocal) continue;
@@ -175,6 +209,8 @@ class Board {
 
             let [x, y, w, h] = [floorLineX + floorLineSpotWidth * floorLineSpotIndex, floorLineY, floorLineSpotWidth, floorLineHeight];
             ctx.rect(x, y, w, h);
+            ctx.fillStyle = "#824121";
+            ctx.fillRect(x, y, w, h);
             this.#ShouldDrawCell({type: "floorLine", cellIndex: floorLineSpotIndex}, x, y, w, h);
 
             if (!this.#_isLocal) continue;
@@ -184,12 +220,24 @@ class Board {
         }
         // End Draw FloorLine
 
+        ctx.font = "bold 48px arial"
+
+        // Start Draw Name & Score
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText(this.#_playerName, 32, 64);
+        ctx.fillText("Score: " + this.#_score, 32, 128);
+        // End Draw Name & Score
+
         ctx.stroke(); // Execute the drawing operation
     }
 
     set BoardData(data) {
         let {patternLines, wall, floorLine, score} = data;
 
+        this.#_score = score;
+        this.#_wall = wall;
+        this.#_patternLines = patternLines;
+        this.#_floorLine = floorLine;
     }
 
     get IsLocal() {

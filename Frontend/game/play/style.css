@@ -1,0 +1,46 @@
+body {
+    background: url("../../media/azul/board_background.png");
+    background-size: 100%;
+}
+
+.board {
+    border: 2px black solid;
+    width: 100px;
+}
+
+.local-board {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 33%;
+}
+
+#factory-displays-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.factoryDisplay {
+    width: 100px;
+    height: 100px;
+    margin: 2px;
+}
+
+#remote-boards-container {
+    display: flex;
+    justify-content: space-evenly;
+    height: 30%;
+    width: 100%;
+    padding-bottom: 32px;
+}
+
+.remote-board {
+    width: 20%;
+    height: 40%;
+
+    display: flex;
+    flex-direction: row;
+}
