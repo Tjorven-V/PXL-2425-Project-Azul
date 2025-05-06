@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const c = setInterval(() => {
         if (ResourceManager.AllLoaded) {
 
-            document.getElementById("loading-resources").style.display = "none";
+            let loadingResources = document.getElementById("loading-resources");
+            // loadingResources.style.display = "none";
 
             let gameInfo = document.getElementById("game-information");
             gameInfo.replaceChildren(...[
@@ -30,6 +31,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             gameInfo.style.position = "fixed";
             gameInfo.style.display = "block";
+
+            loadingResources.classList.add("fade-out");
+            let gameArea = document.getElementById("game-area");
+            gameArea.classList.add("fade-in");
 
             clearInterval(c);
             loadBoards();
@@ -84,12 +89,8 @@ function loadBoards() {
             let board = new Board(player.id, player.name, isLocal);
 
             if (isLocal) {
-                document.body.appendChild(board.Canvas);
+                document.getElementById("game-area").appendChild(board.Canvas);
             } else remoteBoards.append(board.Canvas);
-
-            if (game.playerToPlayId === player.id) {
-                board.Canvas.style.border = "2px solid green";
-            }
 
             board.BoardData = player.board;
             playerBoards[board.OwnerId] = board;

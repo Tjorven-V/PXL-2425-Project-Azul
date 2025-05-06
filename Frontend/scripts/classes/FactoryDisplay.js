@@ -6,7 +6,7 @@ class FactoryDisplay extends ClickableCanvas {
     #_tiles;
 
     constructor(factoryId) {
-        super("factory-" + factoryId, 100, 100, "factoryDisplay");
+        super("factory-" + factoryId, 100, 100, ["factoryDisplay"]);
         this.#_factoryId = factoryId;
         this.#_tiles = [];
     };
@@ -27,7 +27,14 @@ class FactoryDisplay extends ClickableCanvas {
     Paint() {
         this.Clear();
 
+        /**
+         * @type {Canvas}
+         */
         let cv = this.Canvas;
+
+        /**
+         * @type {CanvasRenderingContext2D}
+         */
         let ctx = this.CanvasContext;
 
         // Tile Cell Size
@@ -46,7 +53,7 @@ class FactoryDisplay extends ClickableCanvas {
 
             let [x, y, w, h] = [cellSize * i - (row * cellSize * 2) + cellSize / 4, row * cellSize + cellSize / 4, cellSize, cellSize];
             // ctx.rect(x, y, w, h);
-            this.#ShouldDrawCell(i, x, y, w, h);
+            this.#ShouldDrawCell(i, x - 1, y - 1, w + 2, h + 2);
 
             this.RegisterClickableRegion("tile_" + i, x, y, w, h, () => {
                 this.#TileClicked(i);

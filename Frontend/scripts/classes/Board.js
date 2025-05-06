@@ -81,7 +81,14 @@ class Board extends  ClickableCanvas{
     Paint() {
         this.Clear();
 
+        /**
+         * @type {Canvas}
+         */
         let cv = this.Canvas;
+
+        /**
+         * @type {CanvasRenderingContext2D}
+         */
         let ctx = this.CanvasContext;
 
         // Tile Cell Size
@@ -171,7 +178,7 @@ class Board extends  ClickableCanvas{
         }
         // End Draw FloorLine
 
-        ctx.font = "bold 48px arial"
+        ctx.font = "bold 48px Century Gothic"
 
         // Start Draw Name & Score
         ctx.fillStyle = "#FFFFFF";
@@ -180,6 +187,13 @@ class Board extends  ClickableCanvas{
         // End Draw Name & Score
 
         ctx.stroke(); // Execute the drawing operation
+
+        // New quick draw to put an outline around the board
+        // CSS borders mess with layout too much for my liking
+        ctx.beginPath();
+        ctx.lineWidth = 24;
+        ctx.rect(0, 0, cv.width, cv.height);
+        ctx.stroke();
     }
 
     set AtTurn(toPlay) {
