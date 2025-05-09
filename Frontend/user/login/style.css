@@ -5,6 +5,49 @@ header {
 
 nav a {
     color: inherit;
+    margin: 5px;
+    font-weight: bold;
+}
+
+* {
+    color: white;
+    font-family: Century Gothic, sans-serif;
+    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #883E0A url("../../media/skins/azul/table_background.png") no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+input, button {
+    background-color: #883E0A;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button {
+    background-color: #883E0A;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(0.95);
+}
+
+a {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #FFA500;
 }
 
 .login-form-container {
