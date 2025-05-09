@@ -39,4 +39,11 @@ internal class FactoryDisplay : IFactoryDisplay
 
         return takenTiles.AsReadOnly();
     }
+
+    public void SetTiles(List<TileType> newTiles)
+    {
+        _tiles.Clear();
+        _tiles.AddRange(newTiles);
+    }
+
 }

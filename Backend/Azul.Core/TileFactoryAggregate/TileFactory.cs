@@ -70,6 +70,21 @@ internal class TileFactory : ITileFactory
 
     public IReadOnlyList<TileType> TakeTiles(Guid displayId, TileType tileType)
     {
-        throw new NotImplementedException();
+        var display = Displays.FirstOrDefault(d => d.Id == displayId);
+        if (display == null || display is not FactoryDisplay factoryDisplay)
+        {
+            throw new InvalidOperationException("Display does not exist.");
+        }
+
+        if (!display.Tiles.Contains(tileType))
+        {
+            throw new InvalidOperationException($"Tile type not found in display.");
+        }
+
+        var takenTiles = factoryDisplay.TakeTiles(tileType);
+        TableCenter.AddTiles(factoryDisplay.Tiles.ToList());
+        factoryDisplay.SetTiles(new List<TileType>());
+
+        return takenTiles;
     }
 }

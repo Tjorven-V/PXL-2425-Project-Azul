@@ -31,10 +31,7 @@ internal class TableCenter : ITableCenter
     {
         //throw new NotImplementedException();
         var takenTiles = _tiles.Where(t => t == tileType).ToList();
-        foreach (var tile in takenTiles)
-        {
-            _tiles.Remove(tile);
-        }
-        return takenTiles;
+        _tiles.RemoveAll(t => t == tileType);
+        return takenTiles.AsReadOnly();
     }
 }

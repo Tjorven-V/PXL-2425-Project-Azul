@@ -72,6 +72,23 @@ internal class Game : IGame
 
     public void TakeTilesFromFactory(Guid playerId, Guid displayId, TileType tileType)
     {
-        throw new NotImplementedException();
+        var player = Players.FirstOrDefault(p => p.Id == playerId);
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found.");
+        }
+
+        if (playerId != PlayerToPlayId)
+        {
+            throw new InvalidOperationException("not your turn.");
+        }
+
+        if (player.TilesToPlace.Any())
+        {
+            throw new InvalidOperationException("Player already has tiles to place.");
+        }
+
+        var takenTiles = TileFactory.TakeTiles(displayId, tileType);
+        player.TilesToPlace.AddRange(takenTiles);
     }
 }
