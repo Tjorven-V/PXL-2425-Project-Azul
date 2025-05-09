@@ -2,7 +2,7 @@ body {
     font-family: sans-serif;
     max-width: 600px;
     margin: 2rem auto;
-    background: #883E0A url("../../media/skins/azul/table_background.png") no-repeat center center;
+    background: #883E0A url("../../media/azul/table_background.png") no-repeat center center;
     background-size: cover;
     min-height: 100vh;
 }
