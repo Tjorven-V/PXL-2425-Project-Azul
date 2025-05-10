@@ -28,11 +28,11 @@ jobs:
       - name: Tag image as 'latest' and with short commit
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)  # Get the short commit hash
-          docker tag azulapi ghcr.io/TjorvenVannieuwenhuysePXL/azulapi:latest  # Tag image as 'latest'
-          docker tag azulapi ghcr.io/TjorvenVannieuwenhuysePXL/azulapi:$COMMIT_SHA  # Tag image with commit hash
+          docker tag azulapi ghcr.io/tjorvenvannieuwenhuysepxl/azulapi:latest  # Tag image as 'latest'
+          docker tag azulapi ghcr.io/tjorvenvannieuwenhuysepxl/azulapi:$COMMIT_SHA  # Tag image with commit hash
 
       - name: Push images to GHCR
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)  # Get the short commit hash
-          docker push ghcr.io/TjorvenVannieuwenhuysePXL/azulapi:latest  # Push the 'latest' image
-          docker push ghcr.io/TjorvenVannieuwenhuysePXL/azulapi:$COMMIT_SHA  # Push the image with the commit hash
+          docker push ghcr.io/tjorvenvannieuwenhuysepxl/azulapi:latest  # Push the 'latest' image
+          docker push ghcr.io/tjorvenvannieuwenhuysepxl/azulapi:$COMMIT_SHA  # Push the image with the commit hash
