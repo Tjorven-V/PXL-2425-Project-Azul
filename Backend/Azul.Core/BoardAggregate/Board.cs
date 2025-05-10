@@ -1,4 +1,6 @@
 ﻿using Azul.Core.BoardAggregate.Contracts;
+using Azul.Core.TableAggregate;
+using Azul.Core.TileFactoryAggregate;
 using Azul.Core.TileFactoryAggregate.Contracts;
 
 namespace Azul.Core.BoardAggregate;
@@ -202,6 +204,35 @@ internal class Board : IBoard
         return 2 * horizontalLines;
     }
 
+    private int ProcessFloorTiles(ITileFactory factory)
+    {
+        int scoreLoss = 0;
+        for (int i = 0; i < FloorLine.Length; i++)
+        {
+            if (FloorLine[i].HasTile)
+            {
+                if (i < 2)
+                {
+                    scoreLoss += 1;
+                }
+                else if (i < 5)
+                {
+                    scoreLoss += 2;
+                }
+                else
+                {
+                    scoreLoss += 3;
+                }
+
+                if (FloorLine[i].Type != TileType.StartingTile)
+                {
+                    factory.AddToUsedTiles(FloorLine[i].Type.Value);
+                }
+            }
+        }
+        return scoreLoss;
+    }
+
     public void CalculateFinalBonusScores()
     {
         int colourBonus = CalculateColourBonus();
@@ -314,5 +345,7 @@ internal class Board : IBoard
                 patternLine.Clear();
             }
         }
+
+        Score -= ProcessFloorTiles(tileFactory);
     }
 }
