@@ -138,18 +138,15 @@ internal class Game : IGame
 
         playerToPlay.TilesToPlace.Clear();
 
+        bool turnDecidedByTile = false;
+
         if (TileFactory.IsEmpty)
         {
-            //IPlayer? playerWhoHadStartingTileInPreviousRound = null;
             IPlayer? starterForNextRound = null;
 
             foreach (var player in Players)
             {
                 player.Board.DoWallTiling(TileFactory); 
-                //if (player.HasStartingTile)
-                //{
-                //    playerWhoHadStartingTileInPreviousRound = player;
-                //}
             }
 
             if (playerWhoActedHadStartingTile)
@@ -171,13 +168,15 @@ internal class Game : IGame
             {
                 RoundNumber++;
 
+                foreach (var player in Players)
+                {
+                    if (player.HasStartingTile) starterForNextRound = player;
+                }
+
                 if (starterForNextRound != null)
                 {
                     _currentPlayerId = starterForNextRound.Id;
-                }
-                else
-                {
-                    _currentPlayerId = Players[0].Id;
+                    turnDecidedByTile = true;
                 }
 
                 foreach (var player in Players)
@@ -188,14 +187,14 @@ internal class Game : IGame
                 TileFactory.FillDisplays();
             }
         }
-        else
+
+        if (turnDecidedByTile) return; 
+
+        int indexOfPlayerWhoPlayed = Array.FindIndex(Players, p => p.Id == playerId);
+        if (indexOfPlayerWhoPlayed != -1)
         {
-            int indexOfPlayerWhoPlayed = Array.FindIndex(Players, p => p.Id == playerId);
-            if (indexOfPlayerWhoPlayed != -1)
-            {
-                int nextPlayerIndex = (indexOfPlayerWhoPlayed + 1) % Players.Length;
-                _currentPlayerId = Players[nextPlayerIndex].Id;
-            }
+            int nextPlayerIndex = (indexOfPlayerWhoPlayed + 1) % Players.Length;
+            _currentPlayerId = Players[nextPlayerIndex].Id;
         }
     }
 

@@ -240,6 +240,7 @@ internal class Board : IBoard
         int horizontalBonus = CalculateHorizontalBonus();
 
         Score = Score + colourBonus + verticalBonus + horizontalBonus;
+        Score = Math.Max(Score, 0);
     }
 
     public void DoWallTiling(ITileFactory tileFactory)
@@ -347,5 +348,6 @@ internal class Board : IBoard
         }
 
         Score -= ProcessFloorTiles(tileFactory);
+        Score = Math.Max(Score, 0);
     }
 }
