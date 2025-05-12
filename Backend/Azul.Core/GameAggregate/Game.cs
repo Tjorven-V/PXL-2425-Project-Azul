@@ -124,12 +124,12 @@ internal class Game : IGame
 
         if (playerId != _currentPlayerId)
         {
-            throw new InvalidOperationException("It is not this player's turn."); 
+            throw new InvalidOperationException("It is not this player's turn.");
         }
 
         if (!playerToPlay.TilesToPlace.Any())
         {
-            throw new InvalidOperationException("Player has no tiles to place."); 
+            throw new InvalidOperationException("Player has no tiles to place.");
         }
 
         bool playerWhoActedHadStartingTile = playerToPlay.HasStartingTile;
@@ -139,6 +139,7 @@ internal class Game : IGame
         playerToPlay.TilesToPlace.Clear();
 
         bool turnDecidedByTile = false;
+        bool newRound = false;
 
         if (TileFactory.IsEmpty)
         {
@@ -146,7 +147,7 @@ internal class Game : IGame
 
             foreach (var player in Players)
             {
-                player.Board.DoWallTiling(TileFactory); 
+                player.Board.DoWallTiling(TileFactory);
             }
 
             if (playerWhoActedHadStartingTile)
@@ -158,7 +159,7 @@ internal class Game : IGame
 
             if (gameEndsThisRound)
             {
-                _hasEnded = true; 
+                _hasEnded = true;
                 foreach (var player in Players)
                 {
                     player.Board.CalculateFinalBonusScores();
@@ -167,6 +168,7 @@ internal class Game : IGame
             else
             {
                 RoundNumber++;
+                newRound = true;
 
                 foreach (var player in Players)
                 {
@@ -179,23 +181,29 @@ internal class Game : IGame
                     turnDecidedByTile = true;
                 }
 
-                foreach (var player in Players)
-                {
-                    player.HasStartingTile = false;
-                }
                 TileFactory.TableCenter.AddStartingTile();
                 TileFactory.FillDisplays();
             }
         }
 
-        if (turnDecidedByTile) return; 
-
-        int indexOfPlayerWhoPlayed = Array.FindIndex(Players, p => p.Id == playerId);
-        if (indexOfPlayerWhoPlayed != -1)
+        if (newRound)
         {
-            int nextPlayerIndex = (indexOfPlayerWhoPlayed + 1) % Players.Length;
-            _currentPlayerId = Players[nextPlayerIndex].Id;
+            foreach (var player in Players)
+            {
+                player.HasStartingTile = false;
+            }
         }
+
+        if (!turnDecidedByTile)
+        {
+            int indexOfPlayerWhoPlayed = Array.FindIndex(Players, p => p.Id == playerId);
+            if (indexOfPlayerWhoPlayed != -1)
+            {
+                int nextPlayerIndex = (indexOfPlayerWhoPlayed + 1) % Players.Length;
+                _currentPlayerId = Players[nextPlayerIndex].Id;
+            }
+        }
+       
     }
 
     public void TakeTilesFromFactory(Guid playerId, Guid displayId, TileType tileType)
