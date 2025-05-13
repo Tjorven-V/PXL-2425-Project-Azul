@@ -349,5 +349,10 @@ internal class Board : IBoard
 
         Score -= ProcessFloorTiles(tileFactory);
         Score = Math.Max(Score, 0);
+
+        foreach (var tileSpot in FloorLine)
+        {
+            tileSpot.Clear();
+        }
     }
 }
