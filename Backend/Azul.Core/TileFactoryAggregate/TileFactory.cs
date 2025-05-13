@@ -98,7 +98,7 @@ internal class TileFactory : ITileFactory
 
         if (!display.Tiles.Contains(tileType))
         {
-            throw new InvalidOperationException($"Tile type not found in display.");
+            throw new InvalidOperationException("Tile type not found in display.");
         }
 
         var takenTiles = factoryDisplay.TakeTiles(tileType);

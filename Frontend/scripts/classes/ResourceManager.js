@@ -4,6 +4,12 @@ if (window.location.hostname === 'localhost') {
 } else {
     basePath = window.location.hostname;
 }
+export let selectedSkin = "azul";
+
+export function setSkin(newSkin) {
+    selectedSkin = newSkin;
+    updateImagePaths(selectedSkin);
+}
 
 const TileImages = {
     0: new Image(),
@@ -14,18 +20,20 @@ const TileImages = {
     15: new Image()
 }
 
-TileImages[0].src = basePath + "/media/azul/tiles/0.png"
-TileImages[11].src = basePath + "/media/azul/tiles/11.png"
-TileImages[12].src = basePath + "/media/azul/tiles/12.png"
-TileImages[13].src = basePath + "/media/azul/tiles/13.png"
-TileImages[14].src = basePath + "/media/azul/tiles/14.png"
-TileImages[15].src = basePath + "/media/azul/tiles/15.png"
-
 const BoardBackgroundImage = new Image();
-BoardBackgroundImage.src = basePath + "/media/azul/board_background.png";
-
 const FactoryBackground = new Image();
-FactoryBackground.src = basePath + "/media/azul/factory_background.png";
+
+function updateImagePaths(selectedSkin) {
+    TileImages[0].src = basePath + `/media/skins/${selectedSkin}/tiles/0.png`;
+    TileImages[11].src = basePath + `/media/skins/${selectedSkin}/tiles/11.png`;
+    TileImages[12].src = basePath + `/media/skins/${selectedSkin}/tiles/12.png`;
+    TileImages[13].src = basePath + `/media/skins/${selectedSkin}/tiles/13.png`;
+    TileImages[14].src = basePath + `/media/skins/${selectedSkin}/tiles/14.png`;
+    TileImages[15].src = basePath + `/media/skins/${selectedSkin}/tiles/15.png`;
+
+    BoardBackgroundImage.src = basePath + `/media/skins/${selectedSkin}/board_background.png`;
+    FactoryBackground.src = basePath + `/media/skins/${selectedSkin}/factory_background.png`;
+}
 
 class ResourceManager {
     static #_resources = [
@@ -52,3 +60,4 @@ class ResourceManager {
 }
 
 export default ResourceManager;
+export { ResourceManager, updateImagePaths };

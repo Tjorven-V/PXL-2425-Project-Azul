@@ -4,6 +4,12 @@ import ClickableCanvas from "./ClickableCanvas.js";
 class FactoryDisplay extends ClickableCanvas {
     #_factoryId;
     #_tiles;
+    #selectedTileType = null;
+
+    clearSelection() {
+        this.#selectedTileType = null;
+        this.Paint();
+    }
 
     constructor(factoryId) {
         super("factory-" + factoryId, 100, 100, ["factoryDisplay"]);
@@ -16,7 +22,18 @@ class FactoryDisplay extends ClickableCanvas {
     }
 
     #TileClicked(tileIndex) {
-        console.log(this.#_factoryId + " Tile(" + tileIndex + ")");
+        const tileType = this.#_tiles[tileIndex];
+        this.#selectedTileType = tileType;
+
+        document.dispatchEvent(new CustomEvent('factoryTileSelected', {
+            detail: {
+                displayId: this.#_factoryId,
+                tileType: tileType,
+                tileCount: this.#_tiles.filter(t => t === tileType).length
+            }
+        }));
+
+        this.Paint();
     }
 
     Clear() {
@@ -24,7 +41,7 @@ class FactoryDisplay extends ClickableCanvas {
         this.ClearClickableRegions();
     }
 
-    Paint() {
+    Paint(isPlayersTurn) {
         this.Clear();
 
         /**
@@ -62,7 +79,28 @@ class FactoryDisplay extends ClickableCanvas {
 
         // End Draw TileFactory
 
-        ctx.stroke(); // Execute the drawing operation
+        if (this.#selectedTileType !== null && isPlayersTurn) {
+            const selectedTiles = this.#_tiles
+                .map((t, i) => ({t, i}))
+                .filter(({t}) => t === this.#selectedTileType);
+
+            selectedTiles.forEach(({i}) => {
+                const row = Math.floor(i / 2);
+                const [x, y, w, h] = [
+                    cellSize * i - (row * cellSize * 2) + cellSize / 4,
+                    row * cellSize + cellSize / 4,
+                    cellSize,
+                    cellSize
+                ];
+
+                ctx.strokeStyle = "#FFFF00";
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, w, h);
+            });
+        }
+        if (this.#_tiles.length === 0) {
+            this.Clear();
+        }
     }
 
     get Id() {
@@ -72,7 +110,6 @@ class FactoryDisplay extends ClickableCanvas {
     set Tiles(tiles) {
         this.#_tiles = tiles;
     }
-
 }
 
 export default FactoryDisplay;

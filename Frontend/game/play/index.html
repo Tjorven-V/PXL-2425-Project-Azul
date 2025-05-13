@@ -17,17 +17,37 @@
         </div>
     </div>
     <div id="game-area">
+        <div id="skin-selector-container" style="display:none">
+            <label>
+                <select id="skin-selector">
+                    <option value="azul">Azul (Default)</option>
+                    <option value="template">Template</option>
+                    <option value="goofy">goofy</option>
+                </select>
+            </label>
+        </div>
+
+        <div id="opponent-boards-container"></div>
+
+        <div id="factory-container">
+            <div id="factory-displays-container"></div>
+            <div id="table-center-container"></div>
+            <div id="tiles-container"> </div>
+        </div>
+
+        <div id="player-board-container"></div>
+
         <div id="game-information" style="display: none">
             [gameId]<br>
             Player as [playerName]
         </div>
 
-        <div id="remote-boards-container"></div>
-        <div id="factory-displays-container"></div>
-
         <a id="tristan" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
-            <img src="../../media/azul/tristan.png" alt="tristan">
+            <img src="../../media/skins/azul/tristan.png" alt="tristan">
         </a>
+    </div>
+    <div id="system-messages">
+        <div class="messages-container"></div>
     </div>
 </body>
 </html>

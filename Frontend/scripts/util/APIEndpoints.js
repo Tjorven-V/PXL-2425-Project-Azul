@@ -9,7 +9,7 @@ const APIEndpoints = {
     GameInfo: baseUrl + "/Games/{id}",
     TakeTiles: baseUrl + "/Games/{id}/take-tiles",
     PlaceTilesPatternLine: baseUrl + "/Games/{id}/place-tiles-on-patternline",
-    PlaceTilesFloor: baseUrl + "/Games/{id}/place-tiles-on-floorline",
+    PlaceTilesFloorLine: baseUrl + "/Games/{id}/place-tiles-on-floorline",
 
     // Home
     Ping: baseUrl + "/ping",

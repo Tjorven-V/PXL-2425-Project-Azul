@@ -5,73 +5,136 @@ html, body {
     overflow: hidden;
 }
 
+#skin-selector {
+    background-color: #883E0A;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: Century Gothic, sans-serif;
+    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
+}
+
 body {
-    background: #883E0A url("../../media/azul/table_background.png") no-repeat center center;
+    background: #883E0A url("../../media/skins/azul/table_background.png") no-repeat center center;
     background-size: cover;
 }
 
 #loading-resources {
     color: white;
     text-align: center;
-
-    font-size: 6em;
+    font-size: 2em;
     font-family: Century Gothic, sans-serif;
     text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
-
     position: absolute;
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
+}
 
-    .title {
-        font-size: 1em;
-    }
+#game-area {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+}
 
-    .subtitle {
-        font-size: 0.3em;
-    }
+#opponent-boards-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-height: 30vh;
+    overflow-y: auto;
+}
+
+#factory-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 2;
+}
+
+#player-board-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    min-height: 40vh;
 }
 
 .local-board {
-    position: absolute;
-    bottom: 1vh;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 35% !important;
+    height: auto !important;
+    max-width: 1000px;
+}
 
-    width: 33%;
+.remote-board {
+    transform: scale(0.6);
+    margin: -50px;
 }
 
 #factory-displays-container {
     display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 12vh;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
 }
 
 .factoryDisplay {
-    margin: 0.25vh;
+    width: 100px;
+    height: 100px;
+    position: relative;
 }
 
-#remote-boards-container {
+#table-center-container {
     display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    padding-bottom: 0.5vh;
-    margin-top: 1vh;
-    margin-bottom: 2vh;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 400px;
+    padding: 15px;
+    margin: 20px auto;
 }
 
-.remote-board {
-    width: 25%;
+#table-center-container canvas {
+    width: 100% !important;
+    height: auto !important;
+    image-rendering: crisp-edges;
+}
 
-    display: flex;
-    flex-direction: row;
+canvas {
+    image-rendering: crisp-edges;
+    background-color: transparent !important;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 #game-information {
     font-family: Century Gothic, sans-serif;
     font-weight: bold;
 
+    position: fixed;
     bottom: 0;
     left: 0;
     color: rgba(255, 255, 255, 0.25);
@@ -99,41 +162,39 @@ body {
     display: flex;
 }
 
-#game-area {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
+.table-center-display {
+    cursor: pointer;
 }
 
-/*.fade-out, .fade-in {*/
-/*    opacity: 1;*/
-/*    transition: opacity 1s ease-in-out;*/
-/*}*/
-
-.fade-out {
-    animation: fadeOut 0.5s forwards;
+.floorLineSpot {
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
-    animation-delay: 0.25s;
+.floorLineSpot:hover {
+    transform: scale(1.1);
 }
 
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+#system-messages {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 150px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'Century Gothic', sans-serif;
+    overflow-y: auto;
+    z-index: 1000;
 }
 
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+.system-message {
+    padding: 5px;
+    margin: 3px 0;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.3s ease-in;
 }
+
