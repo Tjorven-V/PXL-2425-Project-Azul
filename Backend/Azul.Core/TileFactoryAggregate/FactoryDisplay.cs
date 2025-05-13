@@ -17,7 +17,7 @@ internal class FactoryDisplay : IFactoryDisplay
 
     public IReadOnlyList<TileType> Tiles => _tiles;
 
-    public bool IsEmpty => _tiles.Count() == 0;
+    public bool IsEmpty => _tiles.Count == 0;
 
     public void AddTiles(IReadOnlyList<TileType> tilesToAdd)
     {

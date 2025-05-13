@@ -12,7 +12,7 @@ internal class TableCenter : ITableCenter
     //public IReadOnlyList<TileType> Tiles => throw new NotImplementedException();
     public IReadOnlyList<TileType> Tiles => _tiles.AsReadOnly();
 
-    public bool IsEmpty => _tiles.Count() == 0;
+    public bool IsEmpty => _tiles.Count == 0;
 
     public void AddStartingTile()
     {
@@ -31,6 +31,10 @@ internal class TableCenter : ITableCenter
     {
         //throw new NotImplementedException();
         var takenTiles = _tiles.Where(t => t == tileType).ToList();
+        //if (_tiles.Contains(TileType.StartingTile))
+        //{
+        //    takenTiles.Add(TileType.StartingTile);
+        //}
         _tiles.RemoveAll(t => t == tileType);
         return takenTiles.AsReadOnly();
     }

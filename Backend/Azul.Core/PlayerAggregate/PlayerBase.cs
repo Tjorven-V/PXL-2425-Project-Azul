@@ -30,13 +30,18 @@ internal class PlayerBase : IPlayer
     //public bool HasStartingTile { get => TilesToPlace.Contains(TileType.StartingTile); set => throw new ArgumentNullException(); }
     public bool HasStartingTile
     {
-        get => TilesToPlace.Contains(TileType.StartingTile);
+        get => Board.FloorLine.Any(tile => tile.Type == TileType.StartingTile);
         set
         {
-            if (value && !TilesToPlace.Contains(TileType.StartingTile))
-                TilesToPlace.Add(TileType.StartingTile);
-            if (!value)
-                TilesToPlace.Remove(TileType.StartingTile);
+            if (value)
+            {
+                TileSpot t = Board.FloorLine[Board.FloorLine.Count(t => t.HasTile)];
+                t.PlaceTile(TileType.StartingTile);
+            } else
+            {
+                var startingTile = Board.FloorLine.FirstOrDefault(t => t.Type == TileType.StartingTile);
+                startingTile?.Clear();
+            }
         }
     }
 

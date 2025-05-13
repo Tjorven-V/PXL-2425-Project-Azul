@@ -1,5 +1,4 @@
 ﻿using Azul.Core.GameAggregate.Contracts;
-using Azul.Core.PlayerAggregate;
 using Azul.Core.PlayerAggregate.Contracts;
 using Azul.Core.TileFactoryAggregate.Contracts;
 
@@ -15,6 +14,29 @@ internal class Game : IGame
     private Guid _currentPlayerId;
 
     private bool _hasEnded = false;
+    private Guid _nextPlayerId
+    {
+        get
+        {
+            if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
+            {
+                foreach (var player in Players)
+                {
+                    if (player.HasStartingTile)
+                    {
+                        return player.Id;
+                    }
+                }
+            }
+
+            int currentPlayerIndex = Array.FindIndex(Players, p => p.Id == _currentPlayerId);
+            int nextPlayerIndex = (currentPlayerIndex + 1) % Players.Length;
+            return Players[nextPlayerIndex].Id;
+        }
+    }
+    public Guid PlayerToPlayId => _currentPlayerId;
+    public int RoundNumber { get; private set; } = 1;
+    public bool HasEnded => _hasEnded;
 
     /// <summary>
     /// Creates a new game and determines the player to play first.
@@ -35,6 +57,7 @@ internal class Game : IGame
         {
             player.HasStartingTile = false;
         }
+
         TileFactory.FillDisplays();
 
         // initialising currentPlayerId
@@ -59,40 +82,9 @@ internal class Game : IGame
                 }
             }
         }
+
         _currentPlayerId = firstPlayer.Id;
-
-        //TileFactory.TableCenter.AddStartingTile();
-        //foreach (var player in Players)
-        //{
-        //    player.HasStartingTile = false;
-        //}
     }
-
-    public Guid PlayerToPlayId
-    {
-        get
-        {
-            //IPlayer firstPlayer = Players[0];
-            //DateOnly? latestDate = null;
-
-            //foreach (var player in Players)
-            //{
-            //    if (player.LastVisitToPortugal == null) continue;
-
-            //    if (latestDate == null || player.LastVisitToPortugal > latestDate)
-            //    {
-            //        latestDate = player.LastVisitToPortugal;
-            //        firstPlayer = player;
-            //    }
-            //}
-            //return firstPlayer.Id;
-            return _currentPlayerId;
-        }
-    }
-
-    public int RoundNumber { get; private set; } = 1;
-
-    public bool HasEnded => _hasEnded;
 
     public void PlaceTilesOnFloorLine(Guid playerId)
     {
@@ -106,11 +98,20 @@ internal class Game : IGame
         playerToPlay.Board.AddTilesToFloorLine(playerToPlay.TilesToPlace, TileFactory);
         playerToPlay.TilesToPlace.Clear();
 
-        int indexOfPlayerWhoPlayed = Array.FindIndex(Players, p => p.Id == playerId);
-        if (indexOfPlayerWhoPlayed != -1)
+        _currentPlayerId = _nextPlayerId;
+
+        if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
         {
-            int nextPlayerIndex = (indexOfPlayerWhoPlayed + 1) % Players.Length;
-            _currentPlayerId = Players[nextPlayerIndex].Id;
+            foreach (var player in Players)
+            {
+                player.Board.DoWallTiling(TileFactory);
+                player.HasStartingTile = false;
+            }
+
+            TileFactory.FillDisplays();
+            TileFactory.TableCenter.AddStartingTile();
+
+            RoundNumber++;
         }
     }
 
@@ -132,78 +133,35 @@ internal class Game : IGame
             throw new InvalidOperationException("Player has no tiles to place.");
         }
 
-        bool playerWhoActedHadStartingTile = playerToPlay.HasStartingTile;
-
         playerToPlay.Board.AddTilesToPatternLine(playerToPlay.TilesToPlace, patternLineIndex, TileFactory);
-
+        //PlaceTilesOnFloorLine(playerId);
         playerToPlay.TilesToPlace.Clear();
 
-        bool turnDecidedByTile = false;
-        bool newRound = false;
-
-        if (TileFactory.IsEmpty)
+        bool gameEndsThisRound = Players.Any(p => p.Board.HasCompletedHorizontalLine);
+        if (gameEndsThisRound)
         {
-            IPlayer? starterForNextRound = null;
+            _hasEnded = true;
+            foreach (var p in Players)
+            {
+                p.Board.CalculateFinalBonusScores();
+            }
+        }
 
+        _currentPlayerId = _nextPlayerId;
+
+        if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
+        {
             foreach (var player in Players)
             {
                 player.Board.DoWallTiling(TileFactory);
-            }
-
-            if (playerWhoActedHadStartingTile)
-            {
-                starterForNextRound = playerToPlay;
-            }
-
-            bool gameEndsThisRound = Players.Any(p => p.Board.HasCompletedHorizontalLine);
-
-            if (gameEndsThisRound)
-            {
-                _hasEnded = true;
-                foreach (var player in Players)
-                {
-                    player.Board.CalculateFinalBonusScores();
-                }
-            }
-            else
-            {
-                RoundNumber++;
-                newRound = true;
-
-                foreach (var player in Players)
-                {
-                    if (player.HasStartingTile) starterForNextRound = player;
-                }
-
-                if (starterForNextRound != null)
-                {
-                    _currentPlayerId = starterForNextRound.Id;
-                    turnDecidedByTile = true;
-                }
-
-                TileFactory.TableCenter.AddStartingTile();
-                TileFactory.FillDisplays();
-            }
-        }
-
-        if (newRound)
-        {
-            foreach (var player in Players)
-            {
                 player.HasStartingTile = false;
             }
-        }
 
-        if (!turnDecidedByTile)
-        {
-            int indexOfPlayerWhoPlayed = Array.FindIndex(Players, p => p.Id == playerId);
-            if (indexOfPlayerWhoPlayed != -1)
-            {
-                int nextPlayerIndex = (indexOfPlayerWhoPlayed + 1) % Players.Length;
-                _currentPlayerId = Players[nextPlayerIndex].Id;
-            }
+            TileFactory.FillDisplays();
+            TileFactory.TableCenter.AddStartingTile();
+
+            RoundNumber++;
         }
-       
     }
 
     public void TakeTilesFromFactory(Guid playerId, Guid displayId, TileType tileType)
