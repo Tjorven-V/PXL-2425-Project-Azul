@@ -4,6 +4,9 @@ header {
     display: flex;
     justify-content: flex-end;
 }
+*{
+    font-weight: bold;
+}
 
 #name {
     position: absolute;
@@ -19,17 +22,6 @@ header {
     }
 }
 
-nav {
-    margin: 1em 1em;
-    font-size: 2em;
-}
-
-nav a {
-    color: inherit;
-    margin: 5px;
-    font-weight: bold;
-}
-
 input {
 
     padding: 16px;
@@ -42,7 +34,7 @@ input {
 
     font-size: 2em;
     width: 512px;
-    height: 32px;
+    height: 24px;
 }
 
 #login-button {
@@ -123,4 +115,14 @@ button:hover {
 #login-message {
     display: block;
     font-size: 1.5em;
+}
+
+.register-redirect{
+    text-decoration-line: none;
+}
+
+* {
+    color: white;
+    font-family: Century Gothic, sans-serif;
+    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
 }

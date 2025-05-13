@@ -1,9 +1,6 @@
-@import url("../../media/global.css");
+@import "../../media/global.css";
 
-header {
-    display: flex;
-    justify-content: flex-end;
-}
+
 
 nav a {
     color: inherit;
@@ -11,26 +8,45 @@ nav a {
     font-weight: bold;
 }
 
-* {
-    color: white;
-    font-family: Century Gothic, sans-serif;
-    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
+
+
+label{
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 0.4em;
+    text-align:center;
 }
-
-
 
 input {
     background-color: #883E0A;
-    color: white;
     border: none;
     cursor: pointer;
+
+    padding: 16px;
+    border-radius: 2em;
+    text-align: center;
+
+    font-size: 2em;
+    width: 512px;
+    height: 24px;
 }
 
-input[type=submit] {
+#datum{
+    margin-bottom: 0.5em;
+}
+
+button[type=submit] {
     background-color: #883E0A;
     color: white;
     border: none;
     cursor: pointer;
+
+    width: 6em;
+    height: 64px;
+
+    font-weight: bold;
+    font-size: 2.5em;
+
 }
 
 input[type=submit]:hover {
@@ -65,4 +81,24 @@ form div {
 
 #error {
     color: red;
+}
+
+.register-form-header {
+    display: block;
+    position: relative;
+    padding: 8px 8px 16px;
+    text-align: center;
+
+    .title-header {
+        font-weight: bold;
+        font-size: 3em;
+    }
+    .sub-title-header {
+        display: block;
+        font-size: 1.5em;
+    }
+}
+
+.login-redirect{
+    text-decoration-line: none;
 }
