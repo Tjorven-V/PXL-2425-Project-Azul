@@ -28,22 +28,22 @@ internal class PlayerBase : IPlayer
     public IBoard Board { get ; set; }
 
     //public bool HasStartingTile { get => TilesToPlace.Contains(TileType.StartingTile); set => throw new ArgumentNullException(); }
-    public bool HasStartingTile
-    {
-        get => Board.FloorLine.Any(tile => tile.Type == TileType.StartingTile);
-        set
-        {
-            if (value)
-            {
-                TileSpot t = Board.FloorLine[Board.FloorLine.Count(t => t.HasTile)];
-                t.PlaceTile(TileType.StartingTile);
-            } else
-            {
-                var startingTile = Board.FloorLine.FirstOrDefault(t => t.Type == TileType.StartingTile);
-                startingTile?.Clear();
-            }
-        }
-    }
+    public bool HasStartingTile { get; set; }
+    //{
+    //    get => Board.FloorLine.Any(tile => tile.Type == TileType.StartingTile);
+    //    set
+    //    {
+    //        if (value)
+    //        {
+    //            TileSpot t = Board.FloorLine[Board.FloorLine.Count(t => t.HasTile)];
+    //            t.PlaceTile(TileType.StartingTile);
+    //        } else
+    //        {
+    //            var startingTile = Board.FloorLine.FirstOrDefault(t => t.Type == TileType.StartingTile);
+    //            startingTile?.Clear();
+    //        }
+    //    }
+    //}
 
     public List<TileType> TilesToPlace { get; set; }
 }

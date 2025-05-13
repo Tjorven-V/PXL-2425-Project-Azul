@@ -120,13 +120,13 @@ internal class Board : IBoard
 
     public void AddTilesToPatternLine(IReadOnlyList<TileType> tilesToAdd, int patternLineIndex, ITileFactory tileFactory)
     {
-        TileType typeToAdd = tilesToAdd[0];
-        if (typeToAdd == TileType.StartingTile)
+        if (tilesToAdd.Any(t => t == TileType.StartingTile))
         {
-            AddTilesToFloorLine([TileType.StartingTile], tileFactory);
-            tilesToAdd = [.. tilesToAdd.Skip(1).ToList()];
-            typeToAdd = tilesToAdd[0];
+            tilesToAdd = [.. tilesToAdd.Where(t => t != TileType.StartingTile)];
+            FloorLine.FirstOrDefault(spot => spot.HasTile == false).PlaceTile(TileType.StartingTile);
         }
+
+        TileType typeToAdd = tilesToAdd[0];
 
         // check if tile already completed in wall
         for (int i = 0; i < 5;  i++)

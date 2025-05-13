@@ -86,18 +86,8 @@ internal class Game : IGame
         _currentPlayerId = firstPlayer.Id;
     }
 
-    public void PlaceTilesOnFloorLine(Guid playerId)
+    private void PrepareNextRound()
     {
-        var playerToPlay = Players.FirstOrDefault(p => p.Id == playerId);
-
-        if (playerToPlay == null)
-        {
-            throw new InvalidOperationException($"Player with ID {playerId} not found.");
-        }
-
-        playerToPlay.Board.AddTilesToFloorLine(playerToPlay.TilesToPlace, TileFactory);
-        playerToPlay.TilesToPlace.Clear();
-
         _currentPlayerId = _nextPlayerId;
 
         if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
@@ -113,6 +103,21 @@ internal class Game : IGame
 
             RoundNumber++;
         }
+    }
+
+    public void PlaceTilesOnFloorLine(Guid playerId)
+    {
+        var playerToPlay = Players.FirstOrDefault(p => p.Id == playerId);
+
+        if (playerToPlay == null)
+        {
+            throw new InvalidOperationException($"Player with ID {playerId} not found.");
+        }
+
+        playerToPlay.Board.AddTilesToFloorLine(playerToPlay.TilesToPlace, TileFactory);
+        playerToPlay.TilesToPlace.Clear();
+
+        PrepareNextRound();
     }
 
     public void PlaceTilesOnPatternLine(Guid playerId, int patternLineIndex)
@@ -147,21 +152,7 @@ internal class Game : IGame
             }
         }
 
-        _currentPlayerId = _nextPlayerId;
-
-        if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
-        {
-            foreach (var player in Players)
-            {
-                player.Board.DoWallTiling(TileFactory);
-                player.HasStartingTile = false;
-            }
-
-            TileFactory.FillDisplays();
-            TileFactory.TableCenter.AddStartingTile();
-
-            RoundNumber++;
-        }
+        PrepareNextRound();
     }
 
     public void TakeTilesFromFactory(Guid playerId, Guid displayId, TileType tileType)
@@ -185,9 +176,8 @@ internal class Game : IGame
         var takenTiles = TileFactory.TakeTiles(displayId, tileType);
         player.TilesToPlace.AddRange(takenTiles);
 
-        if (takenTiles.Contains(TileType.StartingTile)) 
+        if (takenTiles.Contains(TileType.StartingTile))
         {
-            player.TilesToPlace.Remove(TileType.StartingTile);
             player.HasStartingTile = true;
         }
     }
