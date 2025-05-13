@@ -187,6 +187,7 @@ internal class Game : IGame
 
         if (takenTiles.Contains(TileType.StartingTile)) 
         {
+            player.TilesToPlace.Remove(TileType.StartingTile);
             player.HasStartingTile = true;
         }
     }
