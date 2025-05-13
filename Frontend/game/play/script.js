@@ -277,6 +277,7 @@ function initGame() {
 }
 
 function waitForResources() {
+    setSkin(document.getElementById("skin-selector").value, document.body);
     if (ResourceManager.AllLoaded) {
         loadBoards();
     } else {
@@ -336,7 +337,7 @@ function resetSelections() {
 
 function changeSkin() {
     const skin = document.getElementById("skin-selector").value;
-    setSkin(skin);
+    setSkin(skin, document.body);
     updateImagePaths(skin);
 }
 

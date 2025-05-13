@@ -6,8 +6,10 @@ if (window.location.hostname === 'localhost') {
 }
 export let selectedSkin = "azul";
 
-export function setSkin(newSkin) {
+export function setSkin(newSkin, domBody) {
     selectedSkin = newSkin;
+    domBody.style.background = `#883E0A url("../../media/skins/${newSkin}/table_background.png")  no-repeat center center`;
+    domBody.style.backgroundSize = "cover";
     updateImagePaths(selectedSkin);
 }
 
