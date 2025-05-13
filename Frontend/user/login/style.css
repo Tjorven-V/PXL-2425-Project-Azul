@@ -1,6 +1,27 @@
+@import "../../media/global.css";
+
 header {
     display: flex;
     justify-content: flex-end;
+}
+
+#name {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4em;
+    font-weight: bold;
+
+    span {
+        display: none;
+        font-size: 0.25em;
+    }
+}
+
+nav {
+    margin: 1em 1em;
+    font-size: 2em;
 }
 
 nav a {
@@ -9,57 +30,60 @@ nav a {
     font-weight: bold;
 }
 
-* {
-    color: white;
-    font-family: Century Gothic, sans-serif;
-    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
-}
+input {
 
-body {
-    margin: 0;
-    padding: 0;
-    background: #883E0A url("../../media/azul/table_background.png") no-repeat center center;
-    background-size: cover;
-    min-height: 100vh;
-}
+    padding: 16px;
+    border-radius: 16px;
+    text-align: center;
 
-input, button {
-    background-color: #883E0A;
     color: white;
     border: none;
     cursor: pointer;
+
+    font-size: 2em;
+    width: 512px;
+    height: 32px;
+}
+
+#login-button {
+    width: 6em;
+    height: 64px;
+
+    font-weight: bold;
+    font-size: 3em;
+}
+
+#login-button:disabled {
+    display: none;
 }
 
 button {
-    background-color: #883E0A;
-    color: white;
-    border: none;
     cursor: pointer;
+
+    span {
+        position: absolute;
+        bottom: 0.15em;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 button:hover {
     transform: scale(0.95);
 }
 
-a {
-    color: #FFD700;
-    font-weight: bold;
-}
-
-a:hover {
-    color: #FFA500;
-}
-
 .login-form-container {
-    font-family: Arial, Helvetica, sans-serif;
-
     position: absolute;
-    top: 33%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
 
     text-align: center;
     align-content: center;
+}
+
+.login-form-entries {
+    margin-bottom: 4em;
 }
 
 .entry-error {
@@ -71,22 +95,32 @@ a:hover {
     display: block;
     position: relative;
     padding: 8px 8px 16px;
+    margin-bottom: 2em;
 
     .title-header {
         font-weight: bold;
-        font-size: 24px;
+        font-size: 3em;
     }
     .sub-title-header {
         display: block;
-        font-size: 16px;
+        font-size: 1.5em;
     }
 }
 
 .login-form-entry {
-    margin-bottom: 16px;
+    margin-bottom: 2em;
+
+    .entry-name, .entry-error {
+        font-size: 2em;
+    }
+
+    .entry-error {
+        font-weight: bold;
+        margin-bottom: 0.2em;
+    }
 }
 
 #login-message {
     display: block;
-    margin-bottom: 16px;
+    font-size: 1.5em;
 }
