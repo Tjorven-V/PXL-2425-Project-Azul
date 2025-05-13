@@ -1,0 +1,37 @@
+* {
+    color: white;
+
+    font-family: Century Gothic, sans-serif;
+    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
+}
+
+/*As a matter of fact, no, we cannot replace it with the shorthand.*/
+/*noinspection CssReplaceWithShorthandSafely*/
+body {
+    margin: 0;
+    padding: 0;
+    background: #883E0A url("azul/table_background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+a {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #FFA500;
+}
+
+.blurred-background {
+    background-color: #00000030;
+    backdrop-filter: blur(3px);
+}
+
+.rounded-edges {
+    border: none;
+    border-radius: 2em;
+}
