@@ -10,6 +10,7 @@ const APIEndpoints = {
     TakeTiles: baseUrl + "/Games/{id}/take-tiles",
     PlaceTilesPatternLine: baseUrl + "/Games/{id}/place-tiles-on-patternline",
     PlaceTilesFloorLine: baseUrl + "/Games/{id}/place-tiles-on-floorline",
+    SendChatMessage: baseUrl + "/Games/{id}/send-chat-message", // Azul 51 Extra: Chat Functionality
 
     // Home
     Ping: baseUrl + "/ping",

@@ -37,4 +37,12 @@ internal class GameService : IGameService
         var game = _gameRepository.GetById(gameId);
         game.PlaceTilesOnFloorLine(playerId);
     }
+
+    // +++ Azul51 - Extra : Chat Functionality +++
+    public void SendChatMessage(Guid gameId, Guid playerId, string message)
+    {
+        var game = _gameRepository.GetById(gameId);
+        game.SendChatMessage(playerId, message);
+    }
+    // --- Azul51 - Extra : Chat Functionality ---
 }

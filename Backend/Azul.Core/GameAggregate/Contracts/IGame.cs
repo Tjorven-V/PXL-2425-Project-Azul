@@ -37,6 +37,11 @@ namespace Azul.Core.GameAggregate.Contracts
         public bool HasEnded { get; }
 
         /// <summary>
+        /// The last 10 chat messages sent by players.
+        /// </summary>
+        public IList<IChatMessageEntry> Chat { get; } // +++ Azul51 - Extra : Chat Functionality +++
+
+        /// <summary>
         /// Takes tiles from a factory display for a player.
         /// </summary>
         /// <param name="playerId">The unique identifier of the player</param>
@@ -58,5 +63,17 @@ namespace Azul.Core.GameAggregate.Contracts
         /// </summary>
         /// <param name="playerId">The unique identifier of the player</param>
         void PlaceTilesOnFloorLine(Guid playerId);
+
+
+        // +++ Azul51 Extra : Chat Functionality +++
+
+        /// <summary>
+        /// Send a chat message from a player to the game.
+        /// </summary>
+        /// <param name="playerId">The unique identifier of the player</param>
+        /// <param name="message"> The message to send</param>
+        void SendChatMessage(Guid playerId, string message);
+
+        // --- Azul51 Extra : Chat Functionality ---
     }
 }

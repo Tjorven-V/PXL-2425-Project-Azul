@@ -11,6 +11,7 @@ public class GameModel
     public TileFactoryModel TileFactory { get; set; }
     public int RoundNumber { get; set; }
     public bool HasEnded { get; set; }
+    public IList<IChatMessageEntry> Chat { get; set; } // +++ Azul51 Extra : Chat Functionality +++
 
     private class MappingProfile : Profile
     {

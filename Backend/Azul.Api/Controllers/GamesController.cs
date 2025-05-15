@@ -72,7 +72,7 @@ namespace Azul.Api.Controllers
         /// <summary>
         /// Places the tiles the player has previously taken on the floor line.
         /// </summary>
-        /// <param name="id">Id (guid) of the game</param>
+        /// <param name="id">Id (guid) of the game</param>  
         [HttpPost("{id}/place-tiles-on-floorline")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -82,5 +82,24 @@ namespace Azul.Api.Controllers
             _gameService.PlaceTilesOnFloorLine(id, UserId);
             return Ok();
         }
+
+        // +++ Azul51 Extra : Chat Functionality +++
+
+        /// <summary>
+        /// Azul51 Extra : Chat Functionality: Send a chat message to the current game.
+        /// </summary>
+        /// <param name="id">Id (guid) of the game</param>
+        /// <param name="inputModel">The chat message to send.</param>
+        [HttpPost("{id}/send-chat-message")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        public IActionResult SendChatMessage(Guid id, [FromBody] ChatMessageModel inputModel)
+        {
+            _gameService.SendChatMessage(id, UserId, inputModel.Message);
+            return Ok();
+        }
+
+        // --- Azul51 Extra : Chat Functionality ---
     }
 }

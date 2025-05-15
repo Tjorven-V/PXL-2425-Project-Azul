@@ -29,4 +29,16 @@ public interface IGameService
     /// <param name="gameId">Unique identifier of the game</param>
     /// <param name="playerId">Unique identifier of the player</param>
     void PlaceTilesOnFloorLine(Guid gameId, Guid playerId);
+
+    // +++ Azul51 Extra : Chat Functionality +++
+
+    /// <summary>
+    /// Send a chat message from a player to the game.
+    /// </summary>
+    /// <param name="gameId">Unique identifier of the game</param>
+    /// <param name="playerId">The unique identifier of the player</param>
+    /// <param name="message"> The message to send</param>
+    void SendChatMessage(Guid gameId, Guid playerId, string message);
+
+    // --- Azul51 Extra : Chat Functionality ---
 }

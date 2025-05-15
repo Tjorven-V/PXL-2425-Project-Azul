@@ -37,6 +37,7 @@ internal class Game : IGame
     public Guid PlayerToPlayId => _currentPlayerId;
     public int RoundNumber { get; private set; } = 1;
     public bool HasEnded => _hasEnded;
+    public IList<IChatMessageEntry> Chat { get; private set; } // +++ Azul51 - Extra : Chat Functionality +++
 
     /// <summary>
     /// Creates a new game and determines the player to play first.
@@ -50,7 +51,8 @@ internal class Game : IGame
         Id = id;
         TileFactory = tileFactory;
         Players = players;
-         
+        Chat = []; // +++ Azul51 - Extra : Chat Functionality +++
+
         TileFactory.TableCenter.AddStartingTile();
 
         foreach (var player in Players)
@@ -181,4 +183,21 @@ internal class Game : IGame
             player.HasStartingTile = true;
         }
     }
+
+    // +++ Azul51 - Extra : Chat Functionality +++
+    public void SendChatMessage(Guid playerId, string message)
+    {
+        var player = Players.FirstOrDefault(p => p.Id == playerId);
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found.");
+        }
+        
+        Chat.Add(new ChatMessageEntry(player, message));
+        if (Chat.Count > 10)
+        {
+            Chat.RemoveAt(0);
+        }
+    }
+    // --- Azul51 - Extra : Chat Functionality ---
 }
