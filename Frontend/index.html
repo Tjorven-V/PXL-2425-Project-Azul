@@ -1,10 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Onitama</title>
-  </head>
-  <body>
-    
-  </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Azul Project - Team 51</title>
+</head>
+<body>
+
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">Azul Project: Team Azul51</a>
+            <div class="nav-links">
+                <a href="user/login/index.html">Login</a>
+                <a href="user/register/index.html" class="register-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="main-header">
+        <h1>Azul Project</h1>
+        <p class="slogan">A student project bringing the classic tile game to your browser, set against a traditional backdrop.</p>
+        <a href="user/login/index.html" class="cta-button">Play Our Game!</a>
+    </header>
+
+    <main class="container">
+        <section id="project-intro">
+            <h2>Welcome to Our Azul Implementation!</h2>
+            <p>This is a student project developed as part of the Project course at PXL Hogeschool. We've created an online, multiplayer version of the beautiful and strategic board game, Azul.</p>
+            <p>We invite you to play, explore, and provide feedback on our work!</p>
+        </section>
+
+        <section id="project-features">
+            <h2>Project Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>💻 Web-Based Gameplay</h3>
+                    <p>Play Azul directly in your browser, no downloads required. Accessible on most modern devices.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🧑‍🤝‍🧑 Multiplayer Support</h3>
+                    <p>Challenge your friends or classmates to a game of Azul.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>룰 Automatic Rules & Scoring</h3>
+                    <p>The game automatically handles rule enforcement and score calculation, letting you focus on strategy.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="team">
+            <h2>Meet the Team</h2>
+            <p>This project was brought to life by a dedicated team of students:</p>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="about/developers/foto/ismael.png" alt="Ismael - Team Member">
+                    <h3>Ismael</h3>
+                    </div>
+                <div class="team-member">
+                    <img src="about/developers/foto/maarten.png" alt="Maarten - Team Member">
+                    <h3>Maarten</h3>
+                    </div>
+                <div class="team-member">
+                    <img src="about/developers/foto/muhammed.png" alt="Muhammed - Team Member"> <h3>Muhammed</h3>
+                    </div>
+                <div class="team-member">
+                    <img src="about/developers/foto/tjorven.png" alt="Tjorven - Team Member">
+                    <h3>Tjorven</h3>
+                    </div>
+            </div>
+        </section>
+
+        <section id="about-project">
+            <h2>About This Project</h2>
+            <p>This online version of Azul was developed using key technologies, e.g., .NET for the backend, Javascript/HTML/CSS for the frontend. It serves as our final year project.</p>
+            <p>The source code can be found on <a href="https://github.com/pxlit-projects/project-2425-azul-azul51" target="_blank" rel="noopener noreferrer">our GitHub repository</a>.</p>
+            <p>We learned a lot during this process and hope you enjoy the result!</p>
+        </section>
+
+        <section class="cta-section">
+            <h2>Ready to Play?</h2>
+            <a href="user/login/index.html" class="cta-button">Start a Game Now!</a>
+            <a href="user/register/index.html" class="cta-button secondary">Create Account</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL Hogeschool</p>
+            <p>This is a student project inspired by the board game Azul by Michael Kiesling. For educational purposes only.</p>
+            <p>Current Date: <span id="currentDate"></span> (Local time)</p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        let localeForDate = 'en-GB';
+        const specificDate = new Date(2025, 4, 16, 0, 40, 51); 
+
+        try {
+             document.getElementById('currentDate').textContent = specificDate.toLocaleString(localeForDate, options);
+        } catch (e) {
+             document.getElementById('currentDate').textContent = specificDate.toLocaleString(undefined, options);
+        }
+    </script>
+</body>
 </html>

@@ -2,49 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Login</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login - Azul Project</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="script.js"></script>
 </head>
 <body>
-
-<div id="login-form-container" class="login-form-container">
-    <div id="login-form" class="login-form">
-        <div class="login-form-header">
-            <span class="title-header">Login</span>
-            <span class="sub-title-header">Don't have an account? <a class="register-redirect" href="../register">Create one!</a></span>
-        </div>
-        <div class="login-form-body">
-            <div class="login-form-entries">
-                <div class="login-form-entry">
-                    <label>
-                        <span class="entry-name">E-Mail</span><br>
-                        <span class="entry-error" id="email-message"></span>
-                        <input id="email" class="blurred-background rounded-edges" type="text">
-                    </label>
-                </div>
-                <div class="login-form-entry">
-                    <label>
-                        <span class="entry-name">Password</span><br>
-                        <span class="entry-error" id="password-message"></span>
-                        <input id="password" class="blurred-background rounded-edges" type="password">
-                    </label>
-                </div>
-                <span style="display: block;" id="login-message"></span>
-            </div>
-            <button id="login-button" class="blurred-background rounded-edges"><span>Login!</span></button>
+<nav>
+    <div class="container nav-container">
+        <a href="../../index.html" class="logo">Azul Project: Team Azul51</a>
+        <div class="nav-links">
         </div>
     </div>
-</div>
+</nav>
 
+<main class="container">
+    <div class="form-wrapper">
+        <div id="login-form-container" class="login-form-container">
+            <div id="login-form" class="login-form">
+                <div class="login-form-header">
+                    <h1 class="title-header">Login</h1>
+                    <p class="sub-title-header">Don't have an account? <a class="register-redirect" href="../register/index.html">Create one!</a></p>
+                </div>
+                <div class="login-form-body">
+                    <div class="login-form-entries">
+                        <div class="login-form-entry">
+                            <label for="email">E-Mail</label>
+                            <input id="email" type="text" placeholder="Enter your e-mail">
+                            <span class="entry-error" id="email-message"></span>
+                        </div>
+                        <div class="login-form-entry">
+                            <label for="password">Password</label>
+                            <input id="password" type="password" placeholder="Enter your password">
+                            <span class="entry-error" id="password-message"></span>
+                        </div>
+                        <span class="login-message-box" id="login-message"></span>
+                    </div>
+                    <button id="login-button" class="cta-button">Login!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
+<footer>
+    <div class="container">
+        <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL Hogeschool</p>
+        <p>Current Date: <span id="currentDate"></span> (Local time)</p>
+    </div>
+</footer>
 
-<!--<header class="blurred-background">-->
-<!--    <span id="name">Azul-51<span>.net</span></span>-->
-<!--    <nav>-->
-<!--        <a href="../../about/developers">About us</a>-->
-<!--    </nav>-->
-<!--</header>-->
+<script type="module" src="script.js"></script>
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    let localeForDate = 'en-GB';
+    const specificDate = new Date(2025, 4, 16, 1, 38, 46);
+    try {
+        document.getElementById('currentDate').textContent = specificDate.toLocaleString(localeForDate, options);
+    } catch (e) {
+        document.getElementById('currentDate').textContent = specificDate.toLocaleString(undefined, options);
+    }
+</script>
 </body>
 </html>
