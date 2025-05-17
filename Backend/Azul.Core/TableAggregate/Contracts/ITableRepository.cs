@@ -4,6 +4,8 @@ namespace Azul.Core.TableAggregate.Contracts
 {
     public interface ITableRepository
     {
+        public IList<ITable> Tables { get; }
+
         /// <summary>
         /// Adds a table to storage.
         /// </summary>

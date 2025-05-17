@@ -102,4 +102,23 @@ public class TablesController : ApiControllerBase
         _tableManager.LeaveTable(id, currentUser);
         return Ok();
     }
+
+    // +++ Azul51 Extra : List of all tables +++
+    /// <summary>
+    /// Azul51 Extra : Table Browser: Gets all available tables.
+    /// </summary>
+    [HttpGet("")]
+    [ProducesResponseType(typeof(AvailableTablesModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetAllTables()
+    {
+        AvailableTablesModel availableTables = new();
+        foreach (var table in _tableRepository.Tables)
+        {
+            TableModel tableModel = _mapper.Map<TableModel>(table);
+            availableTables.AddTable(tableModel);
+        }
+        return Ok(availableTables);
+    }
+    // --- Azul51 Extra : List of all tables ---
 }

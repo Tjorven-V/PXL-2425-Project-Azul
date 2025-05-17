@@ -9,6 +9,7 @@ namespace Azul.Infrastructure;
 internal class InMemoryTableRepository : ITableRepository
 {
     private readonly ExpiringDictionary<Guid, ITable> _tableDictionary;
+    public IList<ITable> Tables => _tableDictionary.Values.ToList();
 
     public InMemoryTableRepository()
     {
