@@ -121,4 +121,25 @@ public class TablesController : ApiControllerBase
         return Ok(availableTables);
     }
     // --- Azul51 Extra : List of all tables ---
+
+    // +++ Azul51 Extra : Get player current table +++
+    /// <summary>
+    /// Azul51 Extra : Table Browser: Gets all available tables.
+    /// </summary>
+    [HttpGet("get-current-table")]
+    [ProducesResponseType(typeof(TableModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetCurrentTable()
+    {
+        foreach (var table in _tableRepository.Tables)
+        {
+            if (table.SeatedPlayers.Any(p => p.Id == UserId))
+            {
+                TableModel tableModel = _mapper.Map<TableModel>(table);
+                return Ok(tableModel);
+            }
+        }
+        return NotFound();
+    }
+    // --- Azul51 Extra : Get player current table ---
 }
