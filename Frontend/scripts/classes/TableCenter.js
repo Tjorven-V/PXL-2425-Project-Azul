@@ -1,5 +1,6 @@
 import ResourceManager from "./ResourceManager.js";
 import ClickableCanvas from "./ClickableCanvas.js";
+import { gameState } from "../../game/play/script.js";
 
 class TableCenter extends ClickableCanvas {
     constructor(id) {
@@ -32,17 +33,19 @@ class TableCenter extends ClickableCanvas {
         ctx.save();
         ctx.translate(transX, transY);
 
-        const filteredTiles = this.tiles.filter(t => t !== 0);
+        const filteredTiles = this.tiles
+            .map((tileType, originalIndex) => ({ tileType, originalIndex }))
+            .filter(({ tileType }) => tileType !== 0);
 
-        filteredTiles.forEach((tileType, index) => {
-            const row = Math.floor(index / tilesPerRow);
-            const col = index % tilesPerRow;
+        filteredTiles.forEach(({ tileType, originalIndex }, filteredIndex) => {
+            const row = Math.floor(filteredIndex / tilesPerRow);
+            const col = filteredIndex % tilesPerRow;
 
             const x = col * (maxTileSize + padding);
             const y = row * (maxTileSize + padding);
 
             this.RegisterClickableRegion(
-                `tile_${index}`,
+                `tile_${originalIndex}`,
                 transX + x,
                 transY + y,
                 maxTileSize,
@@ -60,6 +63,21 @@ class TableCenter extends ClickableCanvas {
                 );
             }
         });
+
+        if (gameState.currentSelection?.displayId === this.id) {
+            const selectedType = gameState.currentSelection.tileType;
+
+            filteredTiles.forEach(({ tileType, originalIndex }, filteredIndex) => {
+                if (tileType === selectedType) {
+                    const row = Math.floor(filteredIndex / tilesPerRow);
+                    const col = filteredIndex % tilesPerRow;
+                    const x = col * (maxTileSize + padding);
+                    const y = row * (maxTileSize + padding);
+
+                    this.drawTileHighlight(ctx, x, y, maxTileSize, maxTileSize);
+                }
+            });
+        }
 
         ctx.restore();
     }

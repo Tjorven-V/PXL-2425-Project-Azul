@@ -5,12 +5,14 @@ import AuthenticationManager from "../../scripts/classes/AuthenticationManager.j
 import { ResourceManager, updateImagePaths, setSkin, selectedSkin } from "../../scripts/classes/ResourceManager.js";
 import TableCenter from "../../scripts/classes/TableCenter.js";
 
-const gameState = {
+export const gameState = {
     hasTilesToPlace: false,
     currentSelection: null,
     factories: {},
     boards: {},
-    currentGame: null
+    currentGame: null,
+    afkLastActive: 0,
+    afkWarningSent: false
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -68,8 +70,70 @@ async function updateBoards() {
             tableCenterContainer.appendChild(tableCenter.Canvas);
         }
 
+        if (game.playerToPlayId === AuthenticationManager.LoggedInUser?.id) {
+            if (!gameState.afkLastActive) {
+                gameState.afkLastActive = Date.now();
+                gameState.afkWarningSent = false;
+            } else {
+                const inactiveTime = Date.now() - gameState.afkLastActive;
+
+                if (inactiveTime > 90000) {
+                    handleAFKTimeout();
+                    gameState.afkLastActive = Date.now();
+                    gameState.afkWarningSent = false;
+                }
+                else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
+                    displaySystemMessage("AFK detected! Auto-move in 10 seconds...", false);
+                    gameState.afkWarningSent = true;
+                }
+            }
+        } else {
+            gameState.afkLastActive = 0;
+            gameState.afkWarningSent = false;
+        }
+
     } catch (error) {
         displaySystemMessage("Updating board error:" + error);
+    }
+}
+
+async function handleAFKTimeout() {
+    try {
+        gameState.currentSelection = null;
+        const game = await getGame();
+        if (!game) return;
+
+        let displayId = null;
+        let tileType = null;
+
+        const availableFactory = game.tileFactory.displays.find(
+            display => display.tiles?.length > 0
+        );
+
+        if (availableFactory) {
+            displayId = availableFactory.id;
+            tileType = availableFactory.tiles[0];
+        } else {
+            const validCenterTiles = game.tileFactory.tableCenter.tiles.filter(t => t !== 0);
+            if (validCenterTiles.length === 0) {
+                displaySystemMessage("No tiles available?");
+                return;
+            }
+            displayId = game.tileFactory.tableCenter.id;
+            tileType = validCenterTiles[0];
+        }
+
+        const takeResult = await takeTiles(displayId, tileType);
+        if (!takeResult.success) throw new Error("Failed to take tiles");
+
+        const placeResult = await placeTilesOnFloorLine();
+        if (!placeResult.success) throw new Error("Failed to place tiles");
+
+        displaySystemMessage("AFK turn completed automatically", false);
+        await updateBoards();
+
+    } catch (error) {
+        displaySystemMessage("AFK handling failed: " + error.message);
     }
 }
 
@@ -109,12 +173,17 @@ async function handleFloorLineSelection(e) {
     }
 
     try {
-        await placeTilesOnFloorLine();
-        gameState.hasTilesToPlace = false;
-        resetSelections();
-        loadBoards();
+        const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
+        if (!takeResult.success) throw new Error("Failed to take tiles");
+
+        const placeResult = await placeTilesOnFloorLine();
+        if (placeResult.success) {
+            gameState.hasTilesToPlace = false;
+            resetSelections();
+            loadBoards();
+        }
     } catch (error) {
-        displaySystemMessage("Floor line placement failed:" + error);
+        displaySystemMessage("Floor line placement failed:" + error.message);
     }
 }
 
@@ -189,31 +258,23 @@ async function placeTilesOnPatternLine(patternLineIndex) {
 }
 
 async function handleFactorySelection(e) {
-    const { displayId, tileType } = e.detail;
+    const { displayId, tileType, tileCount } = e.detail;
     const currentPlayerId = AuthenticationManager.LoggedInUser?.id;
 
     if (!gameState.currentGame || gameState.currentGame.playerToPlayId !== currentPlayerId) {
         displaySystemMessage("Not your turn");
         return;
     }
-    Object.values(gameState.factories).forEach(f => f.clearSelection());
 
-    if (gameState.hasTilesToPlace) {
-        displaySystemMessage("Tiles already taken.");
-        return;
-    }
+    gameState.currentSelection = {
+        displayId,
+        tileType,
+        tileCount
+    };
+    gameState.hasTilesToPlace = true;
 
-    try {
-        const result = await takeTiles(displayId, tileType);
-        if (result.success) {
-            gameState.currentSelection = { displayId, tileType };
-            gameState.hasTilesToPlace = true;
-
-            loadBoards();
-        }
-    } catch (error) {
-        displaySystemMessage("Take tiles failed:" + error);
-    }
+    displaySystemMessage(`Selected ${tileCount} tiles of type ${tileType}`, false);
+    loadBoards();
 }
 
 async function handlePatternLineSelection(e) {
@@ -229,14 +290,17 @@ async function handlePatternLineSelection(e) {
         return;
     }
     try {
-        const result = await placeTilesOnPatternLine(e.detail.patternLineIndex);
+        const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
+        if (!takeResult.success) throw new Error("Failed to take tiles");
 
-        if (result.success) {
+        const placeResult = await placeTilesOnPatternLine(e.detail.patternLineIndex);
+
+        if (placeResult.success) {
             gameState.hasTilesToPlace = false;
             resetSelections();
         }
     } catch (error) {
-        displaySystemMessage("Placement failed:" + error);
+        displaySystemMessage("Placement failed:" + error.message);
     }
 }
 

@@ -52,6 +52,16 @@ class ClickableCanvas {
             }
         }
     }
+    drawTileHighlight(ctx, x, y, w, h) {
+        ctx.save();
+        ctx.strokeStyle = "#FFFF00";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.roundRect(x - 1, y - 1, w + 1, h + 1, 4);
+        ctx.stroke();
+        ctx.restore();
+    }
+
 }
 
 export default ClickableCanvas;

@@ -1,5 +1,6 @@
 import ResourceManager from "./ResourceManager.js";
 import ClickableCanvas from "./ClickableCanvas.js";
+import { gameState } from "../../game/play/script.js";
 
 class FactoryDisplay extends ClickableCanvas {
     #_factoryId;
@@ -66,9 +67,14 @@ class FactoryDisplay extends ClickableCanvas {
         ctx.drawImage(ResourceManager.FactoryBackground, 0, 0, 100, 100)
 
         for (let i = 0; i < this.#_tiles.length; i++) {
-            let row = Math.floor(i / 2);
+            const row = Math.floor(i / 2);
+            const col = i % 2;
 
-            let [x, y, w, h] = [cellSize * i - (row * cellSize * 2) + cellSize / 4, row * cellSize + cellSize / 4, cellSize, cellSize];
+            let [x, y, w, h] = [
+                cellSize * i - (row * cellSize * 2) +
+                cellSize / 4, row * cellSize +
+                cellSize / 4, cellSize, cellSize
+            ];
             // ctx.rect(x, y, w, h);
             this.#ShouldDrawCell(i, x - 1, y - 1, w + 2, h + 2);
 
@@ -79,23 +85,20 @@ class FactoryDisplay extends ClickableCanvas {
 
         // End Draw TileFactory
 
-        if (this.#selectedTileType !== null && isPlayersTurn) {
+        if (gameState.currentSelection?.displayId === this.#_factoryId) {
+            const selectedType = gameState.currentSelection.tileType;
             const selectedTiles = this.#_tiles
                 .map((t, i) => ({t, i}))
-                .filter(({t}) => t === this.#selectedTileType);
+                .filter(({t}) => t === selectedType);
 
             selectedTiles.forEach(({i}) => {
                 const row = Math.floor(i / 2);
                 const [x, y, w, h] = [
-                    cellSize * i - (row * cellSize * 2) + cellSize / 4,
-                    row * cellSize + cellSize / 4,
-                    cellSize,
-                    cellSize
+                    cellSize * i - (row * cellSize * 2) +
+                    cellSize / 4, row * cellSize +
+                    cellSize / 4, cellSize, cellSize
                 ];
-
-                ctx.strokeStyle = "#FFFF00";
-                ctx.lineWidth = 3;
-                ctx.strokeRect(x, y, w, h);
+                this.drawTileHighlight(ctx, x, y, w, h);
             });
         }
         if (this.#_tiles.length === 0) {
