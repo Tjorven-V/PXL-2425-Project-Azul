@@ -384,3 +384,19 @@ function RedirectToGame(gameId) {
     sessionStorage.setItem("gameId", gameId);
     window.location.href = Redirects.Game + "?id=" + gameId;
 }
+
+function updateFooter() {
+    const currentYearEl = document.getElementById('currentYear');
+    if (currentYearEl) {
+        currentYearEl.innerText = new Date().getFullYear();
+    }
+
+    const currentDateEl = document.getElementById('currentDate');
+    if (currentDateEl) {
+        currentDateEl.innerText = new Date().toLocaleDateString(undefined, {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+}
+updateFooter();
