@@ -96,7 +96,7 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         let localeForDate = 'en-GB';
-        const specificDate = new Date(2025, 4, 16, 0, 40, 51); 
+        const specificDate = new Date(2025, 4, 16, 0, 40, 51);
 
         try {
              document.getElementById('currentDate').textContent = specificDate.toLocaleString(localeForDate, options);

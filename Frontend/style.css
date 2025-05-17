@@ -4,7 +4,8 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-image: url('media/skins/azul/table_background.png');
+    /*background-image: url('media/skins/azul/table_background.png');*/
+    background-image: url('media/skins/azul/tiles_background.png');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;

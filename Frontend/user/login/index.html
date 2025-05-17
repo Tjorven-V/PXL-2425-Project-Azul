@@ -53,14 +53,31 @@
 
 <script type="module" src="script.js"></script>
 <script>
+    // Voor het jaartal (dit was al correct voor het HUIDIGE jaar)
     document.getElementById('currentYear').textContent = new Date().getFullYear();
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    let localeForDate = 'en-GB';
-    const specificDate = new Date(2025, 4, 16, 1, 38, 46);
+
+    // Opties voor de formattering van de volledige datum en tijd
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+
+    // Gewenste locale voor de datumnotatie
+    let localeForDate = 'nl-BE'; // Aangepast naar Nederlands (België) als voorbeeld, 'en-GB' kan ook
+
+    // Gebruik de HUIDIGE datum en tijd
+    const currentDate = new Date(); // Dit pakt de huidige datum en tijd van de client
+
     try {
-        document.getElementById('currentDate').textContent = specificDate.toLocaleString(localeForDate, options);
+        // Probeer de datum te formatteren met de opgegeven locale
+        document.getElementById('currentDate').textContent = currentDate.toLocaleString(localeForDate, options);
     } catch (e) {
-        document.getElementById('currentDate').textContent = specificDate.toLocaleString(undefined, options);
+        // Fallback: als de locale niet ondersteund wordt, gebruik de standaard locale van de browser
+        console.warn(`Locale '${localeForDate}' not supported, using browser default. Error: ${e.message}`);
+        document.getElementById('currentDate').textContent = currentDate.toLocaleString(undefined, options);
     }
 </script>
 </body>
