@@ -1,200 +1,218 @@
+/* general styles */
 html, body {
-    height: 100%;
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-}
-
-#skin-selector {
-    background-color: #883E0A;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-family: Century Gothic, sans-serif;
-    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #FFFFFF;
+    font-weight: bold;
 }
 
 body {
     background: #883E0A url("../../media/skins/azul/table_background.png") no-repeat center center;
     background-size: cover;
-}
-
-#loading-resources {
-    color: white;
-    text-align: center;
-    font-size: 2em;
-    font-family: Century Gothic, sans-serif;
-    text-shadow: 16px 4px 8px rgba(0,0,0,0.5);
-    position: absolute;
-    left: 50%;
-    top: 40%;
-    transform: translate(-50%, -50%);
-}
-
-#game-area {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+nav {
+    background: rgba(42, 82, 122, 0.88);
+    color: #F5EFE0;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    width: 100%;
+    z-index: 2000;
     position: relative;
+    flex-shrink: 0;
+    font-weight: bold;
 }
-
-#opponent-boards-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    max-height: 30vh;
-    overflow-y: auto;
+nav .nav-container { display: flex; justify-content: space-between; align-items: center; }
+nav .logo { font-size: 1.3em; color: #F5EFE0; text-decoration: none; }
+nav .nav-links { display: flex; align-items: center; }
+nav .nav-links a {
+    color: #F5EFE0; text-decoration: none; padding: 7px 12px; border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease; margin-left: 8px;
+    font-size: 0.9em; line-height: 1.3;
 }
+nav .nav-links a:first-child { margin-left: 0; }
+nav .nav-links a:hover { background-color: #D98244; color: #FFFFFF !important; }
 
-#factory-container {
-    flex: 2;
+
+/* other shizzles */
+#loading-resources {
+    color: #F5EFE0; text-align: center; font-size: 2em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    position: fixed;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background: rgba(10, 20, 30, 0.97);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    z-index: 2;
+    justify-content: center;
+    z-index: 10000;
+    font-weight: bold;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+
+}
+#loading-resources.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+#loading-resources .header { font-weight: bold; margin-bottom: 10px; }
+#loading-resources .subtitle { font-size: 0.7em; font-weight: bold; }
+
+#game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#skin-selector-container {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 100;
+    background-color: rgba(42, 82, 122, 0.75);
+    padding: 5px 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+}
+#skin-selector-container label {
+    margin-right: 8px; color: #F5EFE0; align-self: center;
+    font-size: 0.85em; font-weight: bold;
+}
+#skin-selector {
+    background-color: #F5EFE0; color: #2A527A; border: 1px solid #2A527A;
+    cursor: pointer; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: none; border-radius: 3px; padding: 3px 5px;
+    font-size: 0.85em; font-weight: normal;
+}
+
+#opponent-boards-container {
+    flex: 1 1 28%;
+    display: flex; justify-content: center; gap: 10px;
+    padding: 5px; overflow-y: auto; min-height: 120px;
+    margin-right: 0;
+}
+
+#factory-container {
+    flex: 2 1 44%;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px; z-index: 2; padding: 5px 0; overflow: hidden;
 }
 
 #player-board-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 20px;
-    min-height: 40vh;
+    flex: 1 1 28%;
+    display: flex; justify-content: center; align-items: flex-end;
+    padding: 5px; min-height: 220px;
 }
 
-.local-board {
-    width: 35% !important;
-    height: auto !important;
-    max-width: 1000px;
-}
+.local-board { width: 35% !important; height: auto !important; max-width: 1000px; }
+.remote-board { transform: scale(0.6); margin: -50px; }
+#factory-displays-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 10px; overflow-y: auto; max-height: 160px; }
+.factoryDisplay { width: 100px; height: 100px; position: relative; }
+#table-center-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 380px; padding: 10px; margin: 10px auto; overflow-y: auto; max-height: 160px; }
+#table-center-container canvas { width: 100% !important; height: auto !important; image-rendering: crisp-edges; }
+canvas { image-rendering: crisp-edges; background-color: transparent !important; }
 
-.remote-board {
-    transform: scale(0.6);
-    margin: -50px;
-}
-
-#factory-displays-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    padding: 20px;
-}
-
-.factoryDisplay {
-    width: 100px;
-    height: 100px;
-    position: relative;
-}
-
-#table-center-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    max-width: 400px;
-    padding: 15px;
-    margin: 20px auto;
-}
-
-#table-center-container canvas {
-    width: 100% !important;
-    height: auto !important;
-    image-rendering: crisp-edges;
-}
-
-canvas {
-    image-rendering: crisp-edges;
-    background-color: transparent !important;
-}
-
-.fade-out {
-    animation: fadeOut 0.5s forwards;
-}
-
-.fade-in {
-    animation: fadeIn 0.5s forwards;
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.fade-out { animation: fadeOut 0.5s forwards; }
+.fade-in { animation: fadeIn 0.5s forwards; }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0;  } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 #game-information {
-    font-family: Century Gothic, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-
     position: fixed;
-    bottom: 0;
-    left: 0;
-    color: rgba(255, 255, 255, 0.25);
-    margin: 16px;
+    bottom: 55px; left: 10px;
+    color: rgba(245, 239, 224, 0.7);
+    font-size: 0.8em; padding: 4px 7px;
+    background-color: rgba(42, 82, 122, 0.7);
+    border-radius: 3px; z-index: 150;
+
 }
 
 #tristan {
-    position: fixed;
-    right: 3em;
-    bottom: -4px;
-
-    width: 64px;
-    height: 64px;
-
-    opacity: 0;
-
-    img {
-        width: 100%;
-        height: 100%;
-    }
+    position: fixed; right: 1em; bottom: 55px;
+    width: 50px; height: 50px; opacity: 0; z-index: 150;
+    img { width: 100%; height: 100%; }
 }
+#tristan:hover { opacity: 1; display: flex; }
 
-#tristan:hover {
-    opacity: 1;
-    display: flex;
-}
-
-.table-center-display {
-    cursor: pointer;
-}
-
-.floorLineSpot {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.floorLineSpot:hover {
-    transform: scale(1.1);
-}
+.table-center-display { cursor: pointer; }
+.floorLineSpot { cursor: pointer; transition: transform 0.2s; }
+.floorLineSpot:hover { transform: scale(1.1); }
 
 #system-messages {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    max-height: 150px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    border-radius: 8px;
-    padding: 10px;
-    font-family: 'Century Gothic', sans-serif;
-    overflow-y: auto;
-    z-index: 1000;
-}
+    position: fixed; bottom: 55px; right: 10px;
+    width: 280px; max-height: 100px;
+    background: rgba(42, 82, 122, 0.9);
+    color: #F5EFE0; border-radius: 6px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.8em; overflow-y: auto; z-index: 1500;
+    font-weight: normal; border: 1px solid rgba(245, 239, 224, 0.2);
 
+}
+#system-messages .messages-container { padding: 8px; }
 .system-message {
-    padding: 5px;
-    margin: 3px 0;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    animation: fadeIn 0.3s ease-in;
+    padding: 3px 5px; margin-bottom: 3px; border-radius: 3px;
+    background: rgba(245, 239, 224, 0.08); animation: fadeIn 0.3s ease-in;
+    line-height: 1.3;
+}
+.system-message:last-child { margin-bottom: 0; }
+.system-message .timestamp { font-size: 0.8em; opacity: 0.7; margin-left: 5px; font-weight: normal; }
+
+/*!* footer *!*/
+/*footer {*/
+/*    text-align: center;*/
+/*    padding: 15px 0;*/
+/*    background: rgba(42, 82, 122, 0.9);*/
+/*    color: #F5EFE0;*/
+/*    font-size: 0.8em;*/
+/*    font-weight: bold;*/
+/*    line-height: 1.4;*/
+/*    flex-shrink: 0;*/
+/*    position: relative;*/
+/*    z-index: 2000;*/
+/*}*/
+/*footer p { margin: 3px 0; }*/
+/*footer a { color: #A8DADC; text-decoration: none; }*/
+/*footer a:hover { text-decoration: underline; color: #F5EFE0; }*/
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    nav { position: static;  }
+    nav .nav-container { flex-direction: column; }
+    nav .logo { margin-bottom: 8px; }
+    nav .nav-links { display: flex; flex-direction: column; align-items: center; width: 100%; }
+    nav .nav-links a { margin: 4px 0; width: 80%; text-align: center; }
+
+    #game-area { padding-top: 5px; padding-bottom: 5px;  }
+    #skin-selector-container { position: static; justify-content: center; margin: 5px auto; }
+    #opponent-boards-container { margin-right: 0; }
+
+    #game-information, #system-messages, #tristan {
+        position: static; width: auto; margin: 8px auto; text-align: center;
+        max-width: 90%; bottom: auto; left: auto; right: auto;
+    }
+    #system-messages { max-height: 80px; }
+    footer { position: static;  }
 }
 

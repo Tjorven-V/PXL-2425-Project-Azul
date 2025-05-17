@@ -11,6 +11,7 @@
     <div class="container nav-container">
         <a href="../../index.html" class="logo">Azul Project: Team Azul51</a>
         <div class="nav-links">
+            <a href="../../index.html">Home</a>
         </div>
     </div>
 </nav>
@@ -47,37 +48,14 @@
 <footer>
     <div class="container">
         <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL Hogeschool</p>
-        <p>Current Date: <span id="currentDate"></span> (Local time)</p>
     </div>
 </footer>
 
 <script type="module" src="script.js"></script>
 <script>
-    // Voor het jaartal (dit was al correct voor het HUIDIGE jaar)
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-    // Opties voor de formattering van de volledige datum en tijd
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-
-    // Gewenste locale voor de datumnotatie
-    let localeForDate = 'nl-BE'; // Aangepast naar Nederlands (België) als voorbeeld, 'en-GB' kan ook
-
-    // Gebruik de HUIDIGE datum en tijd
-    const currentDate = new Date(); // Dit pakt de huidige datum en tijd van de client
-
-    try {
-        // Probeer de datum te formatteren met de opgegeven locale
-        document.getElementById('currentDate').textContent = currentDate.toLocaleString(localeForDate, options);
-    } catch (e) {
-        // Fallback: als de locale niet ondersteund wordt, gebruik de standaard locale van de browser
-        console.warn(`Locale '${localeForDate}' not supported, using browser default. Error: ${e.message}`);
-        document.getElementById('currentDate').textContent = currentDate.toLocaleString(undefined, options);
+    const currentYearSpan = document.getElementById('currentYear');
+    if (currentYearSpan) {
+        currentYearSpan.textContent = new Date().getFullYear();
     }
 </script>
 </body>

@@ -307,9 +307,14 @@ class Board extends ClickableCanvas {
     }
 
     validatePatternLinePlacement(patternLineIndex, tileType) {
+        console.log(`[VALIDATE] PatternLineIndex: ${patternLineIndex}, TileType: ${tileType}`);
+
         const line = this._patternLines[patternLineIndex];
+        console.log(`[VALIDATE] Line State: length=<span class="math-inline">\{line\.length\}, numberOfTiles\=</span>{line.numberOfTiles}, tileType=${line.tileType}`);
 
         if (line.numberOfTiles >= line.length) {
+            console.log("[VALIDATE] FAILED: Pattern line is full");
+
             return { valid: false, error: "Pattern line is full" };
         }
 
@@ -320,6 +325,7 @@ class Board extends ClickableCanvas {
         if (this.isColorInWallRow(patternLineIndex, tileType)) {
             return { valid: false, error: "Color already exists in wall row" };
         }
+        console.log("[VALIDATE] PASSED");
 
         return { valid: true };
     }

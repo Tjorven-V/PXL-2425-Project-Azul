@@ -2,52 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Game</title>
-
-    <script type="module" src="./script.js"></script>
+    <title>Game - Azul Project</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div id="loading-resources">
-        <div class="header">
-            Loading...
-        </div>
-        <div class="subtitle">
-            [gameId]
+
+<nav>
+    <div class="container nav-container">
+        <a href="../../index.html" class="logo">Azul Project: Team Azul51</a>
+        <div class="nav-links">
+            <a href="../../index.html">Home</a>
         </div>
     </div>
-    <div id="game-area">
-        <div id="skin-selector-container" style="display:none">
-            <label>
-                <select id="skin-selector">
-                    <option value="azul">Azul (Default)</option>
-                    <option value="minecraft">Minecraft</option>
-                    <option value="goofy">goofy</option>
-                </select>
-            </label>
-        </div>
+</nav>
 
-        <div id="opponent-boards-container"></div>
+<div id="loading-resources">
+    <div class="header">Loading...</div>
+    <div class="subtitle"></div> </div>
 
-        <div id="factory-container">
-            <div id="factory-displays-container"></div>
-            <div id="table-center-container"></div>
-            <div id="tiles-container"> </div>
-        </div>
-
-        <div id="player-board-container"></div>
-
-        <div id="game-information" style="display: none">
-            [gameId]<br>
-            Player as [playerName]
-        </div>
-
-        <a id="tristan" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
-            <img src="../../media/skins/azul/tristan.png" alt="tristan">
-        </a>
+<div id="game-area">
+    <div id="skin-selector-container"> <label for="skin-selector">Select Skin:</label>
+        <select id="skin-selector">
+            <option value="azul">Azul (Default)</option>
+            <option value="minecraft">Minecraft</option>
+            <option value="goofy">goofy</option>
+        </select>
     </div>
-    <div id="system-messages">
-        <div class="messages-container"></div>
-    </div>
+    <div id="opponent-boards-container"></div>
+    <div id="factory-container">
+        <div id="factory-displays-container"></div>
+        <div id="table-center-container"></div>
+        <div id="tiles-container"></div> </div>
+    <div id="player-board-container"></div>
+    <div id="game-information"></div> <a id="tristan" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
+    <img src="../../media/skins/azul/tristan.png" alt="tristan">
+</a>
+</div>
+
+<div id="system-messages"> <div class="messages-container"></div>
+</div>
+
+<script type="module" src="./script.js"></script>
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    const uiElementsToHideInitially = ['skin-selector-container', 'game-information', 'system-messages'];
+    uiElementsToHideInitially.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = 'none';
+    });
+
+    const loadingResources = document.getElementById('loading-resources');
+    if (loadingResources) loadingResources.style.opacity = '1';
+</script>
 </body>
 </html>

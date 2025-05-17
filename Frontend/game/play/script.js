@@ -19,6 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setupEventListeners();
     waitForResources();
     setInterval(updateBoards, 1000);
+
+    const systemMessagesDiv = document.getElementById('system-messages');
+    const container = systemMessagesDiv ? systemMessagesDiv.querySelector('.messages-container') : null;
+    if (systemMessagesDiv && container && container.children.length === 0) {
+        systemMessagesDiv.style.display = 'none';
+    }
 });
 
 async function updateBoards() {
@@ -266,14 +272,24 @@ async function placeTilesOnFloorLine() {
 
 function initGame() {
     const loadingResources = document.getElementById("loading-resources");
-    const skinSelector = document.getElementById("skin-selector-container");
+    const skinSelectorContainer = document.getElementById("skin-selector-container");
+    const gameArea = document.getElementById("game-area");
+    const gameInfoDiv = document.getElementById('game-information');
 
-    skinSelector.style.display = "flex";
-    skinSelector.style.justifyContent = "flex-end";
-    loadingResources.classList.add("fade-out");
-    document.getElementById("game-area").classList.add("fade-in");
+    if (skinSelectorContainer) skinSelectorContainer.style.display = "flex";
+    if (gameInfoDiv) gameInfoDiv.style.display = "block";
 
-    updateImagePaths(selectedSkin);
+    if (loadingResources) {
+        loadingResources.classList.add("fade-out");
+        setTimeout(() => {
+            loadingResources.style.display = 'none';
+        }, 500);
+    }
+    if (gameArea) gameArea.classList.add("fade-in");
+
+    const initialSkin = document.getElementById("skin-selector") ? document.getElementById("skin-selector").value : 'azul';
+    updateImagePaths(initialSkin);
+    updateGameDisplays();
 }
 
 function waitForResources() {
@@ -342,16 +358,29 @@ function changeSkin() {
 }
 
 function displaySystemMessage(text, isError = true) {
-    const container = document.querySelector('#system-messages .messages-container');
-    const message = document.createElement('div');
+    const systemMessagesDiv = document.getElementById('system-messages');
+    const container = systemMessagesDiv ? systemMessagesDiv.querySelector('.messages-container') : null;
 
+    if (!container || !systemMessagesDiv) {
+        console.error("System messages container or div not found!");
+        return;
+    }
+
+    const message = document.createElement('div');
     message.className = `system-message ${isError ? 'error' : 'info'}`;
     message.innerHTML = `[SYSTEM] ${text} <span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
 
     container.appendChild(message);
+    systemMessagesDiv.style.display = 'block';
+    systemMessagesDiv.scrollTop = systemMessagesDiv.scrollHeight;
 
     setTimeout(() => {
         message.style.opacity = '0';
-        setTimeout(() => message.remove(), 300);
+        setTimeout(() => {
+            message.remove();
+            if (container.children.length === 0) {
+                systemMessagesDiv.style.display = 'none';
+            }
+        }, 300);
     }, 5000);
 }
