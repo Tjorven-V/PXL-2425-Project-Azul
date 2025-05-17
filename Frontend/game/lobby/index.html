@@ -18,18 +18,18 @@
   <div class="lobby-container">
     <h1>Azul Game Lobby</h1>
 
-    <div id="controls" class="lobby-controls">
+    <div id="controls" class="lobby-controls" style="display: none;">
       <label for="players">Number of players:</label>
       <select id="players">
         <option value="2">2 players</option>
         <option value="3">3 players</option>
         <option value="4">4 players</option>
       </select>
-      <button id="joinGame" class="cta-button">Search for a Table</button>
+      <button id="joinGame" class="cta-button">Join or Create a Table</button>
     </div>
 
     <button id="leaveGame" class="cta-button secondary" style="display: none;">Leave Table</button>
-    <div id="status" class="lobby-status"></div>
+    <div id="status" class="lobby-status">Determining Status...</div>
   </div>
 </main>
 

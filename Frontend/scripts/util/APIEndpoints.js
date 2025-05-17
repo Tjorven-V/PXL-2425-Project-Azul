@@ -19,6 +19,10 @@ const APIEndpoints = {
     GetTable: baseUrl + "/Tables/{id}",
     JoinOrCreate: baseUrl + "/Tables/join-or-create",
     Leave: baseUrl + "/Tables/{id}/leave",
+
+    AllTables: baseUrl + "/Tables", // Azul 51 Extra: Table Browser
+    JoinTable: baseUrl + "/Tables/{id}/join", // Azul 51 Extra: Table Browser
+    CurrentTable: baseUrl + "/Tables/get-current-table", // Azul 51 Extra: Table Browser
 }
 
 export default APIEndpoints;

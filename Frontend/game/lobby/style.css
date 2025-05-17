@@ -79,7 +79,7 @@ nav .nav-links a:hover { background-color: rgba(139, 69, 19, 0.7); }
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.25);
     color: #4A3B31;
-    max-width: 500px;
+    width: 500px;
     margin: 20px auto;
 }
 
@@ -94,7 +94,7 @@ nav .nav-links a:hover { background-color: rgba(139, 69, 19, 0.7); }
     font-weight: 600;
     color: #6D4C41;
     font-size: 1em;
-    text-align: left;
+    text-align: center;
 }
 
 .lobby-controls select,
@@ -110,7 +110,7 @@ nav .nav-links a:hover { background-color: rgba(139, 69, 19, 0.7); }
     box-sizing: border-box;
     cursor: pointer;
     display: block;
-    text-align: left;
+    text-align: center;
 }
 
 .lobby-controls select {
@@ -119,7 +119,7 @@ nav .nav-links a:hover { background-color: rgba(139, 69, 19, 0.7); }
     background-repeat: no-repeat;
     background-position: right 15px center;
     background-size: 12px auto;
-    text-align: left; /
+    text-align: center; /
     /* text-align-last: center;?? */
 }
 
