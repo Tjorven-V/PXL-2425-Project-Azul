@@ -32,5 +32,6 @@ namespace Azul.Core.TableAggregate.Contracts
         /// </summary>
         /// <remarks>This is an EXTRA. Not needed to implement the minimal requirements.</remarks>
         void FillWithArtificialPlayers(Guid tableId, User user);
+        ITable JoinTable(Guid id, User currentUser);
     }
 }

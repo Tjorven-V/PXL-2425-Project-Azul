@@ -27,5 +27,6 @@ namespace Azul.Core.TableAggregate.Contracts
         /// Only tables that match the given <paramref name="preferences"/> are returned.
         /// </summary>
         IList<ITable> FindTablesWithAvailableSeats(ITablePreferences preferences);
+        ITable FindTable(Guid tableId);
     }
 }

@@ -47,6 +47,12 @@ internal class TableManager : ITableManager
         //If no table is found, create a new table. Otherwise, take the first available table
     }
 
+    public ITable JoinTable(Guid tableId, User user)
+    {
+        ITable Table = _tableRepository.FindTable(tableId);
+        Table.Join(user);
+        return Table;
+    }
     public void LeaveTable(Guid tableId, User user)
     {
         ITable table = _tableRepository.Get(tableId);

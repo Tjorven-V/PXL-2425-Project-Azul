@@ -5,6 +5,7 @@ using Azul.Core.TableAggregate.Contracts;
 using Azul.Core.UserAggregate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Azul.Api.Controllers;
 
@@ -64,6 +65,24 @@ public class TablesController : ApiControllerBase
         TableModel tableModel = _mapper.Map<TableModel>(table);
 
         return Ok(tableModel);
+    }
+
+    /// <summary>
+    /// Join a table manually.
+    /// </summary>
+    /// <param name="id">
+    /// The unique identifier of the table.
+    /// </param>
+    [HttpPost("{id}/join")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Join(Guid id)
+    {
+        User currentUser = (await _userManager.GetUserAsync(User))!;
+        var joinedTable = _tableManager.JoinTable(id, currentUser);
+        var table = _mapper.Map<TableModel>(joinedTable);
+        return Ok(table);
     }
 
     /// <summary>

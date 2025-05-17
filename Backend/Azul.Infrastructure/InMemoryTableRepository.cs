@@ -1,4 +1,5 @@
-﻿using Azul.Core.TableAggregate.Contracts;
+﻿using System.ComponentModel.Design;
+using Azul.Core.TableAggregate.Contracts;
 using Azul.Core.Util;
 using Azul.Infrastructure.Util;
 
@@ -53,5 +54,17 @@ internal class InMemoryTableRepository : ITableRepository
         }
 
         return availableTables;
+    }
+
+    public ITable FindTable(Guid tableId)
+    {
+        foreach (var table in _tableDictionary.Values)
+        {
+            if (table.Id == tableId)
+            {
+                return table;
+            }
+        }
+        throw new DataNotFoundException();
     }
 }
