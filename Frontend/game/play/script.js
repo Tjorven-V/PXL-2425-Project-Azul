@@ -266,14 +266,18 @@ async function handleFactorySelection(e) {
         return;
     }
 
-    gameState.currentSelection = {
-        displayId,
-        tileType,
-        tileCount
-    };
-    gameState.hasTilesToPlace = true;
-
-    displaySystemMessage(`Selected ${tileCount} tiles of type ${tileType}`, false);
+    if (gameState.currentSelection?.displayId === displayId &&
+        gameState.currentSelection?.tileType === tileType) {
+        gameState.currentSelection = null;
+        gameState.hasTilesToPlace = false;
+    } else {
+        gameState.currentSelection = {
+            displayId,
+            tileType,
+            tileCount
+        };
+        gameState.hasTilesToPlace = true;
+    }
     loadBoards();
 }
 
