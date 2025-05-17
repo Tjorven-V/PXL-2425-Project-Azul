@@ -130,7 +130,7 @@ public class TablesController : ApiControllerBase
 
     // +++ Azul51 Extra : Get player current table +++
     /// <summary>
-    /// Azul51 Extra : Table Browser: Gets all available tables.
+    /// Azul51 Extra : Table Browser: Get the player's current table.
     /// </summary>
     [HttpGet("get-current-table")]
     [ProducesResponseType(typeof(TableModel), StatusCodes.Status200OK)]
