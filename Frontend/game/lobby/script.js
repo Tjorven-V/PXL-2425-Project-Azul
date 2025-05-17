@@ -132,10 +132,7 @@ async function LeaveTable() {
         StopPollingTable();
         ShowControls();
         SetControlsStatus(true);
-    }).catch(err => {
-        alert("DEV ERROR! Not critical but one unaccounted for...");
-        console.error(err);
-    });
+    }).catch(APIError);
 }
 
 function JoinOrCreate(numberOfPlayers) {
@@ -159,10 +156,7 @@ function JoinOrCreate(numberOfPlayers) {
         let data = await response.json();
         ShowLobby(data.id);
 
-    }).catch(err => {
-        alert("DEV ERROR!!! Check console");
-        console.error(err);
-    })
+    }).catch(APIError);
 }
 
 function ShowControls() {
@@ -174,6 +168,46 @@ function ShowControls() {
     StopPollingTable();
 
     SetStatusText("");
+}
+
+function APIError(error) {
+    ShowStatusOnly();
+    SetStatusText("An error occurred contacting the API.\n\nAttempting to re-establish connection...");
+    console.error(error);
+
+    let poll = () => {
+        console.log("Attempting to establish connection...");
+        fetch(APIEndpoints.Ping, {
+            headers: {
+                'Authorization': `Bearer ${AuthenticationManager.Token}`
+            }
+        }).then(async response => {
+            if (!response.ok) {
+                console.log("Received invalid response from API:" + response.status);
+                setTimeout(poll, 5_000)
+                return;
+            }
+
+            if ((await response.json())["isAlive"]) {
+                console.log("Received positive ping from API!");
+                ShowControls();
+                SetStatusText("API Connectivity Restored! Welcome back!");
+            }
+        }).catch(error => {
+            console.log("API unavailable: " + error.message);
+            setTimeout(poll, 5_000);
+        });
+    };
+    poll();
+}
+
+function ShowStatusOnly() {
+    controlsElement.style.display = 'none';
+    leaveBtnElement.style.display = 'none';
+    browserElement.style.display = 'none';
+
+    StopPollingGames();
+    StopPollingTable();
 }
 
 function ShowBrowser() {
@@ -230,10 +264,7 @@ function ShowBrowser() {
 
                         let data = await response.json();
                         ShowLobby(data.id);
-                    }).catch(err => {
-                        alert("UNACCOUNTED FOR DEV ERROR!! console!");
-                        console.error(err);
-                    })
+                    }).catch(APIError);
                 })
             } else {
                 // Update player count
@@ -285,26 +316,34 @@ function PollTable(tableId, callback) {
         tablePoll = null;
     }
 
+    let previousPollPending = false;
     tablePoll = setInterval(() => {
+        if (previousPollPending) return;
+        previousPollPending = true;
+
         fetch(APIEndpoints.GetTable.replace('{id}', tableId), {
                 headers: {
                     'Authorization': `Bearer ${AuthenticationManager.Token}`
                 }
             }
         ).then(async response => {
+            previousPollPending = false;
+
             if (!response.ok) {
+                StopPollingTable();
+
+                if (response.status === 404 || response.status === 400) {
+                    SetStatusText(`Table has expired.\n\nReturning to the lobby...`);
+                    setTimeout(ShowControls, 3_000);
+                    return;
+                }
+
                 SetStatusText(`An error occurred polling table\n${tableId}!\n\n${response.status} ${response.statusText}\n${response.message}`);
                 return;
             }
 
             callback(await response.json());
-        }).catch(err => {
-            clearInterval(tablePoll);
-            tablePoll = null;
-
-            alert("DEV ERROR!!! Check console");
-            console.error(err);
-        })
+        }).catch(APIError);
     }, 500);
 }
 
@@ -333,13 +372,7 @@ function PollGames(callback) {
             }
 
             callback(await response.json());
-        }).catch(err => {
-            clearInterval(gamesPoll);
-            gamesPoll = null;
-
-            alert("DEV ERROR!!! Check console");
-            console.error(err);
-        })
+        }).catch(APIError);
     }, 500);
 }
 
