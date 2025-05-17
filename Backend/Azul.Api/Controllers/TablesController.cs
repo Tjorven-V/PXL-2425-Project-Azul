@@ -134,7 +134,7 @@ public class TablesController : ApiControllerBase
     /// </summary>
     [HttpGet("get-current-table")]
     [ProducesResponseType(typeof(TableModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult GetCurrentTable()
     {
         foreach (var table in _tableRepository.Tables)
@@ -145,7 +145,7 @@ public class TablesController : ApiControllerBase
                 return Ok(tableModel);
             }
         }
-        return NotFound();
+        return NoContent();
     }
     // --- Azul51 Extra : Get player current table ---
 }
