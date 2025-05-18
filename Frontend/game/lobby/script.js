@@ -359,13 +359,19 @@ function PollGames(callback) {
         gamesPoll = null;
     }
 
+    let previousPollPending = false;
     gamesPoll = setInterval(() => {
+        if (previousPollPending) return;
+        previousPollPending = true;
+
         fetch(APIEndpoints.AllTables, {
                 headers: {
                     'Authorization': `Bearer ${AuthenticationManager.Token}`
                 }
             }
         ).then(async response => {
+            previousPollPending = false;
+
             if (!response.ok) {
                 SetStatusText(`An error occurred polling games!\n\n${response.status} ${response.statusText}\n${response.message}`);
                 return;
