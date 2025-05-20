@@ -75,5 +75,12 @@ namespace Azul.Core.GameAggregate.Contracts
         void SendChatMessage(Guid playerId, string message);
 
         // --- Azul51 Extra : Chat Functionality ---
+
+        /// <summary>
+        /// Retrieve the taken tiles of the player.
+        /// </summary>
+        /// <param name="playerId">The unique identifier of the player</param>
+        IReadOnlyCollection<TileType> GetPlayerTilesToPlace(Guid playerId);
+
     }
 }

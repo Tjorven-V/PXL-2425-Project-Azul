@@ -2,6 +2,7 @@
 using Azul.Api.Models.Input;
 using Azul.Api.Models.Output;
 using Azul.Core.GameAggregate.Contracts;
+using Azul.Core.TileFactoryAggregate.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -52,6 +53,20 @@ namespace Azul.Api.Controllers
         {
             _gameService.TakeTilesFromFactory(id, UserId, inputModel.DisplayId, inputModel.TileType);
             return Ok();
+        }
+
+        /// <summary>
+        /// Gets the tiles that the current player has taken and needs to place.
+        /// </summary>
+        /// <param name="id">Id (guid) of the game</param>
+        [HttpGet("{id}/tiles-to-place")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<TileType>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        public IActionResult GetTilesToPlace(Guid id)
+        {
+            var tiles = _gameService.GetPlayerTilesToPlace(id, UserId);
+            return Ok(tiles);
         }
 
         /// <summary>

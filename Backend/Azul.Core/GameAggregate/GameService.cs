@@ -45,4 +45,10 @@ internal class GameService : IGameService
         game.SendChatMessage(playerId, message);
     }
     // --- Azul51 - Extra : Chat Functionality ---
+
+    public IReadOnlyCollection<TileType> GetPlayerTilesToPlace(Guid gameId, Guid playerId)
+    {
+        var game = _gameRepository.GetById(gameId);
+        return game.GetPlayerTilesToPlace(playerId);
+    }
 }

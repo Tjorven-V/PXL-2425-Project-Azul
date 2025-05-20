@@ -228,4 +228,15 @@ internal class Game : IGame
         }
     }
     // --- Azul51 - Extra : Chat Functionality ---
+
+    public IReadOnlyCollection<TileType> GetPlayerTilesToPlace(Guid playerId)
+    {
+        var player = Players.FirstOrDefault(p => p.Id == playerId);
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found.");
+        }
+
+        return player.TilesToPlace;
+    }
 }
