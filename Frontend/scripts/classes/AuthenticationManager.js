@@ -69,6 +69,15 @@ class AuthenticationManager {
             return null;
         }
     }
+
+    static logout() {
+        sessionStorage.removeItem("loggedInUser");
+        sessionStorage.removeItem("token");
+        console.log("User has been logged out. Session storage cleared.");
+
+        window.location.href = '/index.html';
+    }
+
     static get Token() {
         return sessionStorage.getItem("token");
     }

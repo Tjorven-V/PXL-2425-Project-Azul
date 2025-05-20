@@ -41,7 +41,7 @@ function validateUsername() {
     } else {
     antwoord.style.display = "none";
     return true;
-}
+    }
 }
 // Email Validatie
 function validateEmail() {
@@ -51,7 +51,7 @@ function validateEmail() {
     } else {
     antwoord.style.display = "none";
     return true;
-}
+    }
 }
 
 // Datum Validatie

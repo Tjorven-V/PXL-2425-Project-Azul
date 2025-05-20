@@ -77,6 +77,47 @@ nav .logo {
 nav .nav-links {
     display: flex;
     align-items: center;
+    gap: 15px;
+}
+
+nav .nav-links .nav-link-item {
+    color: #F5EFE0;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav .nav-links .nav-link-item:hover {
+    background-color: #D98244;
+    color: #FFFFFF !important;
+}
+
+nav .nav-links .nav-username {
+    color: #F5EFE0;
+    font-weight: bold;
+}
+
+nav .nav-links .home-icon-link {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 4px;
+    line-height: 1;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+nav .nav-links .home-icon-symbol {
+    font-size: 2.0em;
+    color: #F5EFE0;
+    line-height: 1;
+    display: block;
+}
+
+nav .nav-links .home-icon-link:hover {
+    background-color: #D98244 !important;
+    border-radius: 4px;
 }
 
 nav .nav-links a {
@@ -98,6 +139,21 @@ nav .nav-links a:hover {
     background-color: #D98244;
     color: #FFFFFF !important;
     border-color: transparent;
+}
+
+/*nav .nav-links a.register-btn {*/
+/*    color: #F5EFE0;     !* Tekstkleur *!*/
+/*    text-decoration: none;*/
+/*    padding: 8px 15px; !* Je bestaande padding *!*/
+/*    border-radius: 4px; !* Je bestaande border-radius *!*/
+/*    !* vertical-align wordt nu afgehandeld door align-items op .nav-links *!*/
+/*    !* De class .register-btn geeft de knop zijn achtergrondkleur etc. *!*/
+/*}*/
+
+nav .nav-links a.register-btn {
+    background-color: #E07A5F;  /* De oranje/rode achtergrondkleur */
+    color: #FFFFFF;             /* Witte tekstkleur */
+    border: 1px solid #C96A4F;  /* Een iets donkerdere rand */
 }
 
 

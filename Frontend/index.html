@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Azul Project - Team 51</title>
+    <script type="module" src="script.js"></script>
 </head>
 <body>
 
 <nav>
-    <div class="container"> <a href="index.html" class="logo">Azul Project: Team Azul51</a>
-        <div class="nav-links">
-            <a href="user/login/index.html">Login</a>
+    <div class="container">
+        <a href="index.html" class="logo">Azul Project: Team Azul51</a>
+        <div class="nav-links" id="navLinksContainer"> <a href="user/login/index.html">Login</a>
             <a href="user/register/index.html" class="register-btn">Sign Up</a>
         </div>
     </div>
@@ -20,7 +21,7 @@
 <header class="main-header">
     <h1>Azul Project</h1>
     <p class="slogan">A student project bringing the classic tile game to your browser, set against a traditional backdrop.</p>
-    <a href="user/login/index.html" class="cta-button">Play Our Game!</a>
+    <a href="user/login/index.html" class="cta-button" id="playOurGameHeaderButton">Play Our Game!</a>
 </header>
 
 <main class="container">
@@ -79,7 +80,7 @@
 
     <section class="cta-section">
         <h2>Ready to Play?</h2>
-        <a href="user/login/index.html" class="cta-button">Start a Game Now!</a>
+        <a href="user/login/index.html" class="cta-button" id="startGameCtaButton">Start a Game Now!</a>
         <a href="user/register/index.html" class="cta-button secondary">Create Account</a>
     </section>
 </main>

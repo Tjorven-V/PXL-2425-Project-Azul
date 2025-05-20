@@ -73,6 +73,31 @@ nav .nav-links {
     align-items: center;
 }
 
+nav .nav-links .home-icon-link {
+    color: #F5EFE0;
+    text-decoration: none;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+nav .nav-links .home-icon-link:hover {
+    background-color: #D98244 !important;
+    /* border-radius: 4px; */
+}
+
+nav .nav-links .home-icon-symbol {
+    font-size: 2.0em;
+    color: #F5EFE0;
+    line-height: 1;
+    display: block;    
+}
+
 nav .nav-links a {
     color: #F5EFE0;
     text-decoration: none;

@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', async (event) => {
         return;
     }
 
+    updateUserNavigation();
+
     joinBtnElement = document.getElementById('joinGame');
     leaveBtnElement = document.getElementById('leaveGame');
     playerCountSelectElement = document.getElementById('players');
@@ -61,6 +63,49 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     SetControlsStatus(true);
 })
+
+function updateUserNavigation() {
+    const navLinksContainer = document.querySelector('.nav-links');
+    const loggedInUser = AuthenticationManager.LoggedInUser;
+
+    if (!navLinksContainer) {
+        console.error("Nav links container not found!");
+        return;
+    }
+
+    if (loggedInUser) {
+        const userName = loggedInUser.userName || loggedInUser.name || 'User';
+
+        navLinksContainer.innerHTML = `
+            <a href="../../index.html" title="Home" class="nav-link-item home-icon-link">
+                <span role="img" aria-label="Home" class="home-icon-symbol">&#x1F3E0;</span>
+            </a>
+            <span class="nav-username" style="margin-right: 15px; vertical-align: middle;">${userName}</span>
+            <a href="#" id="logoutButton" class="nav-link-item register-btn" style="vertical-align: middle;">Logout</a>
+        `;
+
+        const logoutButtonElement = document.getElementById('logoutButton');
+        if (logoutButtonElement) {
+            logoutButtonElement.addEventListener('click', async (event) => {
+                event.preventDefault();
+                try {
+                    await AuthenticationManager.logout();
+                    window.location.href = '../../index.html';
+                } catch (error) {
+                    console.error("Logout failed:", error);
+                }
+            });
+        } else {
+            console.error("Logout button not found after adding to DOM!");
+        }
+    } else {
+        navLinksContainer.innerHTML = `
+            <a href="../../user/login/index.html">Login</a>
+            <a href="../../user/register/index.html" class="register-btn">Sign Up</a>
+        `;
+    }
+}
+
 
 function SetControlsStatus(enabled, cursor = "blocked") {
     joinBtnElement.disabled = !enabled;
