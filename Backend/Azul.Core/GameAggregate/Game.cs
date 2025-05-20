@@ -109,6 +109,11 @@ internal class Game : IGame
 
     public void PlaceTilesOnFloorLine(Guid playerId)
     {
+        if (HasEnded)
+        {
+            throw new InvalidOperationException("The game has ended!");
+        }
+
         var playerToPlay = Players.FirstOrDefault(p => p.Id == playerId);
 
         if (playerToPlay == null)
@@ -124,6 +129,11 @@ internal class Game : IGame
 
     public void PlaceTilesOnPatternLine(Guid playerId, int patternLineIndex)
     {
+        if (HasEnded)
+        {
+            throw new InvalidOperationException("The game has ended!");
+        }
+
         var playerToPlay = Players.FirstOrDefault(p => p.Id == playerId);
         if (playerToPlay == null)
         {
@@ -159,6 +169,11 @@ internal class Game : IGame
 
     public void TakeTilesFromFactory(Guid playerId, Guid displayId, TileType tileType)
     {
+        if (HasEnded)
+        {
+            throw new InvalidOperationException("The game has ended!");
+        }
+
         var player = Players.FirstOrDefault(p => p.Id == playerId);
         if (player == null)
         {
