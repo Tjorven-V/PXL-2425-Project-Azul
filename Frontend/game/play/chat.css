@@ -1,0 +1,47 @@
+
+.chat-box {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 300px;
+    background: #ffffffdd;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+}
+
+.chat-log {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 8px;
+    padding-right: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.chat-message {
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#chat-input {
+    width: calc(100% - 60px);
+    padding: 6px;
+    font-size: 14px;
+}
+
+button {
+    width: 50px;
+    padding: 6px;
+    font-size: 14px;
+    margin-left: 4px;
+}
+
+#chat-status {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+}

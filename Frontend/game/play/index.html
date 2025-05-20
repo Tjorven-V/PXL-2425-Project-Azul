@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Game - Azul Project</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./chat.css">
 </head>
 <body>
-
 <nav>
     <div class="container nav-container">
         <a href="../../index.html" class="logo">Azul Project: Team Azul51</a>
@@ -39,20 +39,28 @@
 </a>
 </div>
 
+<div class="chat-box">
+    <div id="chat-log" class="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Type your message..." maxlength="64" />
+    <button id="send-button">Send</button>
+    <p id="chat-status" class="chat-status"></p>
+</div>
 <div id="system-messages"> <div class="messages-container"></div>
 </div>
 
 <script type="module" src="./script.js"></script>
-<script>
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-    const uiElementsToHideInitially = ['skin-selector-container', 'game-information', 'system-messages'];
-    uiElementsToHideInitially.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) element.style.display = 'none';
-    });
+<script type="module" src="./chat.js"></script>
 
-    const loadingResources = document.getElementById('loading-resources');
-    if (loadingResources) loadingResources.style.opacity = '1';
-</script>
+<!--<script>-->
+<!--    document.getElementById('currentYear').textContent = new Date().getFullYear();-->
+<!--    const uiElementsToHideInitially = ['skin-selector-container', 'game-information', 'system-messages'];-->
+<!--    uiElementsToHideInitially.forEach(id => {-->
+<!--        const element = document.getElementById(id);-->
+<!--        if (element) element.style.display = 'none';-->
+<!--    });-->
+
+<!--    const loadingResources = document.getElementById('loading-resources');-->
+<!--    if (loadingResources) loadingResources.style.opacity = '1';-->
+<!--</script>-->
 </body>
 </html>
