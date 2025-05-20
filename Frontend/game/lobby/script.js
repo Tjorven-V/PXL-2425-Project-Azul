@@ -6,7 +6,7 @@ function RedirectToLogin() {
     window.location = Redirects.Login;
 }
 
-let joinBtnElement, leaveBtnElement, playerCountSelectElement, controlsElement, statusElement, browserElement, closeBrowserElement, browseButtonElement, availableGamesElement;
+let gameFilterElement, joinBtnElement, leaveBtnElement, playerCountSelectElement, controlsElement, statusElement, browserElement, closeBrowserElement, browseButtonElement, availableGamesElement;
 document.addEventListener('DOMContentLoaded', async (event) => {
     if (!AuthenticationManager.LoggedInUser) {
         RedirectToLogin();
@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     closeBrowserElement = document.getElementById('closeBrowser')
     browseButtonElement = document.getElementById('browseGames');
     availableGamesElement = document.getElementById("available-games");
+    gameFilterElement = document.getElementById('game-filter');
 
     SetControlsStatus(false);
     SetStatusText("Determining Player Table...");
@@ -219,8 +220,15 @@ function ShowBrowser() {
 
     availableGamesElement.replaceChildren();
 
-    PollGames((availableGames) => {
-        for (const game of availableGames.tables) {
+    PollGames((foundGames) => {
+        let filterValue = gameFilterElement.value;
+        let availableGames = foundGames.tables.filter(game => {
+            if (filterValue === "show-all") return true;
+            else if (filterValue === "hide-full") return game.hasAvailableSeat;
+            else if (filterValue === "only-full") return !game.hasAvailableSeat;
+        });
+
+        for (const game of availableGames) {
             let entryElement = document.getElementById("game-" + game.id);
 
             if (!entryElement) {
@@ -252,6 +260,10 @@ function ShowBrowser() {
                 availableGamesElement.appendChild(entryElement);
 
                 entryElement.addEventListener('click', () => {
+                    if (!game.hasAvailableSeat) {
+                        SpectateGame(game.gameId);
+                        return;
+                    }
                     fetch(APIEndpoints.JoinTable.replace('{id}', game.id), {
                         method: 'POST',
                         headers: {
@@ -259,6 +271,11 @@ function ShowBrowser() {
                         }
                     }).then(async response => {
                         if (!response.ok) {
+                            if (response.status === 400) {
+                                SpectateGame(game.gameId);
+                                return;
+                            }
+
                             throw response;
                         }
 
@@ -297,7 +314,7 @@ function ShowBrowser() {
         }
 
 // Remove stale entries
-        const currentGameIds = new Set(availableGames.tables.map(game => "game-" + game.id));
+        const currentGameIds = new Set(availableGames.map(game => "game-" + game.id));
         for (const child of Array.from(availableGamesElement.children)) {
             if (!currentGameIds.has(child.id)) {
                 child.remove();
@@ -307,6 +324,11 @@ function ShowBrowser() {
     });
 
     SetStatusText("");
+}
+
+function SpectateGame(gameId) {
+    console.log("Spectate " + gameId);
+    // TODO: Implement
 }
 
 let tablePoll;

@@ -32,8 +32,13 @@
     </div>
 
     <div id="browser" class="lobby-controls" style="display: none;">
+      <label for="game-filter"></label>
+      <select id="game-filter">
+        <option value="show-all">Show all games</option>
+        <option value="hide-full">Show only available</option>
+        <option value="only-full">Show only full games</option>
+      </select>
       <div id="available-games" style="max-height: 500px; overflow-y: scroll">
-
       </div>
       <button id="closeBrowser" class="cta-button">Back</button>
     </div>
