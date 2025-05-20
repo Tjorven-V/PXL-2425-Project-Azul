@@ -4,6 +4,8 @@ import AuthenticationManager from "../../scripts/classes/AuthenticationManager.j
 let chatLog, chatInput, chatStatus;
 let gameId, playerId;
 let sendButton;
+let lastMessageTime = 0;
+const messageCooldown = 2000;
 
 document.addEventListener('DOMContentLoaded', () => {
     chatLog = document.getElementById("chat-log");
@@ -12,6 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     sendButton = document.getElementById("send-button");
 
     document.getElementById('send-button')?.addEventListener('click', sendChat);
+
+    let enterPress = (e) => {
+        if (e.key !== "Enter") return;
+        sendButton.click();
+    };
+
+    chatInput.addEventListener('keyup', enterPress);
 
     gameId = sessionStorage.getItem("gameId");
     const rawDataPlayer = sessionStorage.getItem("loggedInUser");
@@ -67,6 +76,13 @@ function renderChat(chatMessages){
 }
 
 window.sendChat = async function(){
+    const now = Date.now()
+
+    if (now - lastMessageTime < messageCooldown){
+        chatStatus.textContent = "Please wait a moment before sending a new message";
+        return;
+    }
+
     const message = chatInput.value.trim();
     if (message.length <1 || message.length > 64) {
         chatStatus.textContent = 'Message must be between 1 and 64 characters';
@@ -81,6 +97,7 @@ window.sendChat = async function(){
     if (response.ok){
         chatInput.value=""
         chatStatus.textContent = "";
+        lastMessageTime = now;
         await loadChat();
     } else {
         const errorText = await response.text();
