@@ -88,22 +88,35 @@ internal class Game : IGame
         _currentPlayerId = firstPlayer.Id;
     }
 
+    private async Task DelayNextRound()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(2));
+
+        foreach (var player in Players)
+        {
+            player.Board.DoWallTiling(TileFactory);
+            player.HasStartingTile = false;
+        }
+
+        await Task.Delay(TimeSpan.FromSeconds(2));
+
+        TileFactory.FillDisplays();
+        TileFactory.TableCenter.AddStartingTile();
+
+        RoundNumber++;
+
+        _currentPlayerId = _nextPlayerId;
+    }
+
     private void PrepareNextRound()
     {
-        _currentPlayerId = _nextPlayerId;
-
         if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
         {
-            foreach (var player in Players)
-            {
-                player.Board.DoWallTiling(TileFactory);
-                player.HasStartingTile = false;
-            }
-
-            TileFactory.FillDisplays();
-            TileFactory.TableCenter.AddStartingTile();
-
-            RoundNumber++;
+            _currentPlayerId = Guid.Empty;
+            _ = DelayNextRound();
+        } else
+        {
+            _currentPlayerId = _nextPlayerId;
         }
     }
 
