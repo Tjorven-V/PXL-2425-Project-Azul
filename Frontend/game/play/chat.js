@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(loadChat, 1000);
 });
 
-
-
 async function loadChat() {
     try {
         const response = await fetch(APIEndpoints.GameInfo.replace("{id}", gameId), {
@@ -56,23 +54,42 @@ async function loadChat() {
         if (!response.ok) throw new Error('Failed to load game');
         const game = await response.json();
         if (!game.chat) throw new Error("No chat data found");
-        renderChat(game.chat);
+
+        const playerNames = game.players?.map(p => p.name) || [];
+        renderChat(game.chat, playerNames);
+
     } catch (error) {
         chatLog.innerHTML = `<p class="error">Could not load chat</p>`;
         console.error(error);
     }
 }
 
-
-function renderChat(chatMessages){
+function renderChat(chatMessages, playerNames) {
     chatLog.innerHTML = "";
     chatMessages.forEach(msg => {
         const div = document.createElement('div');
         div.className = 'chat-message';
-        div.textContent = `${msg.author}: ${msg.message}`;
+        div.innerHTML = tagUser(`${msg.author}: ${msg.message}`, playerNames);
         chatLog.appendChild(div);
     });
     chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+function tagUser(text, playerNames) {
+    const splitIndex = text.indexOf(': ');
+    if (splitIndex === -1) {
+        return text;
+    }
+    const author = text.slice(0, splitIndex + 2);  // keeps author and ': ' example. Maarten: hello --> author = "Maarten: "
+    const message = text.slice(splitIndex + 2);    // keeps message example. Maarten: hello --> message = "hallo"
+
+    const highlightedMessage = message.replace(/@(\w+)/g, (match, username) => { // match is the entire text after "@"
+        if (playerNames.includes(username)) {
+            return `<span class="mention"><mark>@${username}</mark></span>`;
+        }
+        return match;
+    });
+    return author + highlightedMessage;
 }
 
 window.sendChat = async function(){
