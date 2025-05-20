@@ -77,15 +77,22 @@ nav .logo {
 nav .nav-links {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
+nav .nav-links a,
 nav .nav-links .nav-link-item {
+    background-color: transparent;
     color: #F5EFE0;
     text-decoration: none;
-    padding: 8px 10px;
+    padding: 8px 15px;
     border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    margin-left: 10px;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
 }
 
 nav .nav-links .nav-link-item:hover {
@@ -115,9 +122,9 @@ nav .nav-links .home-icon-symbol {
     display: block;
 }
 
-nav .nav-links .home-icon-link:hover {
-    background-color: #D98244 !important;
-    border-radius: 4px;
+nav .nav-links a.home-icon-link:hover {
+    background-color: #D98244;
+    color: #FFFFFF !important;
 }
 
 nav .nav-links a {
@@ -141,19 +148,10 @@ nav .nav-links a:hover {
     border-color: transparent;
 }
 
-/*nav .nav-links a.register-btn {*/
-/*    color: #F5EFE0;     !* Tekstkleur *!*/
-/*    text-decoration: none;*/
-/*    padding: 8px 15px; !* Je bestaande padding *!*/
-/*    border-radius: 4px; !* Je bestaande border-radius *!*/
-/*    !* vertical-align wordt nu afgehandeld door align-items op .nav-links *!*/
-/*    !* De class .register-btn geeft de knop zijn achtergrondkleur etc. *!*/
-/*}*/
-
-nav .nav-links a.register-btn {
-    background-color: #E07A5F;  /* De oranje/rode achtergrondkleur */
-    color: #FFFFFF;             /* Witte tekstkleur */
-    border: 1px solid #C96A4F;  /* Een iets donkerdere rand */
+nav .nav-links a#logoutButton.register-btn:hover {
+    background-color: #E07A5F;
+    color: #FFFFFF !important;
+    border-color: #C96A4F;
 }
 
 
