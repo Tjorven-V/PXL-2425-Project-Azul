@@ -90,7 +90,7 @@ internal class Game : IGame
 
     private async Task DelayNextRound()
     {
-        await Task.Delay(TimeSpan.FromSeconds(2));
+        await Task.Delay(TimeSpan.FromSeconds(1.5f));
 
         foreach (var player in Players)
         {
@@ -98,7 +98,7 @@ internal class Game : IGame
             player.HasStartingTile = false;
         }
 
-        await Task.Delay(TimeSpan.FromSeconds(2));
+        await Task.Delay(TimeSpan.FromSeconds(1.5f));
 
         TileFactory.FillDisplays();
         TileFactory.TableCenter.AddStartingTile();
