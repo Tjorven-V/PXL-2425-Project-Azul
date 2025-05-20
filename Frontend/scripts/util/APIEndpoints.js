@@ -1,4 +1,4 @@
-const baseUrl = "https://localhost:5051/";
+import {API as baseUrl} from "../util/BasePaths.js";
 
 const APIEndpoints = {
     // Authentication

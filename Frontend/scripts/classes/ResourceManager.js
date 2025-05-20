@@ -1,9 +1,5 @@
-let basePath;
-if (window.location.hostname === 'localhost') {
-    basePath = window.location.origin + "/Frontend";
-} else {
-    basePath = window.location.hostname;
-}
+import {Site as basePath} from "../util/BasePaths.js";
+
 export let selectedSkin = "azul";
 
 export function setSkin(newSkin, domBody) {
