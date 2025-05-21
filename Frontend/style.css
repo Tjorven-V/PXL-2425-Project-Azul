@@ -9,7 +9,7 @@ html, body {
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    background-image: url('media/skins/azul/tiles_background.png');
+    background-image: url('media/tiles_background.png');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
