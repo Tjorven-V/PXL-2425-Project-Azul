@@ -1,5 +1,4 @@
 ﻿using Azul.Core.GameAggregate.Contracts;
-using Azul.Core.PlayerAggregate;
 using Azul.Core.PlayerAggregate.Contracts;
 using Azul.Core.TileFactoryAggregate.Contracts;
 
@@ -107,60 +106,33 @@ internal class Game : IGame
         RoundNumber++;
 
         _currentPlayerId = _nextPlayerId;
-        Console.WriteLine($"Next player: {_currentPlayerId}");
-
-        await Task.Delay(TimeSpan.FromSeconds(1.5f));
-
-        StartAITurn();
     }
 
     private void PrepareNextRound()
     {
         if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
         {
-            _currentPlayerId = Guid.Empty;
-            _ = DelayNextRound();
+            //_currentPlayerId = Guid.Empty;
+            //await Task.Delay(TimeSpan.FromSeconds(1.5f));
 
-            return;
+            _currentPlayerId = _nextPlayerId;
+            foreach (var player in Players)
+            {
+                player.Board.DoWallTiling(TileFactory);
+                player.HasStartingTile = false;
+            }
+
+            //await Task.Delay(TimeSpan.FromSeconds(1.5f));
+
+            TileFactory.FillDisplays();
+            TileFactory.TableCenter.AddStartingTile();
+
+            RoundNumber++;
+
+            //_currentPlayerId = _nextPlayerId;
         } else
         {
             _currentPlayerId = _nextPlayerId;
-            Console.WriteLine($"Next player: {_currentPlayerId}");
-        }
-
-        StartAITurn();
-    }
-
-    private void StartAITurn()
-    {
-        Task.Run(AIPlayerTurn); // Run this on a new thread so it doesnt block the HTTP request from the player
-    }
-
-    private async void AIPlayerTurn()
-    {
-        var playerToPlay = Players.FirstOrDefault(p => p.Id == _currentPlayerId);
-        if (playerToPlay is not ComputerPlayer)
-        {
-            Console.WriteLine("This player is not AI");
-            return;
-        }
-        Console.WriteLine("This player is AI!");
-
-        await Task.Delay(TimeSpan.FromSeconds(1.5f)); // Simulate delay for AI player turn
-
-        var aiPlayer = playerToPlay as ComputerPlayer;
-
-        var takeTilesMove = aiPlayer.GetPreferredMove(this);
-        TakeTilesFromFactory(aiPlayer.Id, takeTilesMove.FactoryDisplayId, takeTilesMove.TileType);
-
-        var placeTilesMove = aiPlayer.GetPreferredPlaceTilesMove(this);
-        if (placeTilesMove.PatternLineIndex == -1)
-        {
-            PlaceTilesOnFloorLine(aiPlayer.Id);
-        }
-        else
-        {
-            PlaceTilesOnPatternLine(aiPlayer.Id, placeTilesMove.PatternLineIndex);
         }
     }
 
