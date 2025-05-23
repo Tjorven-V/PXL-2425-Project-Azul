@@ -107,6 +107,11 @@ internal class Game : IGame
         RoundNumber++;
 
         _currentPlayerId = _nextPlayerId;
+        Console.WriteLine($"Next player: {_currentPlayerId}");
+
+        await Task.Delay(TimeSpan.FromSeconds(1.5f));
+
+        StartAITurn();
     }
 
     private void PrepareNextRound()
@@ -115,20 +120,24 @@ internal class Game : IGame
         {
             _currentPlayerId = Guid.Empty;
             _ = DelayNextRound();
+
+            return;
         } else
         {
             _currentPlayerId = _nextPlayerId;
+            Console.WriteLine($"Next player: {_currentPlayerId}");
         }
 
-        Console.WriteLine($"Next player: {_currentPlayerId}");
+        StartAITurn();
+    }
+
+    private void StartAITurn()
+    {
         Task.Run(AIPlayerTurn); // Run this on a new thread so it doesnt block the HTTP request from the player
     }
 
     private async void AIPlayerTurn()
     {
-        await Task.Delay(TimeSpan.FromSeconds(1.5f)); // Simulate delay for AI player turn
-
-        Console.WriteLine("Testing if this player is AI");
         var playerToPlay = Players.FirstOrDefault(p => p.Id == _currentPlayerId);
         if (playerToPlay is not ComputerPlayer)
         {
@@ -136,21 +145,21 @@ internal class Game : IGame
             return;
         }
         Console.WriteLine("This player is AI!");
+
+        await Task.Delay(TimeSpan.FromSeconds(1.5f)); // Simulate delay for AI player turn
+
         var aiPlayer = playerToPlay as ComputerPlayer;
 
         var takeTilesMove = aiPlayer.GetPreferredMove(this);
         TakeTilesFromFactory(aiPlayer.Id, takeTilesMove.FactoryDisplayId, takeTilesMove.TileType);
-        Console.WriteLine("AI player has taken tiles");
 
         var placeTilesMove = aiPlayer.GetPreferredPlaceTilesMove(this);
         if (placeTilesMove.PatternLineIndex == -1)
         {
-            Console.WriteLine("AI player has no pattern line to place tiles on, placing on floor line");
             PlaceTilesOnFloorLine(aiPlayer.Id);
         }
         else
         {
-            Console.WriteLine($"AI player has pattern line {placeTilesMove.PatternLineIndex} to place tiles on");
             PlaceTilesOnPatternLine(aiPlayer.Id, placeTilesMove.PatternLineIndex);
         }
     }
