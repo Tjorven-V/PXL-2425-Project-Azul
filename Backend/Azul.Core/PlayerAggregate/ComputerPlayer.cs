@@ -8,8 +8,19 @@ namespace Azul.Core.PlayerAggregate;
 internal class ComputerPlayer : PlayerBase
 {
     private readonly IGamePlayStrategy _strategy;
+    public IGamePlayStrategy Strategy => _strategy;
 
-    public ComputerPlayer(IGamePlayStrategy strategy) : base(Guid.NewGuid(), "Computer", null)
+    public ITakeTilesMove GetPreferredMove(IGame game)
+    {
+        return _strategy.GetBestTakeTilesMove(Id, game);
+    }
+
+    public IPlaceTilesMove GetPreferredPlaceTilesMove(IGame game)
+    {
+        return _strategy.GetBestPlaceTilesMove(Id, game);
+    }
+
+    public ComputerPlayer(IGamePlayStrategy strategy, string name = "Computer") : base(Guid.NewGuid(), name, null)
     {
         _strategy = strategy;
     }

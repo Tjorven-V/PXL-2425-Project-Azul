@@ -29,9 +29,39 @@ internal class Table : ITable
 
     public Guid GameId { get; set;  }
 
+    private static string[] ComputerPlayerNames = {
+        "Harald", "Philippe", "Gustav", "Hans", "Karl", "Lars",
+        "Erik", "Johan", "Sven", "Bjorn", "Magnus", "Olof",
+        "Nils", "Rune", "Stig", "Tomas", "Ulf", "Viggo",
+        "Yngve", "Ziggy", "Astrid", "Birgit", "Cecilia",
+        "Dahlia", "Elin", "Freja", "Greta", "Hilda", "Ingrid",
+        "Jasmine", "Karin", "Lina", "Maja", "Nora", "Oda",
+        "Petra", "Runa", "Saga", "Tove", "Ulla", "Vera",
+        "Ylva", "Zara", "Alva", "Britt", "Clara", "Dora",
+        "Elsa", "Freya", "Gina", "Hanna", "Ida", "Juna"
+    };
+
     public void FillWithArtificialPlayers(IGamePlayStrategy gamePlayStrategy)
     {
-        throw new NotImplementedException();
+        IReadOnlyList<IPlayer> currentlySeatedPlayers = SeatedPlayers;
+        List<ComputerPlayer> aiPlayers = [];
+
+        List<string> TakenNames = [];
+        var rand = new Random();
+
+        for (int i = 0; i < Preferences.NumberOfArtificialPlayers; i++)
+        {
+            var name = ComputerPlayerNames[rand.Next(ComputerPlayerNames.Length)];
+            while (TakenNames.Contains(name))
+            {
+                name = ComputerPlayerNames[rand.Next(ComputerPlayerNames.Length)];
+            }
+            TakenNames.Add(name);
+            var aiPlayer = new ComputerPlayer(gamePlayStrategy, $"{name} (CPU)  ");
+            aiPlayers.Add(aiPlayer);
+        }
+
+        SeatedPlayers = [..currentlySeatedPlayers, ..aiPlayers];
     }
 
     public void Join(User user)

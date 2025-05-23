@@ -1,4 +1,5 @@
 ﻿using Azul.Core.GameAggregate.Contracts;
+using Azul.Core.PlayerAggregate;
 using Azul.Core.PlayerAggregate.Contracts;
 using Azul.Core.TileFactoryAggregate.Contracts;
 
@@ -117,6 +118,40 @@ internal class Game : IGame
         } else
         {
             _currentPlayerId = _nextPlayerId;
+        }
+
+        Console.WriteLine($"Next player: {_currentPlayerId}");
+        Task.Run(AIPlayerTurn); // Run this on a new thread so it doesnt block the HTTP request from the player
+    }
+
+    private async void AIPlayerTurn()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(1.5f)); // Simulate delay for AI player turn
+
+        Console.WriteLine("Testing if this player is AI");
+        var playerToPlay = Players.FirstOrDefault(p => p.Id == _currentPlayerId);
+        if (playerToPlay is not ComputerPlayer)
+        {
+            Console.WriteLine("This player is not AI");
+            return;
+        }
+        Console.WriteLine("This player is AI!");
+        var aiPlayer = playerToPlay as ComputerPlayer;
+
+        var takeTilesMove = aiPlayer.GetPreferredMove(this);
+        TakeTilesFromFactory(aiPlayer.Id, takeTilesMove.FactoryDisplayId, takeTilesMove.TileType);
+        Console.WriteLine("AI player has taken tiles");
+
+        var placeTilesMove = aiPlayer.GetPreferredPlaceTilesMove(this);
+        if (placeTilesMove.PatternLineIndex == -1)
+        {
+            Console.WriteLine("AI player has no pattern line to place tiles on, placing on floor line");
+            PlaceTilesOnFloorLine(aiPlayer.Id);
+        }
+        else
+        {
+            Console.WriteLine($"AI player has pattern line {placeTilesMove.PatternLineIndex} to place tiles on");
+            PlaceTilesOnPatternLine(aiPlayer.Id, placeTilesMove.PatternLineIndex);
         }
     }
 

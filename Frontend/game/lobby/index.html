@@ -22,11 +22,18 @@
     <h1>Azul Game Lobby</h1>
 
     <div id="controls" class="lobby-controls">
-      <label for="players">Number of players:</label>
+      <label for="players">Number of players</label>
       <select id="players">
-        <option value="2">2 players</option>
-        <option value="3">3 players</option>
-        <option value="4">4 players</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <label for="ai-players">of which are AI</label>
+      <select id="ai-players">
+        <option value="0" selected="selected">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
       </select>
       <button id="joinGame" class="cta-button">Search for a Table</button>
       <button id="browseGames" class="cta-button">Browse Tables</button>

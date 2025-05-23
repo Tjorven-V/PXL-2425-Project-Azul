@@ -19,8 +19,8 @@ internal class GameFactory : IGameFactory
         {
             if (player == null) continue;
 
-            var gamePlayer = new HumanPlayer(player.Id, player.Name, player.LastVisitToPortugal);
-            gamePlayers.Add(gamePlayer);
+            //var gamePlayer = new HumanPlayer(player.Id, player.Name, player.LastVisitToPortugal);
+            gamePlayers.Add(player);
         }
 
         if (gamePlayers.Count == 0)

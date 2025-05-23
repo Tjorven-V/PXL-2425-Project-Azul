@@ -77,6 +77,7 @@ internal class TableManager : ITableManager
         }
 
         // 3. Create new game for this table
+        FillWithArtificialPlayers(tableId, new User());
         var game = _gameFactory.CreateNewForTable(table);
 
         // 4. Save the game in the repository
@@ -91,7 +92,7 @@ internal class TableManager : ITableManager
 
     public void FillWithArtificialPlayers(Guid tableId, User user)
     {
-        //TODO: Implement this method when you are working on the EXTRA requirement 'Play against AI'
-        throw new NotImplementedException();
+        var table = _tableRepository.Get(tableId);
+        table.FillWithArtificialPlayers(_gamePlayStrategy);
     }
 }

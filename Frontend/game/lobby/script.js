@@ -6,7 +6,7 @@ function RedirectToLogin() {
     window.location = Redirects.Login;
 }
 
-let gameFilterElement, joinBtnElement, leaveBtnElement, playerCountSelectElement, controlsElement, statusElement, browserElement, closeBrowserElement, browseButtonElement, availableGamesElement;
+let gameFilterElement, aiPlayerCountSelectElement, joinBtnElement, leaveBtnElement, playerCountSelectElement, controlsElement, statusElement, browserElement, closeBrowserElement, browseButtonElement, availableGamesElement;
 document.addEventListener('DOMContentLoaded', async (event) => {
     if (!AuthenticationManager.LoggedInUser) {
         RedirectToLogin();
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     joinBtnElement = document.getElementById('joinGame');
     leaveBtnElement = document.getElementById('leaveGame');
     playerCountSelectElement = document.getElementById('players');
+    aiPlayerCountSelectElement = document.getElementById('ai-players');
     controlsElement = document.getElementById('controls');
     statusElement = document.getElementById('status');
     browserElement = document.getElementById('browser');
@@ -55,11 +56,24 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     joinBtnElement.addEventListener('click', function () {
         let numberOfPlayers = parseInt(playerCountSelectElement.value);
-        JoinOrCreate(numberOfPlayers);
+        let numberOfAIPlayers = parseInt(aiPlayerCountSelectElement.value);
+        JoinOrCreate(numberOfPlayers, numberOfAIPlayers);
     })
     leaveBtnElement.addEventListener('click', LeaveTable);
     browseButtonElement.addEventListener('click', ShowBrowser);
     closeBrowserElement.addEventListener('click', ShowControls);
+
+    aiPlayerCountSelectElement.addEventListener('change', () => {
+        console.log("wuff");
+
+        let aiPlayerCount = parseInt(aiPlayerCountSelectElement.value);
+        let playerCount = parseInt(playerCountSelectElement.value);
+
+        if (aiPlayerCount >= playerCount) {
+            console.log(aiPlayerCount - 1)
+            playerCountSelectElement.value = aiPlayerCount + 1;
+        }
+    });
 
     SetControlsStatus(true);
 })
@@ -181,7 +195,7 @@ async function LeaveTable() {
     }).catch(APIError);
 }
 
-function JoinOrCreate(numberOfPlayers) {
+function JoinOrCreate(numberOfPlayers, numberOfAIPlayers = 0) {
     SetStatusText("Searching for a game with " + numberOfPlayers + " player(s)...");
     SetControlsStatus(false, "wait");
 
@@ -191,7 +205,7 @@ function JoinOrCreate(numberOfPlayers) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${AuthenticationManager.Token}`
         },
-        body: JSON.stringify({ numberOfPlayers })
+        body: JSON.stringify({ numberOfPlayers: numberOfPlayers - numberOfAIPlayers, numberOfArtificialPlayers: numberOfAIPlayers })
     }).then(async response => {
         SetControlsStatus(true);
         if (!response.ok) {
@@ -291,7 +305,7 @@ function ShowBrowser() {
                 // Player count
                 const playerCount = document.createElement("div");
                 playerCount.id = "playercount_" + game.id;
-                playerCount.textContent = `Seated Players (${game.seatedPlayers.length}/${game.preferences.numberOfPlayers})`;
+                playerCount.textContent = `Seated Players (${game.seatedPlayers.length}/${game.preferences.numberOfPlayers}${game.preferences.numberOfArtificialPlayers !== 0 ? " + " + game.preferences.numberOfArtificialPlayers + " AI" : ""})`;
                 entryElement.appendChild(playerCount);
 
                 // Seated players
@@ -332,7 +346,7 @@ function ShowBrowser() {
                 // Update player count
                 const playerCount = entryElement.querySelector(`#playercount_${game.id}`);
                 if (playerCount) {
-                    playerCount.textContent = `Seated Players (${game.seatedPlayers.length}/${game.preferences.numberOfPlayers})`;
+                    playerCount.textContent = `Seated Players (${game.seatedPlayers.length}/${game.preferences.numberOfPlayers}${game.preferences.numberOfArtificialPlayers !== 0 ? " + " + game.preferences.numberOfArtificialPlayers + " AI" : ""})`;
                 }
 
                 // Track existing players
@@ -464,7 +478,9 @@ function ShowLobby(tableId) {
 
     SetStatusText("Table " + tableId + "\n\nRetrieving info...");
     PollTable(tableId, (tableData) => {
-        let text = `Seated Players (${tableData.seatedPlayers.length}/${tableData.preferences.numberOfPlayers})\n`
+        let maxPlayersText = `${tableData.preferences.numberOfPlayers}${tableData.preferences.numberOfArtificialPlayers !== 0 ? " + " + tableData.preferences.numberOfArtificialPlayers + " AI" : ""}`;
+
+        let text = `Seated Players: ${tableData.seatedPlayers.length}/${maxPlayersText}\n`
         for (let player of tableData.seatedPlayers) {
             text += player.name + "\n";
         }
