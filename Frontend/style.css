@@ -1,47 +1,29 @@
-/* General styles */
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
+/* General styles - Most html, body base styles are now in global.css */
+
+
+
+.container { /* landing.css specific additions/overrides to global .container */
+    /* width: 90%; -> Inherited from global .container */
+    max-width: 960px; /* Common max-width for content areas */
+    margin: auto; /* Centers the container */
+    overflow: hidden; /* Specific to landing page containers, prevents horizontal scroll from children */
+    padding: 0 15px; /* Inherited from global .container */
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    background-image: url('media/tiles_background.png');
-    background-size: cover;
-    background-position: center center;
-    background-attachment: fixed;
-    color: #4A3B31;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-weight: bold;
-}
-
-.container {
-    width: 90%;
-    max-width: 960px;
-    margin: auto;
-    overflow: hidden;
-    padding: 0 15px;
-}
-
-h1, h2, h3 {
+h1, h2, h3 { /* Base heading styles for landing page content */
     margin-bottom: 0.7em;
     font-weight: bold;
 }
 
-h2 {
+h2 { /* Specific h2 style for landing page sections */
     font-size: 1.9em;
     text-align: center;
     margin-bottom: 25px;
-    color: #D98244;
+    color: #D98244; /* Theme color */
 }
-h3 {
+h3 { /* Specific h3 style for landing page sub-sections */
     font-size: 1.3em;
-    color: #E07A5F;
+    color: #E07A5F; /* Another theme color */
 }
 
 p {
@@ -57,117 +39,64 @@ ul li {
     margin-bottom: 0.5em;
 }
 
-ul li::before {
+ul li::before { /* Custom bullet point */
     content: '➤';
-    color: #D98244;
+    color: #D98244; /* Theme color for bullet */
     position: absolute;
     left: 0;
     font-size: 0.9em;
-    top: 0.1em;
+    top: 0.1em; /* Fine-tune vertical alignment */
 }
 
 /* navigation */
-nav {
-    background: rgba(42, 82, 122, 0.9);
-    color: #F5EFE0;
-    padding: 12px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    width: 100%;
-    z-index: 1000;
-    position: sticky;
-    top: 0;
-}
 
-nav .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
-nav .logo {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #F5EFE0;
-    text-decoration: none;
-}
-
-nav .nav-links {
-    display: flex;
-    align-items: center;
-}
-
-nav .nav-links a {
-    color: #F5EFE0;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin-left: 10px;
-    font-size: 0.95em;
-    font-weight: bold;
-    line-height: 1.4;
-}
-
-nav .nav-links a:first-child {
-    margin-left: 0;
-}
-
-nav .nav-links a:hover,
-nav .nav-links a.register-btn:hover {
-    background-color: #D98244;
-    color: #FFFFFF !important;
-    border-color: transparent;
-}
-
-nav .nav-links a.register-btn {
-    background-color: #E07A5F;
-    color: #FFFFFF;
-    border: 1px solid #C96A4F;
-}
+/* nav .container (if HTML uses <div class="container"> inside nav) inherits from global .container + landing .container overrides */
+/* nav .logo, .nav-links, .nav-links a, .nav-links a:hover, .nav-links a.register-btn are covered by global.css */
 
 /* Header */
 .main-header {
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.45); /* Semi-transparent overlay for background image visibility */
     min-height: 350px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #FFFFFF;
+    color: #FFFFFF; /* Text color for header content */
     padding: 30px 20px;
 }
 .main-header h1 {
     font-size: 2.8em;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    color: #FFFFFF; /* Overrides general h1 color for this context */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7); /* Stronger shadow for readability on image */
     font-weight: bold;
 }
 .main-header .slogan {
     font-size: 1.2em;
     margin-bottom: 25px;
     font-weight: bold;
-    color: #f0f0f0;
+    color: #f0f0f0; /* Slightly off-white for slogan */
 }
 
 /* Sections */
 section {
     padding: 30px 25px;
-    background-color: rgba(245, 239, 224, 0.96);
-    margin: 25px 0;
+    background-color: rgba(245, 239, 224, 0.96); /* Light, slightly transparent background for sections */
+    margin: 25px 0; /* Vertical spacing between sections */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    color: #4A3B31;
-    border: 1px solid #E0CDB6;
+    color: #4A3B31; /* Default text color for section content */
+    border: 1px solid #E0CDB6; /* Subtle border */
 }
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
     gap: 20px;
 }
 .feature-item {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.8); /* Lighter background for feature items */
     padding: 20px;
     border-radius: 6px;
     text-align: center;
@@ -179,7 +108,7 @@ section {
 .team-grid {
     display: grid;
     gap: 20px;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Default for mobile */
 }
 .team-member {
     background: rgba(255, 255, 255, 0.85);
@@ -192,20 +121,21 @@ section {
 .team-member img {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
-    background-color: #F5EFE0;
+    border-radius: 50%; /* Circular images */
+    background-color: #F5EFE0; /* Fallback background for images */
     margin-bottom: 10px;
-    object-fit: cover;
-    border: 3px solid #FFFFFF;
+    object-fit: cover; /* Ensures images cover the area well */
+    border: 3px solid #FFFFFF; /* White border around image */
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
-.team-member h3 {
+.team-member h3 { /* Overrides general h3 for team member names */
     font-size: 1.15em;
     margin-top: 5px;
     margin-bottom: 0;
+    /* color will be inherited from general h3 or can be set if different */
 }
 
-
+/* Responsive team grid columns */
 @media (min-width: 550px) {
     .team-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -221,27 +151,27 @@ section {
 /* Call to Action Buttons */
 .cta-section { text-align: center; padding: 15px 0 5px 0; }
 
-.cta-button {
-    display: inline-block;
-    background-color: #E07A5F;
+.cta-button { /* Landing page specific .cta-button, extends global .cta-button implicitly */
+    /* display: inline-block; -> from global */
+    background-color: #E07A5F; /* Primary CTA color */
     color: #FFFFFF;
-    padding: 12px 28px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    margin: 10px 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    font-weight: bold;
-    border: 1px solid #C96A4F;
+    padding: 12px 28px; /* Specific padding for landing page CTAs */
+    /* text-decoration: none; -> from global */
+    /* border-radius: 5px; -> from global */
+    font-size: 1.1em; /* Specific font size for landing page CTAs */
+    margin: 10px 5px; /* Specific margin */
+    /* transition: ... -> from global */
+    /* box-shadow: ... -> from global */
+    /* font-weight: bold; -> from global */
+    border: 1px solid #C96A4F; /* Specific border */
 }
 .cta-button:hover {
-    background-color: #C96A4F;
+    background-color: #C96A4F; /* Darker on hover */
     border-color: #B3593E;
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* Lift effect */
 }
-.cta-button.secondary {
-    background-color: #A8DADC;
+.cta-button.secondary { /* Secondary CTA variant for landing page */
+    background-color: #A8DADC; /* Different theme color */
     color: #2A527A;
     border-color: #8AB8B8;
 }
@@ -252,40 +182,22 @@ section {
     border-color: #70A0A0;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px 0;
-    background: rgba(42, 82, 122, 0.92);
-    color: #F5EFE0;
-    font-size: 0.85em;
-    font-weight: bold;
-    line-height: 1.5;
-    margin-top: auto;
-}
-footer p {
-    margin: 5px 0;
-}
-
-footer a {
-    color: #A8DADC;
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-    color: #F5EFE0;
-}
+/* Footer styles are now in global.css */
 
 /* General Responsiveness */
 @media (max-width: 768px) {
     .main-header h1 { font-size: 2.2em; }
     .main-header .slogan { font-size: 1em; }
-    nav .container { flex-direction: column; }
-    nav .logo { margin-bottom: 10px; }
-    nav .nav-links { display: flex; flex-direction: column; align-items: center; width: 100%; }
-    nav .nav-links a { margin: 5px 0; width: 80%; text-align: center; }
-    .features-grid { grid-template-columns: 1fr; }
-    .cta-button { font-size: 1em; padding: 10px 20px; }
-    section { padding: 25px 15px; }
+    /* Responsive nav styles are now in global.css */
+    /* nav .container { flex-direction: column; } -> global */
+    /* nav .logo { margin-bottom: 10px; } -> global (uses 8px, landing had 10px, might need override if 10px is crucial) */
+    /* nav .nav-links { display: flex; flex-direction: column; align-items: center; width: 100%; } -> global */
+    /* nav .nav-links a { margin: 5px 0; width: 80%; text-align: center; } -> global (uses 4px margin, landing had 5px) */
+    
+    .features-grid { grid-template-columns: 1fr; } /* Stack features on mobile */
+    .cta-button { /* Adjust CTA buttons on mobile */
+        font-size: 1em; 
+        padding: 10px 20px; 
+    }
+    section { padding: 25px 15px; } /* Reduce padding for sections on mobile */
 }

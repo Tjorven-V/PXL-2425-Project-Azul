@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Azul Game Lobby</title>
+  <link rel="stylesheet" href="../../media/global.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../../user/me/retro/easter_egg.css">
 </head>
 <body>
 
@@ -17,7 +19,10 @@
   </div>
 </nav>
 
-<main class="container">
+<div id="easter-egg-trigger-zone"></div>
+<img src="../../user/me/retro/files/varia/supermario.png" id="easter-egg-mario-lobby" alt="Super Mario Easter Egg" class="easter-egg-mario-image">
+
+<main class="main-content-gecentreerd">
   <div class="lobby-container">
     <h1>Azul Game Lobby</h1>
 
@@ -53,17 +58,20 @@
 
     <button id="leaveGame" class="cta-button secondary" style="display: none;">Leave Table</button>
     <div id="status" class="lobby-status"></div>
+    <div id="waiting-game-prompt" style="display: none; text-align: center; margin-top: 15px; padding: 10px; background-color: rgba(220, 230, 245, 0.6); border-radius: 5px;">
+      <p style="margin: 0 0 8px 0; font-size: 0.95em; color: #2A527A;">Want to play a game while waiting?</p>
+      <button id="play-snes-while-waiting" class="cta-button" style="width: auto; padding: 8px 15px; font-size: 0.9em; margin-bottom: 0;">Play SNES Game</button>
+    </div>
   </div>
 </main>
 
 <footer>
   <div class="container">
-    <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL Hogeschool</p>
+    <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL University College</p>
   </div>
 </footer>
 <script type="module" src="script.js"></script>
 <script>
-  // Alleen script voor currentYear
   const currentYearSpan = document.getElementById('currentYear');
   if (currentYearSpan) {
     currentYearSpan.textContent = new Date().getFullYear();

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="media/global.css">
     <link rel="stylesheet" href="style.css">
     <title>Azul Project - Team 51</title>
     <script type="module" src="script.js"></script>
@@ -10,10 +11,14 @@
 <body>
 
 <nav>
-    <div class="container">
+    <div class="nav-container">
         <a href="index.html" class="logo">Azul Project: Team Azul51</a>
-        <div class="nav-links" id="navLinksContainer"> <a href="user/login/index.html">Login</a>
-            <a href="user/register/index.html" class="register-btn">Sign Up</a>
+        <div class="nav-links">
+            <a href="index.html" class="home-icon-link" title="Home">
+                <span class="home-icon-symbol">🏠</span>
+            </a>
+            <a href="user/login/index.html" class="nav-link-item">Login</a>
+            <a href="user/register/index.html" class="nav-link-item register-btn">Sign Up</a>
         </div>
     </div>
 </nav>
@@ -87,7 +92,7 @@
 
 <footer>
     <div class="container">
-        <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL Hogeschool</p>
+        <p>&copy; <span id="currentYear"></span> Project - Team Azul51 - PXL University College</p>
         <p>This is a student project inspired by the board game Azul by Michael Kiesling. For educational purposes only.</p>
     </div>
 </footer>

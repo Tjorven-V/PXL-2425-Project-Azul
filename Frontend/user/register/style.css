@@ -1,139 +1,47 @@
-/*!* General Styles *!*/
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-}
+/*!* General Styles - Most have been moved to global.css *!*/
+/* html, body base styles (margin, padding, width, overflow-x, font-family, line-height, main text color, flex props, font-weight) are now in global.css */
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
+    /* Kept page-specific background, other body styles are now global */
     background-image: url('../../media/tiles_background.png');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
-    color: #4A3B31;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-weight: bold;
 }
 
-.container {
-    width: 90%;
-    max-width: 960px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 15px;
+.container { /* register.css specific enhancement to global .container */
+    /* width: 90%; -> Inherited from global .container */
+    max-width: 960px; /* Added for register.css context */
+    /* margin-left: auto; -> Inherited from global .container */
+    /* margin-right: auto; -> Inherited from global .container */
+    /* padding: 0 15px; -> Inherited from global .container */
 }
 
-main.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
+main.container { /* register.css specific enhancement to global main.container */
+    /* flex: 1; -> Inherited */
+    /* display: flex; -> Inherited */
+    /* flex-direction: column; -> Inherited */
+    /* align-items: center; -> Inherited */
+    /* justify-content: center; -> Inherited */
+    padding-top: 15px; /* Specific padding for register page main content */
+    padding-bottom: 15px; /* Specific padding for register page main content */
 }
 
 nav {
-    background: rgba(42, 82, 122, 0.9);
-    color: #F5EFE0;
-    padding: 12px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    width: 100%;
-    z-index: 1000;
-    position: sticky;
-    top: 0;
+    /* Shared nav styles (color, padding, width, z-index, position, top, font-weight) are in global.css */
+    background: rgba(42, 82, 122, 0.9); /* Specific background opacity for register page nav */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Specific shadow for register page nav */
 }
 
-nav .container,
-nav .nav-container {
-    width: 90%;
-    max-width: 960px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-nav .logo {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #F5EFE0;
-    text-decoration: none;
-}
-
-nav .nav-links {
-    display: flex;
-    align-items: center;
-}
-
-nav .nav-links .home-icon-link {
-    color: #F5EFE0;
-    text-decoration: none;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-    background-color: transparent !important;
-    border: none !important;
-}
-
-nav .nav-links .home-icon-link:hover {
-    background-color: #D98244 !important;
-    /* border-radius: 4px; */
-}
-
-nav .nav-links .home-icon-symbol {
-    font-size: 2.0em;
-    color: #F5EFE0;
-    line-height: 1;
-    display: block;    
-}
-
-nav .nav-links a {
-    color: #F5EFE0;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin-left: 10px;
-    font-size: 0.95em;
-    font-weight: bold;
-    line-height: 1.4;
-}
-
-nav .nav-links a:first-child {
-    margin-left: 0;
-}
-
-nav .nav-links a:hover,
-nav .nav-links a.register-btn:hover {
-    background-color: #D98244;
-    color: #FFFFFF !important;
-    border-color: transparent;
-}
-
-nav .nav-links a.register-btn {
-    background-color: #E07A5F;
-    color: #FFFFFF;
-    border: 1px solid #C96A4F;
-}
+/* All sub-rules for nav (.nav-container, .logo, .nav-links, .home-icon-link, .home-icon-symbol, a, a:hover, a.register-btn) are now covered by global.css */
 
 /* Register Form Specific Styles */
 .form-wrapper {
     width: 100%;
-    max-width: 480px;
+    max-width: 480px; /* Slightly wider than login form */
 }
 
-form {
+form { /* Styles apply directly to the form tag */
     background-color: rgba(245, 239, 224, 0.98);
     padding: 20px 25px;
     border-radius: 6px;
@@ -168,7 +76,7 @@ form {
     text-decoration: underline;
 }
 
-.form-body {
+.form-body { /* Assuming this class is used or intended, though not explicitly in original HTML snippet */
     margin-top: 10px;
 }
 
@@ -185,13 +93,12 @@ form {
     font-size: 0.85em;
 }
 
-.form-entry label.checkbox-label {
+.form-entry label.checkbox-label { /* Specific style for checkbox labels */
     font-weight: normal;
     color: #4A3B31;
     font-size: 0.9em;
-    margin-bottom: 0;
+    margin-bottom: 0; /* Align with checkbox */
 }
-
 
 .form-entry input[type="text"],
 .form-entry input[type="email"],
@@ -205,14 +112,14 @@ form {
     color: #4A3B31;
     font-size: 0.9em;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Ensures consistent font with body */
     font-weight: normal;
 }
 .form-entry input[type="text"]::placeholder,
 .form-entry input[type="email"]::placeholder,
 .form-entry input[type="password"]::placeholder {
     color: #b0b0b0;
-    font-weight: normal;
+    font-weight: normal; /* Placeholders are typically normal weight */
 }
 .form-entry input[type="text"]:focus,
 .form-entry input[type="email"]:focus,
@@ -231,36 +138,37 @@ form {
 }
 .form-entry input[type="checkbox"] {
     margin-right: 8px;
-    width: auto;
-    height: auto;
-    transform: scale(1.1);
+    width: auto; /* Override browser defaults if they cause issues */
+    height: auto; /* Override browser defaults */
+    transform: scale(1.1); /* Slightly larger checkbox */
     cursor: pointer;
-    accent-color: #D98244;
+    accent-color: #D98244; /* Theme color for the checkbox itself */
 }
 
-#datum-wrapper.form-entry {
+#datum-wrapper.form-entry { /* If a specific wrapper for date is used */
     margin-top: 0;
 }
 
-.cta-button#register-button {
+.cta-button#register-button { /* Extends global .cta-button */
     width: 100%;
     background-color: #E07A5F;
     color: #FFFFFF;
     padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 1em;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    /* text-decoration: none; -> from global .cta-button */
+    /* border-radius: 4px; -> original was 4px, global .cta-button is 5px. Keeping 4px. */
+    /* font-size: 1em; -> from global .cta-button */
+    /* font-weight: bold; -> from global .cta-button */
+    /* transition: ... -> from global .cta-button */
+    /* box-shadow: ... -> from global .cta-button */
     border: 1px solid #C96A4F;
-    cursor: pointer;
-    margin-top: 18px;
+    /* cursor: pointer; -> from global .cta-button */
+    margin-top: 18px; /* Specific margin */
+    border-radius: 4px; /* Kept 4px as it was specific, global .cta-button uses 5px */
 }
 .cta-button#register-button:hover {
     background-color: #C96A4F;
     border-color: #B3593E;
-    transform: translateY(-1px);
+    transform: translateY(-1px); /* Global .cta-button does not specify transform on hover */
 }
 .cta-button#register-button:disabled {
     background-color: #F6C4B6;
@@ -273,51 +181,27 @@ form {
 
 p#error.form-message:not(:empty) {
     display: block;
-    color: #D32F2F;
+    color: #D32F2F; /* Error color */
     font-size: 0.85em;
     margin-top: 12px;
-    margin-bottom: 0;
+    margin-bottom: 0; /* No extra space if error message is the last thing */
     font-weight: bold;
 }
-p#error.form-message {
+p#error.form-message { /* Hides the element if empty */
     display: none;
     min-height: 0;
     margin-top:0;
     margin-bottom:0;
 }
-p#error.form-message.success {
-    color: #2E7D32;
+p#error.form-message.success { /* Style for a success message if the same p#error is used */
+    color: #2E7D32; /* Success color */
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px 0;
-    background: rgba(42, 82, 122, 0.92);
-    color: #F5EFE0;
-    font-size: 0.85em;
-    font-weight: bold;
-    line-height: 1.5;
-    margin-top: auto;
-}
-footer p {
-    margin: 5px 0;
-}
-footer a {
-    color: #A8DADC;
-    text-decoration: none;
-}
-footer a:hover {
-    text-decoration: underline;
-    color: #F5EFE0;
-}
+/* Footer styles are now in global.css */
 
 /* Responsiveness */
 @media (max-width: 768px) {
-    nav .container, nav .nav-container { flex-direction: column; }
-    nav .logo { margin-bottom: 8px; }
-    nav .nav-links { display: flex; flex-direction: column; align-items: center; width: 100%; }
-    nav .nav-links a { margin: 4px 0; width: 80%; text-align: center; }
+    /* Responsive nav styles are now in global.css */
 
     .form-wrapper { margin: 15px 5px; padding:0; }
     form { padding: 15px 20px; }

@@ -76,6 +76,39 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     });
 
     SetControlsStatus(true);
+
+    // Easter Egg
+    const easterEggTrigger = document.getElementById('easter-egg-trigger-zone');
+    const easterEggMario = document.getElementById('easter-egg-mario-lobby');
+
+    if (easterEggTrigger && easterEggMario) {
+        easterEggTrigger.addEventListener('mouseenter', () => {
+            easterEggMario.style.display = 'block';
+        });
+
+        easterEggTrigger.addEventListener('mouseleave', (event) => {
+            if (!easterEggMario.contains(event.relatedTarget)) {
+                easterEggMario.style.display = 'none';
+            }
+        });
+
+        easterEggMario.addEventListener('mouseleave', () => {
+            easterEggMario.style.display = 'none';
+        });
+
+        easterEggMario.addEventListener('click', () => {
+            window.location.href = '../../user/me/retro/index.html';
+        });
+    } else {
+        console.warn("Easter egg elements not found in the DOM. Check IDs in lobby HTML and script.");
+    }
+    // --- End Easter Egg ---
+
+    // Update het jaartal in de footer (als dit nog niet elders gebeurt)
+    const currentYearSpan = document.getElementById('currentYear');
+    if (currentYearSpan && !currentYearSpan.textContent) { // Voorkom overschrijven als al ingesteld
+        currentYearSpan.textContent = new Date().getFullYear();
+    }
 })
 
 function updateUserNavigation() {
