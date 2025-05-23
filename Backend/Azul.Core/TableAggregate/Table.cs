@@ -29,18 +29,6 @@ internal class Table : ITable
 
     public Guid GameId { get; set;  }
 
-    private static string[] ComputerPlayerNames = {
-        "Harald", "Philippe", "Gustav", "Hans", "Karl", "Lars",
-        "Erik", "Johan", "Sven", "Bjorn", "Magnus", "Olof",
-        "Nils", "Rune", "Stig", "Tomas", "Ulf", "Viggo",
-        "Yngve", "Ziggy", "Astrid", "Birgit", "Cecilia",
-        "Dahlia", "Elin", "Freja", "Greta", "Hilda", "Ingrid",
-        "Jasmine", "Karin", "Lina", "Maja", "Nora", "Oda",
-        "Petra", "Runa", "Saga", "Tove", "Ulla", "Vera",
-        "Ylva", "Zara", "Alva", "Britt", "Clara", "Dora",
-        "Elsa", "Freya", "Gina", "Hanna", "Ida", "Juna"
-    };
-
     public void FillWithArtificialPlayers(IGamePlayStrategy gamePlayStrategy)
     {
         IReadOnlyList<IPlayer> currentlySeatedPlayers = SeatedPlayers;
@@ -51,10 +39,10 @@ internal class Table : ITable
 
         for (int i = 0; i < Preferences.NumberOfArtificialPlayers; i++)
         {
-            var name = ComputerPlayerNames[rand.Next(ComputerPlayerNames.Length)];
+            var name = ComputerPlayer.PlayerNames[rand.Next(ComputerPlayer.PlayerNames.Length)];
             while (TakenNames.Contains(name))
             {
-                name = ComputerPlayerNames[rand.Next(ComputerPlayerNames.Length)];
+                name = ComputerPlayer.PlayerNames[rand.Next(ComputerPlayer.PlayerNames.Length)];
             }
             TakenNames.Add(name);
             var aiPlayer = new ComputerPlayer(gamePlayStrategy, $"{name} (CPU)  ");

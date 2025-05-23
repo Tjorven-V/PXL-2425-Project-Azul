@@ -1,6 +1,8 @@
 ﻿using Azul.Core.GameAggregate.Contracts;
+using Azul.Core.PlayerAggregate;
 using Azul.Core.PlayerAggregate.Contracts;
 using Azul.Core.TileFactoryAggregate.Contracts;
+using System.Numerics;
 
 namespace Azul.Core.GameAggregate;
 
@@ -38,6 +40,8 @@ internal class Game : IGame
     public int RoundNumber { get; private set; } = 1;
     public bool HasEnded => _hasEnded;
     public IList<IChatMessageEntry> Chat { get; private set; } // +++ Azul51 - Extra : Chat Functionality +++
+
+    private Random _rand = new Random();
 
     /// <summary>
     /// Creates a new game and determines the player to play first.
@@ -82,39 +86,21 @@ internal class Game : IGame
                         firstPlayer = player;
                     }
                 }
+
+                if (player is ComputerPlayer)
+                {
+                    Chat.Add(new ChatMessageEntry(player, ComputerPlayer.StartGameMessages[_rand.Next(ComputerPlayer.StartGameMessages.Length)]));
+                }
             }
         }
 
         _currentPlayerId = firstPlayer.Id;
     }
 
-    private async Task DelayNextRound()
-    {
-        await Task.Delay(TimeSpan.FromSeconds(1.5f));
-
-        foreach (var player in Players)
-        {
-            player.Board.DoWallTiling(TileFactory);
-            player.HasStartingTile = false;
-        }
-
-        await Task.Delay(TimeSpan.FromSeconds(1.5f));
-
-        TileFactory.FillDisplays();
-        TileFactory.TableCenter.AddStartingTile();
-
-        RoundNumber++;
-
-        _currentPlayerId = _nextPlayerId;
-    }
-
     private void PrepareNextRound()
     {
         if (TileFactory.IsEmpty && TileFactory.TableCenter.IsEmpty)
         {
-            //_currentPlayerId = Guid.Empty;
-            //await Task.Delay(TimeSpan.FromSeconds(1.5f));
-
             _currentPlayerId = _nextPlayerId;
             foreach (var player in Players)
             {
@@ -122,17 +108,77 @@ internal class Game : IGame
                 player.HasStartingTile = false;
             }
 
-            //await Task.Delay(TimeSpan.FromSeconds(1.5f));
+            bool gameEndsThisRound = Players.Any(p => p.Board.HasCompletedHorizontalLine);
+            if (gameEndsThisRound)
+            {
+                _hasEnded = true;
+                foreach (var player in Players)
+                {
+                    player.Board.CalculateFinalBonusScores();
+
+                    if (gameEndsThisRound && player is ComputerPlayer)
+                    {
+                        SendChatMessage(player.Id, ComputerPlayer.EndGameMessages[_rand.Next(ComputerPlayer.EndGameMessages.Length)]);
+                    }
+                }
+            }
+
+            if (gameEndsThisRound)
+            {
+                Console.WriteLine($"Game {Id} has ended.");
+                _currentPlayerId = Guid.Empty;
+                return;
+            }
 
             TileFactory.FillDisplays();
             TileFactory.TableCenter.AddStartingTile();
 
             RoundNumber++;
-
-            //_currentPlayerId = _nextPlayerId;
         } else
         {
             _currentPlayerId = _nextPlayerId;
+            Console.WriteLine($"Next player: {_currentPlayerId}");
+        }
+
+        StartAITurn();
+    }
+
+    private void StartAITurn()
+    {
+        Task.Run(AIPlayerTurn); // Run this on a new thread so it doesnt block the HTTP request from the player
+    }
+
+    private async void AIPlayerTurn()
+    {
+        var playerToPlay = Players.FirstOrDefault(p => p.Id == _currentPlayerId);
+        if (playerToPlay is not ComputerPlayer)
+        {
+            Console.WriteLine("This player is not AI");
+            return;
+        }
+        Console.WriteLine("This player is AI!");
+
+        await Task.Delay(TimeSpan.FromSeconds(_rand.NextDouble() * 3.5 + 2.5)); // Simulate delay for AI player turn
+
+        if (HasEnded)
+        {
+            Console.WriteLine("Game has ended, AI player turn stopped.");
+            return;
+        }
+
+        var aiPlayer = playerToPlay as ComputerPlayer;
+
+        var takeTilesMove = aiPlayer.GetPreferredMove(this);
+        TakeTilesFromFactory(aiPlayer.Id, takeTilesMove.FactoryDisplayId, takeTilesMove.TileType);
+
+        var placeTilesMove = aiPlayer.GetPreferredPlaceTilesMove(this);
+        if (placeTilesMove.PatternLineIndex == -1)
+        {
+            PlaceTilesOnFloorLine(aiPlayer.Id);
+        }
+        else
+        {
+            PlaceTilesOnPatternLine(aiPlayer.Id, placeTilesMove.PatternLineIndex);
         }
     }
 
@@ -182,16 +228,6 @@ internal class Game : IGame
         playerToPlay.Board.AddTilesToPatternLine(playerToPlay.TilesToPlace, patternLineIndex, TileFactory);
         //PlaceTilesOnFloorLine(playerId);
         playerToPlay.TilesToPlace.Clear();
-
-        bool gameEndsThisRound = Players.Any(p => p.Board.HasCompletedHorizontalLine);
-        if (gameEndsThisRound)
-        {
-            _hasEnded = true;
-            foreach (var p in Players)
-            {
-                p.Board.CalculateFinalBonusScores();
-            }
-        }
 
         PrepareNextRound();
     }

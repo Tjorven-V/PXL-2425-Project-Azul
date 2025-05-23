@@ -73,7 +73,6 @@ internal class GamePlayStrategy : IGamePlayStrategy
 
     private IEnumerable<PatternLineDisplayFiller> PartialPatternLinesThatCanBeCompleted(IBoard playerBoard, IEnumerable<IFactoryDisplay> displaysToSearch)
     {
-        Console.WriteLine("Looking for partials");
         List<PatternLineDisplayFiller> patternLineDisplayFillers = [];
 
         for (int patternLineIndex = 0; patternLineIndex < playerBoard.PatternLines.Length; patternLineIndex++)
@@ -84,22 +83,18 @@ internal class GamePlayStrategy : IGamePlayStrategy
             int tilesRemaining = patternLine.Length - patternLine.NumberOfTiles;
             if (tilesRemaining == 0) continue; // This line is already full
 
-            Console.WriteLine("Testing line " + patternLineIndex + " with " + tilesRemaining + " tiles remaining");
             var requiredType = patternLine.TileType;
 
             foreach (var factoryDisplay in displaysToSearch)
             {
                 foreach (var groupedTiles in factoryDisplay.Tiles.GroupBy(t => t))
                 {
-                    Console.WriteLine("Found grouped tiles of type " + groupedTiles.Key + " with " + groupedTiles.Count() + " tiles");
                     if (groupedTiles.Key != requiredType || groupedTiles.Count() < tilesRemaining) continue;
-                    Console.WriteLine("This satisfies!");
                     patternLineDisplayFillers.Add(new PatternLineDisplayFiller(patternLineIndex, groupedTiles.Key, factoryDisplay));
                 }
             }
         }
 
-        Console.WriteLine("Returning " + patternLineDisplayFillers.Count() + " partial pattern lines");
         return patternLineDisplayFillers;
     }
 
@@ -139,25 +134,25 @@ internal class GamePlayStrategy : IGamePlayStrategy
                     }
                 }
             }
+        }
 
-                 if (underfilledPatternLines.Count > 0)
+        if (underfilledPatternLines.Count > 0)
+        {
+            patternLineDisplayFillers = [.. underfilledPatternLines];
+        }
+        else
+        {
+            int maxAcceptableOverflow = 2; // This is the maximum amount of tiles that can be overfilled before the AI prefers to take one tile and put it on the floor line
+            foreach (var overfilledPatternLine in overfilledPatternLines)
             {
-                patternLineDisplayFillers = [.. underfilledPatternLines];
-            }
-            else
-            {   
-                int maxAcceptableOverflow = 2;
-                foreach (var overfilledPatternLine in overfilledPatternLines)
+                foreach (var patternLineDisplayFiller in overfilledPatternLine)
                 {
-                    foreach (var patternLineDisplayFiller in overfilledPatternLine)
-                    {
-                        var move = patternLineDisplayFiller.Key;
-                        var overfilledTiles = patternLineDisplayFiller.Value;
+                    var move = patternLineDisplayFiller.Key;
+                    var overfilledTiles = patternLineDisplayFiller.Value;
 
-                        if (overfilledTiles > maxAcceptableOverflow) continue;
+                    if (overfilledTiles > maxAcceptableOverflow) continue;
 
-                        patternLineDisplayFillers.Add(move);
-                    }
+                    patternLineDisplayFillers.Add(move);
                 }
             }
         }
@@ -189,7 +184,7 @@ internal class GamePlayStrategy : IGamePlayStrategy
         // Determine if any EMPTY pattern line can be filled in one move
         Console.Write("- - - - - Looking for empty pattern lines that can be filled in one move...");
         PatternLineDisplayFiller[] linesThatCanBeCompleted = [.. EmptyPatternLinesThatCanBeCompleted(playerBoard, displaysToSearch)];
-        if (linesThatCanBeCompleted.Length > 1)
+        if (linesThatCanBeCompleted.Length > 0)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\tOK");
