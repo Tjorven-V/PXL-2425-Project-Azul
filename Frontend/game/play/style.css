@@ -218,25 +218,6 @@ canvas { image-rendering: crisp-edges; background-color: transparent !important;
 .floorLineSpot { cursor: pointer; transition: transform 0.2s; }
 .floorLineSpot:hover { transform: scale(1.1); }
 
-#system-messages {
-    position: fixed; bottom: 55px; right: 10px;
-    width: 280px; max-height: 100px;
-    background: rgba(42, 82, 122, 0.9);
-    color: #F5EFE0; border-radius: 6px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 0.8em; overflow-y: auto; z-index: 1500;
-    font-weight: normal; border: 1px solid rgba(245, 239, 224, 0.2);
-
-}
-#system-messages .messages-container { padding: 8px; }
-.system-message {
-    padding: 3px 5px; margin-bottom: 3px; border-radius: 3px;
-    background: rgba(245, 239, 224, 0.08); animation: fadeIn 0.3s ease-in;
-    line-height: 1.3;
-}
-.system-message:last-child { margin-bottom: 0; }
-.system-message .timestamp { font-size: 0.8em; opacity: 0.7; margin-left: 5px; font-weight: normal; }
-
 /*!* footer *!*/
 /*footer {*/
 /*    text-align: center;*/

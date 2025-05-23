@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
     }
-    setInterval(loadChat, 1000);
+    setInterval(loadChat, 2500);
 });
 
 async function loadChat() {
@@ -65,6 +65,9 @@ async function loadChat() {
 }
 
 function renderChat(chatMessages, playerNames) {
+    const chatLog = document.getElementById("chat-log");
+    if (!chatLog) return;
+
     chatLog.innerHTML = "";
     chatMessages.forEach(msg => {
         const div = document.createElement('div');
@@ -121,4 +124,3 @@ window.sendChat = async function(){
         chatStatus.textContent = `Failed to send: ${errorText}`;
     }
 }
-
