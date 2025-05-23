@@ -64,14 +64,20 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     closeBrowserElement.addEventListener('click', ShowControls);
 
     aiPlayerCountSelectElement.addEventListener('change', () => {
-        console.log("wuff");
-
         let aiPlayerCount = parseInt(aiPlayerCountSelectElement.value);
         let playerCount = parseInt(playerCountSelectElement.value);
 
         if (aiPlayerCount >= playerCount) {
-            console.log(aiPlayerCount - 1)
             playerCountSelectElement.value = aiPlayerCount + 1;
+        }
+    });
+
+    playerCountSelectElement.addEventListener('change', () => {
+        let aiPlayerCount = parseInt(aiPlayerCountSelectElement.value);
+        let playerCount = parseInt(playerCountSelectElement.value);
+
+        if (aiPlayerCount >= playerCount) {
+            aiPlayerCountSelectElement.value = playerCount - 1;
         }
     });
 
@@ -158,15 +164,18 @@ function SetControlsStatus(enabled, cursor = "blocked") {
     joinBtnElement.disabled = !enabled;
     leaveBtnElement.disabled = !enabled;
     playerCountSelectElement.disabled = !enabled;
+    aiPlayerCountSelectElement.disabled = !enabled;
 
     if (!enabled) {
         joinBtnElement.style.cursor = cursor;
         leaveBtnElement.style.cursor = cursor;
         playerCountSelectElement.style.cursor = cursor;
+        aiPlayerCountSelectElement.style.cursor = cursor;
     } else {
         joinBtnElement.style.cursor = "";
         leaveBtnElement.style.cursor = "";
         playerCountSelectElement.style.cursor = "";
+        aiPlayerCountSelectElement.style.cursor = "";
     }
 }
 
