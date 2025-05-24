@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
     }
-    setInterval(loadChat, 2500);
+    setInterval(loadChat, 1500);
 });
 
 async function loadChat() {

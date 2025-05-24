@@ -23,7 +23,7 @@ class TableCenter extends ClickableCanvas {
         this.Clear();
         const ctx = this.CanvasContext;
 
-        const tilesPerRow = 8;
+        const tilesPerRow = 10;
         const padding = 10;
         const maxTileSize = (this.Canvas.width - (tilesPerRow - 1) * padding) / tilesPerRow;
 

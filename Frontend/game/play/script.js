@@ -46,8 +46,8 @@ function updateUserNavigation() {
             <a href="../../index.html" title="Home" class="nav-link-item home-icon-link">
                 <span role="img" aria-label="Home" class="home-icon-symbol">&#x1F3E0;</span>
             </a>
-            <span class="nav-username" style="margin-right: 15px; vertical-align: middle;">${userName}</span>
-            <a href="#" id="logoutButton" class="nav-link-item register-btn" style="vertical-align: middle;">Logout</a>
+            <span class="nav-username" style="font-size: 0.85em; margin-right: 15px; vertical-align: middle;">${userName}</span>
+            <a href="#" id="logoutButton" class="nav-link-item register-btn" style="font-size: 0.85em; vertical-align: middle;">Logout</a>
         `;
 
         const logoutButtonElement = document.getElementById('logoutButton');
@@ -126,7 +126,7 @@ async function updateBoards() {
                     gameState.afkWarningSent = false;
                 }
                 else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
-                    displaySystemMessage("AFK detected! Auto-move in 10 seconds...", false);
+                    displaySystemMessage("AFK detected! Auto-move in 10 seconds...");
                     gameState.afkWarningSent = true;
                 }
             }
@@ -136,7 +136,7 @@ async function updateBoards() {
         }
 
     } catch (error) {
-        displaySystemMessage("Updating board error:" + error);
+        console.log("Updating board error:" + error);
     }
 }
 
@@ -159,7 +159,7 @@ async function handleAFKTimeout() {
         } else {
             const validCenterTiles = game.tileFactory.tableCenter.tiles.filter(t => t !== 0);
             if (validCenterTiles.length === 0) {
-                displaySystemMessage("No tiles available?");
+                console.log("No tiles available?");
                 return;
             }
             displayId = game.tileFactory.tableCenter.id;
@@ -172,11 +172,11 @@ async function handleAFKTimeout() {
         const placeResult = await placeTilesOnFloorLine();
         if (!placeResult.success) throw new Error("Failed to place tiles");
 
-        displaySystemMessage("AFK turn completed automatically", false);
+        displaySystemMessage("AFK turn completed automatically...", false);
         await updateBoards();
 
     } catch (error) {
-        displaySystemMessage("AFK handling failed: " + error.message);
+        console.log("AFK handling failed: " + error.message);
     }
 }
 
@@ -226,7 +226,7 @@ async function handleFloorLineSelection(e) {
             loadBoards();
         }
     } catch (error) {
-        displaySystemMessage("Floor line placement failed:" + error.message);
+        console.log("Floor line placement failed:" + error.message);
     }
 }
 
@@ -250,7 +250,7 @@ async function takeTiles(displayId, tileType) {
         return { success: true };
 
     } catch (error) {
-        displaySystemMessage("TakeTiles failed:" + error);
+        console.log("TakeTiles failed:" + error);
         return { success: false };
     }
 }
@@ -264,7 +264,7 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         }
         const game = await getGame();
         if (!game) {
-            displaySystemMessage("Couldn't validate game state");
+            console.log("Couldn't validate game state");
             return { success: false };
         }
 
@@ -280,7 +280,7 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
         if (!takeResult.success) throw new Error("Failed to take tiles");
 
-        displaySystemMessage("Sending placeTiles request...", false);
+        console.log("Sending placeTiles request...");
         const response = await fetch(APIEndpoints.PlaceTilesPatternLine.replace("{id}", gameId), {
             method: 'POST',
             headers: {
@@ -292,13 +292,13 @@ async function placeTilesOnPatternLine(patternLineIndex) {
 
         if (!response.ok) {
             const error = await response.json();
-            displaySystemMessage("PlaceTiles failed:", error.message);
+            console.log("PlaceTiles failed:" + error.message);
             return { success: false, error: error.message };
         }
 
         return { success: true };
     } catch (error) {
-        displaySystemMessage("PlaceTiles error:" + error);
+        console.log("PlaceTiles error:" + error);
         return { success: false, error: error.message };
     }
 }
@@ -347,7 +347,7 @@ async function handlePatternLineSelection(e) {
             resetSelections();
         }
     } catch (error) {
-        displaySystemMessage("Placement failed:" + error.message);
+        console.log("Placement failed:" + error.message);
     }
 }
 
@@ -370,13 +370,13 @@ async function placeTilesOnFloorLine() {
 
         if (!response.ok) {
             const error = await response.json();
-            displaySystemMessage("PlaceTilesFloorLine failed:", error.message);
+            console.log("PlaceTilesFloorLine failed:" + error.message);
             return { success: false, error: error.message };
         }
 
         return { success: true };
     } catch (error) {
-        displaySystemMessage("PlaceTilesFloorLine error: " + error);
+        console.log("PlaceTilesFloorLine error: " + error);
         return { success: false, error: error.message };
     }
 }
@@ -426,7 +426,7 @@ async function getGame() {
         }
         return null;
     } catch (error) {
-        displaySystemMessage("Game fetch error: " + error);
+        console.log("Game fetch error: " + error);
         return null;
     }
 }
@@ -449,7 +449,7 @@ async function loadBoards() {
         });
         await updateBoards();
     } catch (error) {
-        displaySystemMessage("Board loading error: " + error);
+        console.log("Board loading error: " + error);
     }
 }
 
@@ -469,13 +469,30 @@ function changeSkin() {
 }
 
 function displaySystemMessage(text, isError = true) {
-    const chatLog = document.getElementById('chat-log');
-    if (!chatLog) return;
+    const gameId = sessionStorage.getItem("gameId") || 'N/A';
+    const chatStatus = document.getElementById("chat-status");
+    const playerId = AuthenticationManager.LoggedInUser?.id;
 
-    const message = document.createElement('div');
-    message.className = `system-message ${isError ? 'error' : 'info'}`;
-    message.textContent = `[SYSTEM]: ${text}`;
-
-    chatLog.appendChild(message);
-    chatLog.scrollTop = chatLog.scrollHeight;
+    if (!isError) {
+        fetch(APIEndpoints.SendChatMessage.replace("{id}", gameId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${AuthenticationManager.Token}`
+            },
+            body: JSON.stringify({ playerId, message: text })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorText => {
+                        console.error('API Error:', errorText);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+            });
+    } else {
+        chatStatus.textContent = text;
+    }
 }
