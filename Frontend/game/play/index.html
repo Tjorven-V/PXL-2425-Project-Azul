@@ -20,47 +20,44 @@
 
 <div id="loading-resources">
     <div class="header">Loading...</div>
-    <div class="subtitle"></div> </div>
-
-<div id="game-area">
-    <div id="skin-selector-container"> <label for="skin-selector">Select Skin:</label>
-        <select id="skin-selector">
-            <option value="azul">Azul (Default)</option>
-            <option value="minecraft">Minecraft</option>
-            <option value="goofy">goofy</option>
-        </select>
-    </div>
-    <div id="opponent-boards-container"></div>
-    <div id="factory-container">
-        <div id="factory-displays-container"></div>
-        <div id="table-center-container"></div>
-        <div id="tiles-container"></div> </div>
-    <div id="player-board-container"></div>
-    <div id="game-information"></div> <a id="tristan" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
-    <img src="../../media/skins/azul/tristan.png" alt="tristan">
-</a>
+    <div class="subtitle"></div>
 </div>
 
-<div class="chat-box">
-    <div id="chat-log" class="chat-log"></div>
-    <input id="chat-input" type="text" placeholder="Type your message..." maxlength="64" />
-    <button id="send-button">Send</button>
-    <p id="chat-status" class="chat-status"></p>
+<div id="game-viewport">
+    <div id="game-container">
+        <div id="game-area">
+            <div id="skin-selector-container">
+                <label for="skin-selector">Select Skin:</label>
+                <select id="skin-selector">
+                    <option value="azul">Azul (Default)</option>
+                    <option value="minecraft">Minecraft</option>
+                    <option value="goofy">goofy</option>
+                </select>
+            </div>
+            <div id="opponent-boards-container"></div>
+            <div id="factory-container">
+                <div id="factory-displays-container"></div>
+                <div id="table-center-container"></div>
+                <div id="tiles-container"></div>
+            </div>
+            <div id="player-board-container"></div>
+        </div>
+        <div id="game-information"></div>
+        <a id="tristan" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
+            <img src="../../media/skins/azul/tristan.png" alt="tristan">
+        </a>
+        <div class="chat-box">
+            <div id="chat-log" class="chat-log"></div>
+            <div class="chat-input-area">
+                <input id="chat-input" type="text" placeholder="Type your message..." maxlength="64" />
+                <button id="send-button">Send</button>
+            </div>
+            <p id="chat-status" class="chat-status"></p>
+        </div>
+    </div>
 </div>
 
 <script type="module" src="./script.js"></script>
 <script type="module" src="./chat.js"></script>
-
-<!--<script>-->
-<!--    document.getElementById('currentYear').textContent = new Date().getFullYear();-->
-<!--    const uiElementsToHideInitially = ['skin-selector-container', 'game-information', 'system-messages'];-->
-<!--    uiElementsToHideInitially.forEach(id => {-->
-<!--        const element = document.getElementById(id);-->
-<!--        if (element) element.style.display = 'none';-->
-<!--    });-->
-
-<!--    const loadingResources = document.getElementById('loading-resources');-->
-<!--    if (loadingResources) loadingResources.style.opacity = '1';-->
-<!--</script>-->
-</body>
+<script type="module" src="./scale-manager.js"></script> </body>
 </html>

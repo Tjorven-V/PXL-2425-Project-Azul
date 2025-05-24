@@ -83,10 +83,10 @@ function tagUser(text, playerNames) {
     if (splitIndex === -1) {
         return text;
     }
-    const author = text.slice(0, splitIndex + 2);  // keeps author and ': ' example. Maarten: hello --> author = "Maarten: "
-    const message = text.slice(splitIndex + 2);    // keeps message example. Maarten: hello --> message = "hallo"
+    const author = text.slice(0, splitIndex + 2);
+    const message = text.slice(splitIndex + 2);
 
-    const highlightedMessage = message.replace(/@(\w+)/g, (match, username) => { // match is the entire text after "@"
+    const highlightedMessage = message.replace(/@(\w+)/g, (match, username) => {
         if (playerNames.includes(username)) {
             return `<span class="mention"><mark>@${username}</mark></span>`;
         }
