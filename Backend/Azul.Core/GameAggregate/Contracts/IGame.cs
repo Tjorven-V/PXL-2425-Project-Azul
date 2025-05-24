@@ -37,6 +37,12 @@ namespace Azul.Core.GameAggregate.Contracts
         public bool HasEnded { get; }
 
         /// <summary>
+        /// A list of players who won the game. This will usually just be a single player, but there are cases players share a victory.
+        /// </summary>
+        public IReadOnlyList<Guid> WinningPlayers { get; } // +++ Azul51 Extra : Winning Players +++
+
+
+        /// <summary>
         /// The last 10 chat messages sent by players.
         /// </summary>
         public IList<IChatMessageEntry> Chat { get; } // +++ Azul51 - Extra : Chat Functionality +++

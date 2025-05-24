@@ -16,6 +16,47 @@ internal class Game : IGame
     private Guid _currentPlayerId;
 
     private bool _hasEnded = false;
+
+    private IReadOnlyList<Guid> _winningPlayers;
+    public IReadOnlyList<Guid> WinningPlayers {
+        get {
+            if (!_hasEnded)
+            {
+                return [];
+            }
+
+            if (_winningPlayers != null)
+            {
+                return _winningPlayers;
+            }
+
+            List<Guid> determinedWinners = [];
+
+            List<IPlayer> playersWithCompletedLine = new List<IPlayer>();
+
+            foreach (var player in Players)
+            {
+                if (player.Board.HasCompletedHorizontalLine)
+                {
+                    playersWithCompletedLine.Add(player);
+                }
+            }
+
+            if (playersWithCompletedLine.Count == 1)
+            {
+                determinedWinners = [playersWithCompletedLine[0].Id];
+            } else
+            {
+                int highestScore = playersWithCompletedLine.Max(p => p.Board.Score);
+                List<IPlayer> winningPlayers = [.. playersWithCompletedLine.Where(p => p.Board.Score == highestScore)];
+                determinedWinners = [.. winningPlayers.Select(p => p.Id)];
+            }
+
+            _winningPlayers = determinedWinners;
+            return determinedWinners;
+        }
+    } // +++ Azul51 Extra : Winning Players +++
+
     private Guid _nextPlayerId
     {
         get
