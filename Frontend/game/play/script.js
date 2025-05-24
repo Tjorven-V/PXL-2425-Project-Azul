@@ -197,10 +197,76 @@ function updateGameDisplays() {
 
 function setupEventListeners() {
     document.getElementById("skin-selector").addEventListener("change", changeSkin);
+    document.getElementById("leave-table-button").addEventListener("click", leaveTable);
     document.addEventListener('factoryTileSelected', handleFactorySelection);
     document.addEventListener('patternLineSelected', handlePatternLineSelection);
     document.addEventListener('floorLineSelected', handleFloorLineSelection);
 }
+
+async function leaveTable() {
+    const tableId = sessionStorage.getItem("tableId")
+
+    try{
+        const response = await fetch(APIEndpoints.Leave.replace("{id}", tableId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${AuthenticationManager.Token}`
+            },
+        });
+
+        if (!response.ok) {
+            const err = await response.text();
+            throw new Error(err);
+        }
+
+        sessionStorage.removeItem('gameId')
+        window.location.href = "../../index.html";
+    }catch(e){
+        console.error('Failed to leave the table:', e)
+    }
+    await checkAmountOfPlayers()
+}
+//
+// async function checkAmountOfPlayers(){
+//     const gameId = sessionStorage.getItem("gameId")
+//     if(!gameId) return;
+//
+//     try{
+//         const response = fetch(APIEndpoints.GameInfo.replace("{id}", gameId), {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Authorization': `Bearer ${AuthenticationManager.Token}`
+//             }
+//         })
+//
+//         if(!response.ok){
+//             throw new Error("Failed to fetch game info");
+//         }
+//
+//         const gameData = await response.json();
+//
+//         if (gameData.players === 1 && !gameData.hasEnded){
+//             const response = await fetch(APIEndpoints.GameInfo.replace("{id}", gameId), {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': `Bearer ${AuthenticationManager.Token}`
+//                 },
+//                 body: JSON.stringify({hasEnded: true})
+//             })
+//             if (!response.ok) {
+//                 throw new Error("Failed to fetch game info");
+//             }
+//         }
+//
+//     }catch(e){
+//         console.error(e)
+//     }
+//     return console.log('Enough players to continue.');
+//
+// }
 
 async function handleFloorLineSelection(e) {
 

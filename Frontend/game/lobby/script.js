@@ -519,6 +519,7 @@ function ShowLobby(tableId) {
     StopPollingGames();
 
     SetStatusText("Table " + tableId + "\n\nRetrieving info...");
+    sessionStorage.setItem("tableId", tableId);
     PollTable(tableId, (tableData) => {
         let maxPlayersText = `${tableData.preferences.numberOfPlayers}${tableData.preferences.numberOfArtificialPlayers !== 0 ? " + " + tableData.preferences.numberOfArtificialPlayers + " AI" : ""}`;
 
