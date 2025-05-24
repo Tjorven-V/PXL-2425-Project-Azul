@@ -30,6 +30,12 @@ internal class Game : IGame
                 return _winningPlayers;
             }
 
+            if (Players.Length == 1)
+            {
+                _winningPlayers = [Players[0].Id];
+                return _winningPlayers; // If there's only one player, they are the winner by default.
+            }
+
             List<Guid> determinedWinners = [];
 
             List<IPlayer> playersWithCompletedLine = new List<IPlayer>();
