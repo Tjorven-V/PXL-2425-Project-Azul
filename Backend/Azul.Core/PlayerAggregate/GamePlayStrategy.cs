@@ -150,7 +150,10 @@ internal class GamePlayStrategy : IGamePlayStrategy
                     var move = patternLineDisplayFiller.Key;
                     var overfilledTiles = patternLineDisplayFiller.Value;
 
-                    if (overfilledTiles > maxAcceptableOverflow) continue;
+                    if (overfilledTiles > maxAcceptableOverflow && overfilledPatternLines.Count > 1)
+                    {
+                        continue;
+                    }
 
                     patternLineDisplayFillers.Add(move);
                 }

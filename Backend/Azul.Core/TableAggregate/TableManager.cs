@@ -31,45 +31,38 @@ internal class TableManager : ITableManager
 
     public ITable JoinOrCreateTable(User user, ITablePreferences preferences)
     {
-        if (preferences.NumberOfPlayers < 0 || preferences.NumberOfArtificialPlayers < 0)
+        int humanPlayers = preferences.NumberOfPlayers;
+        int artificialPlayers = preferences.NumberOfArtificialPlayers;
+
+        if (humanPlayers < 0 || artificialPlayers < 0)
         {
-            if (preferences.NumberOfPlayers < 1)
-            {
-                throw new InvalidOperationException("Game must have at least one player.");
-            }
-            if (preferences.NumberOfArtificialPlayers < 0)
-            {
-                throw new InvalidOperationException("Number of artificial players cannot be negative.");
-            }
-            if (preferences.NumberOfArtificialPlayers > 3)
-            {
-                throw new InvalidOperationException("Game cannot have more than 3 AI players.");
-            }
-            if (preferences.NumberOfArtificialPlayers >= preferences.NumberOfPlayers)
-            {
-                throw new InvalidOperationException("Number of artificial players must be less than total number of players.");
-            }
-            throw new InvalidOperationException("Game cannot have negative players");
+            throw new ArgumentException("Number of players cannot be negative.");
         }
 
-        if (preferences.NumberOfPlayers - preferences.NumberOfArtificialPlayers < 0)
+        if (humanPlayers <= 0)
         {
-            throw new InvalidOperationException("Game cannot have 0 human players");
+            throw new ArgumentException("At least one human player must be present.");
         }
 
-        if (preferences.NumberOfArtificialPlayers > 3)
+        if (humanPlayers > 4)
         {
-            throw new InvalidOperationException("Game cannot have more than 3 AI players");
-        }
-        if (preferences.NumberOfPlayers < 1 && preferences.NumberOfArtificialPlayers < 1)
-        {
-            throw new InvalidOperationException("Game cannot have less than 1 player without at least 1 AI player");
+            throw new ArgumentException("There can be at most 4 human players.");
         }
 
+        if (artificialPlayers >= 4)
+        {
+            throw new ArgumentException("There can be at most 3 artificial players");
+        }
+
+        if (artificialPlayers <= 0 && humanPlayers < 2)
+        {
+            throw new ArgumentException("At least two human players must be present.");
+        }
 
         IList<ITable> availableTables = _tableRepository.FindTablesWithAvailableSeats(preferences);
 
-        if (availableTables == null || availableTables.Count == 0) {
+        if (availableTables == null || availableTables.Count == 0)
+        {
             ITable newTable = _tableFactory.CreateNewForUser(user, preferences);
             _tableRepository.Add(newTable);
             return newTable;
@@ -78,9 +71,6 @@ internal class TableManager : ITableManager
         ITable firstAvailableTable = availableTables[0];
         firstAvailableTable.Join(user);
         return firstAvailableTable;
-
-        //Find a table with available seats that matches the given preferences
-        //If no table is found, create a new table. Otherwise, take the first available table
     }
 
     public ITable JoinTable(Guid tableId, User user)

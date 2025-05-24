@@ -60,7 +60,8 @@ internal class TileFactory : ITileFactory
 
             if (!Bag.TryTakeTiles(remaining, out var remainingTiles))
             {
-                throw new InvalidOperationException("Not enough tiles in the bag to fill the displays.");
+                continue;
+                //throw new InvalidOperationException("Not enough tiles in the bag to fill the displays.");
             }
 
             tilesForDisplay.AddRange(remainingTiles);
