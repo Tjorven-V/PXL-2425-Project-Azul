@@ -52,47 +52,51 @@ async function loadChat() {
             }
         });
         if (!response.ok) throw new Error('Failed to load game');
+
         const game = await response.json();
         if (!game.chat) throw new Error("No chat data found");
 
-        const playerNames = game.players?.map(p => p.name) || [];
-        renderChat(game.chat, playerNames);
+        renderChat(game.chat);
 
     } catch (error) {
-        chatLog.innerHTML = `<p class="error">Could not load chat</p>`;
+        renderChatError("Could not load chat");
         console.error(error);
     }
 }
 
-function renderChat(chatMessages, playerNames) {
-    const chatLog = document.getElementById("chat-log");
+function renderChatError(chatMessages) {
     if (!chatLog) return;
 
-    chatLog.innerHTML = "";
+    while (chatLog.firstChild) {
+        chatLog.removeChild(chatLog.firstChild);
+    }
+
+    const errorMessage = document.createElement('p');
+    errorMessage.className = 'error';
+    errorMessage.appendChild(document.createTextNode(chatMessages));
+    chatLog.appendChild(errorMessage);
+}
+
+function renderChat(chatMessages){
+    if (!chatLog) return;
+
+    while (chatLog.firstChild) {
+        chatLog.removeChild(chatLog.firstChild);
+    }
+
     chatMessages.forEach(msg => {
         const div = document.createElement('div');
         div.className = 'chat-message';
-        div.innerHTML = tagUser(`${msg.author}: ${msg.message}`, playerNames);
+
+        const author = document.createTextNode(`${msg.author}: `);
+        const message = document.createTextNode(msg.message);
+
+        div.appendChild(author);
+        div.appendChild(message);
         chatLog.appendChild(div);
     });
+
     chatLog.scrollTop = chatLog.scrollHeight;
-}
-
-function tagUser(text, playerNames) {
-    const splitIndex = text.indexOf(': ');
-    if (splitIndex === -1) {
-        return text;
-    }
-    const author = text.slice(0, splitIndex + 2);
-    const message = text.slice(splitIndex + 2);
-
-    const highlightedMessage = message.replace(/@(\w+)/g, (match, username) => {
-        if (playerNames.includes(username)) {
-            return `<span class="mention"><mark>@${username}</mark></span>`;
-        }
-        return match;
-    });
-    return author + highlightedMessage;
 }
 
 window.sendChat = async function(){
