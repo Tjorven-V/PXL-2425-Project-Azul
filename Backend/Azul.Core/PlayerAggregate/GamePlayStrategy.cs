@@ -163,6 +163,35 @@ internal class GamePlayStrategy : IGamePlayStrategy
         return [.. patternLineDisplayFillers];
     }
 
+    private IEnumerable<PatternLineDisplayFiller> PartialPatternLineToFillPartially(IBoard playerBoard, IEnumerable<IFactoryDisplay> displaysToSearch)
+    {
+        List<PatternLineDisplayFiller> patternLineDisplayFillers = [];
+
+        for (int patternLineIndex = 0; patternLineIndex < playerBoard.PatternLines.Length; patternLineIndex++)
+        {
+            var patternLine = playerBoard.PatternLines[patternLineIndex];
+
+            if (patternLine.NumberOfTiles == 0) continue; // This line is empty
+            if (patternLine.IsComplete) continue; // This line is already full
+
+            int tilesRemaining = patternLine.Length - patternLine.NumberOfTiles;
+            TileType requiredType = patternLine.TileType.Value; // This can never be null if there are tiles placed (unless we fucked up somewhere)
+
+            foreach (var factoryDisplay in displaysToSearch)
+            {
+                foreach (var groupedTiles in factoryDisplay.Tiles.GroupBy(t => t))
+                {
+                    if (groupedTiles.Key != requiredType) continue; // wrong type
+                    if (groupedTiles.Count() > tilesRemaining) continue; // too many tiles
+
+                    patternLineDisplayFillers.Add(new PatternLineDisplayFiller(patternLineIndex, groupedTiles.Key, factoryDisplay));
+                }
+            }
+        }
+
+        return [.. patternLineDisplayFillers];
+    }
+
     private TakeTilesMove FindBestMove(IBoard playerBoard, IEnumerable<IFactoryDisplay> displaysToSearch, out int preferredPatternLine)
     {
         Console.Write("- - - - - Looking for partial pattern lines that can be completed...");
@@ -195,6 +224,24 @@ internal class GamePlayStrategy : IGamePlayStrategy
             preferredPatternLine = linesThatCanBeCompleted[^1].PatternLineIndex; // ^1 is the last element in the array? cool
             return new TakeTilesMove(linesThatCanBeCompleted[^1].FactoryDisplay, linesThatCanBeCompleted[^1].TileType);
         } else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\tFAIL");
+        }
+        Console.ResetColor();
+
+        // Determine if any PARTIAL pattern line can be filled partially
+        Console.Write("- - - - - Looking for partial lines that can be partially filled...");
+        PatternLineDisplayFiller[] partialLinesThatCanBePartiallyFilled = [.. PartialPatternLineToFillPartially(playerBoard, displaysToSearch)];
+        if (partialLinesThatCanBePartiallyFilled.Length > 0)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\tOK");
+            Console.ResetColor();
+            preferredPatternLine = partialLinesThatCanBePartiallyFilled[^1].PatternLineIndex; // ^1 is the last element in the array? cool
+            return new TakeTilesMove(partialLinesThatCanBePartiallyFilled[^1].FactoryDisplay, partialLinesThatCanBePartiallyFilled[^1].TileType);
+        }
+        else
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("\tFAIL");
