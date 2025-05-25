@@ -391,6 +391,13 @@ async function placeTilesOnPatternLine(patternLineIndex) {
             return {success: false, error: error.message};
         }
 
+        try {
+            const tilePlaceSound = new Audio("../../media/sounds/tilePlace.mp3");
+            tilePlaceSound.play();
+        } catch (soundError) {
+            console.error("Error playing sound:", soundError);
+        }
+
         return {success: true};
     } catch (error) {
         console.log("PlaceTiles error:" + error);
