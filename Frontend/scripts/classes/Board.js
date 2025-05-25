@@ -263,7 +263,7 @@ class Board extends ClickableCanvas {
             }
         }
 
-        ctx.font = "bold 48px Century Gothic";
+        ctx.font = "bold 48px 'Segoe UI', Arial, sans-serif";
         ctx.fillStyle = "#FFFFFF";
         ctx.fillText(this._playerName, 32, 64);
         ctx.fillText("Score: " + this._score, 32, 128);
