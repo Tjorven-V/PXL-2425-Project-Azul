@@ -187,33 +187,37 @@ internal class Game : IGame
             Console.WriteLine($"Next player: {_currentPlayerId}");
         }
 
-        StartAITurn();
-    }
-
-    private void StartAITurn()
-    {
-        Task.Run(AIPlayerTurn); // Run this on a new thread so it doesnt block the HTTP request from the player
-    }
-
-    private async void AIPlayerTurn()
-    {
         var playerToPlay = Players.FirstOrDefault(p => p.Id == _currentPlayerId);
         if (playerToPlay is not ComputerPlayer)
         {
-            Console.WriteLine("This player is not AI");
-            return;
-        }
-        Console.WriteLine("This player is AI!");
+            Console.WriteLine("This player is not AI.");
+            StartPlayerTurn(playerToPlay as HumanPlayer);
+        } else
+        {
+            Console.WriteLine("This player is AI!");
+            StartAITurn(playerToPlay as ComputerPlayer);
+        }       
+    }
+    private void StartPlayerTurn(HumanPlayer player)
+    {
+    }
 
-        await Task.Delay(TimeSpan.FromSeconds(_rand.NextDouble() * 3.5 + 2.5)); // Simulate delay for AI player turn
+    private void StartAITurn(ComputerPlayer aiPlayer)
+    {
+        Task.Run(() => AIPlayerTurn(aiPlayer)); // Run this on a new thread so it doesnt block the HTTP request from the player
+    }
+
+    private async void AIPlayerTurn(ComputerPlayer aiPlayer)
+    {
+        var simulatedDelay = TimeSpan.FromSeconds(_rand.NextDouble() * 3.5 + 2.5);
+        Console.WriteLine($"AI player {aiPlayer.Name} is thinking... (simulated delay: {simulatedDelay.TotalSeconds} seconds)");
+        await Task.Delay(simulatedDelay); // Simulate delay for AI player turn
 
         if (HasEnded)
         {
             Console.WriteLine("Game has ended, AI player turn stopped.");
             return;
         }
-
-        var aiPlayer = playerToPlay as ComputerPlayer;
 
         var takeTilesMove = aiPlayer.GetPreferredMove(this);
         TakeTilesFromFactory(aiPlayer.Id, takeTilesMove.FactoryDisplayId, takeTilesMove.TileType);
