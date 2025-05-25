@@ -26,7 +26,8 @@
         <form>
             <div class="register-form-header">
                 <h1 class="title-header">Create Account</h1>
-                <p class="sub-title-header">Already have an account? <a class="login-redirect" href="../login/index.html">Login here!</a></p>
+                <p class="sub-title-header">Already have an account? <a class="login-redirect"
+                                                                        href="../login/index.html">Login here!</a></p>
             </div>
 
             <div class="form-body">
@@ -40,11 +41,13 @@
                 </div>
                 <div class="form-entry">
                     <label for="wachtwoord">Password:</label>
-                    <input type="password" id="wachtwoord" name="password" minlength="6" required placeholder="Enter your password (min. 6 characters)">
+                    <input type="password" id="wachtwoord" name="password" minlength="6" required
+                           placeholder="Enter your password (min. 6 characters)">
                 </div>
                 <div class="form-entry">
                     <label for="wachtwoord-verificatie">Password verification:</label>
-                    <input type="password" id="wachtwoord-verificatie" name="wachtwoord-verificatie" minlength="6" required placeholder="Confirm your password">
+                    <input type="password" id="wachtwoord-verificatie" name="wachtwoord-verificatie" minlength="6"
+                           required placeholder="Confirm your password">
                 </div>
 
                 <div class="form-entry checkbox-entry">
@@ -80,7 +83,7 @@
     const portugalCheck = document.getElementById('portugal-check');
     const datumWrapper = document.getElementById('datum-wrapper');
     if (portugalCheck && datumWrapper) {
-        portugalCheck.addEventListener('change', function() {
+        portugalCheck.addEventListener('change', function () {
             if (this.checked) {
                 datumWrapper.style.display = 'block';
             } else {

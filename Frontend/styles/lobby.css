@@ -3,7 +3,7 @@ h1 {
     color: #D98244;
     text-align: center;
     margin-bottom: 1.2em;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     font-weight: bold;
 }
 
@@ -11,7 +11,7 @@ h1 {
     background-color: rgba(253, 251, 245, 0.94);
     padding: 25px 30px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.25);
     color: #4A3B31;
     width: 500px;
     margin: 20px auto;
@@ -54,7 +54,6 @@ h1 {
     background-position: right 15px center;
     background-size: 12px auto;
 }
-
 .lobby-controls select:focus {
     outline: none;
     border-color: #D98244;
@@ -74,13 +73,11 @@ button#joinGame.cta-button {
     color: #FFFFFF;
     border: 1px solid #C96A4F;
 }
-
 button#joinGame.cta-button:hover {
     background-color: #C96A4F;
     border-color: #B3593E;
     transform: translateY(-2px);
 }
-
 button#joinGame.cta-button:disabled {
     background-color: #F6C4B6;
     color: #A88F87;
@@ -95,13 +92,11 @@ button#joinGame.cta-button:disabled {
     color: #2A527A;
     border-color: #8AB8B8;
 }
-
 .cta-button.secondary:hover {
     background-color: #8AB8B8;
     color: #FFFFFF;
     border-color: #70A0A0;
 }
-
 .cta-button.secondary:disabled {
     background-color: #E0F2F7;
     color: #A0B8BD;
@@ -139,21 +134,17 @@ button#joinGame.cta-button:disabled {
         margin: 20px 10px;
         padding: 20px;
     }
-
     .lobby-container h1 {
         font-size: 1.8em;
     }
-
     .lobby-controls select,
     .cta-button {
         font-size: 1em;
         padding: 10px 12px;
     }
-
     #leaveGame.cta-button {
         max-width: 90%;
     }
-
     .lobby-status {
         font-size: 0.9em;
         padding: 8px 10px;

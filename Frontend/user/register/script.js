@@ -23,7 +23,8 @@ function validatePasswords() {
         antwoord.textContent = "Passswords are unidentical.";
         antwoord.style.display = "flex";
         return false;
-    } if (!validatePasswordFormat(form.elements['wachtwoord-verificatie'].value)) {
+    }
+    if (!validatePasswordFormat(form.elements['wachtwoord-verificatie'].value)) {
         antwoord.textContent = "Invalid password.";
         antwoord.style.display = "flex";
         return false;
@@ -39,18 +40,19 @@ function validateUsername() {
         antwoord.textContent = "Invalid username.";
         antwoord.style.display = "flex";
     } else {
-    antwoord.style.display = "none";
-    return true;
+        antwoord.style.display = "none";
+        return true;
     }
 }
+
 // Email Validatie
 function validateEmail() {
     if (!validateEmailFormat(form.elements['email'].value)) {
         antwoord.textContent = "Invalid E-mail.";
         antwoord.style.display = "flex";
     } else {
-    antwoord.style.display = "none";
-    return true;
+        antwoord.style.display = "none";
+        return true;
     }
 }
 

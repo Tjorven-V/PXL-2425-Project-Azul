@@ -2,7 +2,7 @@ import APIEndpoints from '../../scripts/util/APIEndpoints.js';
 import Board from "../../scripts/classes/Board.js";
 import FactoryDisplay from "../../scripts/classes/FactoryDisplay.js";
 import AuthenticationManager from "../../scripts/classes/AuthenticationManager.js";
-import { ResourceManager, updateImagePaths, setSkin, selectedSkin } from "../../scripts/classes/ResourceManager.js";
+import {ResourceManager, setSkin, updateImagePaths} from "../../scripts/classes/ResourceManager.js";
 import TableCenter from "../../scripts/classes/TableCenter.js";
 
 export const gameState = {
@@ -93,7 +93,9 @@ function updateUserNavigation() {
                 try {
                     await AuthenticationManager.logout();
                     window.location.href = '../../index.html';
-                } catch (error) { console.error("Logout failed:", error); }
+                } catch (error) {
+                    console.error("Logout failed:", error);
+                }
             });
         }
     }
@@ -151,8 +153,7 @@ async function updateBoards() {
                     handleAFKTimeout();
                     gameState.afkLastActive = Date.now();
                     gameState.afkWarningSent = false;
-                }
-                else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
+                } else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
                     displaySystemMessage("AFK detected! Auto-move in 10 seconds...");
                     gameState.afkWarningSent = true;
                 }
@@ -233,7 +234,7 @@ function setupEventListeners() {
 async function leaveTable() {
     const tableId = sessionStorage.getItem("tableId")
 
-    try{
+    try {
         const response = await fetch(APIEndpoints.Leave.replace("{id}", tableId), {
             method: 'POST',
             headers: {
@@ -249,11 +250,12 @@ async function leaveTable() {
 
         sessionStorage.removeItem('gameId')
         window.location.href = "../../index.html";
-    }catch(e){
+    } catch (e) {
         console.error('Failed to leave the table:', e)
     }
     await checkAmountOfPlayers()
 }
+
 //
 // async function checkAmountOfPlayers(){
 //     const gameId = sessionStorage.getItem("gameId")
@@ -340,11 +342,11 @@ async function takeTiles(displayId, tileType) {
         });
 
         if (!response.ok) throw new Error(await response.text());
-        return { success: true };
+        return {success: true};
 
     } catch (error) {
         console.log("TakeTiles failed:" + error);
-        return { success: false };
+        return {success: false};
     }
 }
 
@@ -353,12 +355,12 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         const gameId = sessionStorage.getItem('gameId');
         if (!gameId) {
             displaySystemMessage('No game ID found');
-            return { success: false };
+            return {success: false};
         }
         const game = await getGame();
         if (!game) {
             console.log("Couldn't validate game state");
-            return { success: false };
+            return {success: false};
         }
 
         const currentPlayer = game.players.find(p => p.id === AuthenticationManager.LoggedInUser?.id);
@@ -367,7 +369,7 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         const validation = board.validatePatternLinePlacement(patternLineIndex, gameState.currentSelection.tileType);
         if (!validation.valid) {
             displaySystemMessage(validation.error);
-            return { success: false };
+            return {success: false};
         }
 
         const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
@@ -380,24 +382,24 @@ async function placeTilesOnPatternLine(patternLineIndex) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${AuthenticationManager.Token}`
             },
-            body: JSON.stringify({ patternLineIndex })
+            body: JSON.stringify({patternLineIndex})
         });
 
         if (!response.ok) {
             const error = await response.json();
             console.log("PlaceTiles failed:" + error.message);
-            return { success: false, error: error.message };
+            return {success: false, error: error.message};
         }
 
-        return { success: true };
+        return {success: true};
     } catch (error) {
         console.log("PlaceTiles error:" + error);
-        return { success: false, error: error.message };
+        return {success: false, error: error.message};
     }
 }
 
 async function handleFactorySelection(e) {
-    const { displayId, tileType, tileCount } = e.detail;
+    const {displayId, tileType, tileCount} = e.detail;
     const currentPlayerId = AuthenticationManager.LoggedInUser?.id;
 
     if (!gameState.currentGame || gameState.currentGame.playerToPlayId !== currentPlayerId) {
@@ -449,7 +451,7 @@ async function placeTilesOnFloorLine() {
         const gameId = sessionStorage.getItem('gameId');
         if (!gameId) {
             displaySystemMessage('No game ID found');
-            return { success: false };
+            return {success: false};
         }
 
         const response = await fetch(APIEndpoints.PlaceTilesFloorLine.replace("{id}", gameId), {
@@ -464,13 +466,13 @@ async function placeTilesOnFloorLine() {
         if (!response.ok) {
             const error = await response.json();
             console.log("PlaceTilesFloorLine failed:" + error.message);
-            return { success: false, error: error.message };
+            return {success: false, error: error.message};
         }
 
-        return { success: true };
+        return {success: true};
     } catch (error) {
         console.log("PlaceTilesFloorLine error: " + error);
-        return { success: false, error: error.message };
+        return {success: false, error: error.message};
     }
 }
 
@@ -511,7 +513,7 @@ async function getGame() {
 
     try {
         const response = await fetch(APIEndpoints.GameInfo.replace("{id}", gameId), {
-            headers: { 'Authorization': `Bearer ${AuthenticationManager.Token}` }
+            headers: {'Authorization': `Bearer ${AuthenticationManager.Token}`}
         });
         if (response.ok) {
             gameState.currentGame = await response.json();
@@ -573,7 +575,7 @@ function displaySystemMessage(text, isError = true) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${AuthenticationManager.Token}`
             },
-            body: JSON.stringify({ playerId, message: text })
+            body: JSON.stringify({playerId, message: text})
         })
             .then(response => {
                 if (!response.ok) {

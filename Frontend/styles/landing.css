@@ -1,8 +1,7 @@
 .container {
     max-width: 960px;
-    margin: auto;
     overflow: hidden;
-    padding: 0 15px;
+    margin: auto; 
 }
 
 h1, h2, h3 {
@@ -16,7 +15,6 @@ h2 {
     margin-bottom: 25px;
     color: #D98244;
 }
-
 h3 {
     font-size: 1.3em;
     color: #E07A5F;
@@ -27,10 +25,7 @@ p {
     font-size: 0.95em;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-}
+ul { list-style: none; padding: 0; }
 
 ul li {
     padding-left: 1.5em;
@@ -58,14 +53,12 @@ ul li::before {
     color: #FFFFFF;
     padding: 30px 20px;
 }
-
 .main-header h1 {
     font-size: 2.8em;
     color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     font-weight: bold;
 }
-
 .main-header .slogan {
     font-size: 1.2em;
     margin-bottom: 25px;
@@ -73,29 +66,47 @@ ul li::before {
     color: #f0f0f0;
 }
 
+.main-header a.cta-button { 
+    background-color: #E07A5F;
+    color: #FFFFFF; 
+    padding: 12px 28px;
+    font-size: 1.1em;
+    margin: 10px 5px;
+    border: 1px solid #C96A4F;
+    text-decoration: none; 
+}
+
 section {
     padding: 30px 25px;
     background-color: rgba(245, 239, 224, 0.96);
     margin: 25px 0;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     color: #4A3B31;
     border: 1px solid #E0CDB6;
 }
+
+section p a { 
+    color: #0056b3; 
+    /* text-decoration: underline;  */
+}
+
+section p a:hover {
+    color: #D98244; 
+    text-decoration: none; 
 
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
-
 .feature-item {
     background: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 6px;
     text-align: center;
     border: 1px solid #E0CDB6;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 
 .team-grid {
@@ -103,16 +114,14 @@ section {
     gap: 20px;
     grid-template-columns: 1fr;
 }
-
 .team-member {
     background: rgba(255, 255, 255, 0.85);
     padding: 20px 15px;
     border-radius: 6px;
     text-align: center;
     border: 1px solid #E0CDB6;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
 .team-member img {
     width: 100px;
     height: 100px;
@@ -121,9 +130,8 @@ section {
     margin-bottom: 10px;
     object-fit: cover;
     border: 3px solid #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
-
 .team-member h3 {
     font-size: 1.15em;
     margin-top: 5px;
@@ -135,18 +143,13 @@ section {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
 @media (min-width: 900px) {
     .team-grid {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-
-.cta-section {
-    text-align: center;
-    padding: 15px 0 5px 0;
-}
+.cta-section { text-align: center; padding: 15px 0 5px 0; }
 
 .cta-button {
     background-color: #E07A5F;
@@ -156,13 +159,11 @@ section {
     margin: 10px 5px;
     border: 1px solid #C96A4F;
 }
-
 .cta-button:hover {
     background-color: #C96A4F;
     border-color: #B3593E;
     transform: translateY(-2px);
 }
-
 .cta-button.secondary {
     background-color: #A8DADC;
     color: #2A527A;
@@ -176,24 +177,9 @@ section {
 }
 
 @media (max-width: 768px) {
-    .main-header h1 {
-        font-size: 2.2em;
-    }
-
-    .main-header .slogan {
-        font-size: 1em;
-    }
-
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .cta-button {
-        font-size: 1em;
-        padding: 10px 20px;
-    }
-
-    section {
-        padding: 25px 15px;
-    }
+    .main-header h1 { font-size: 2.2em; }
+    .main-header .slogan { font-size: 1em; }
+    .features-grid { grid-template-columns: 1fr; }
+    .cta-button { font-size: 1em; padding: 10px 20px; }
+    section { padding: 25px 15px; }
 }

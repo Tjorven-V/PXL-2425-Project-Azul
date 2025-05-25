@@ -77,7 +77,7 @@ function renderChatError(chatMessages) {
     chatLog.appendChild(errorMessage);
 }
 
-function renderChat(chatMessages){
+function renderChat(chatMessages) {
     if (!chatLog) return;
 
     while (chatLog.firstChild) {
@@ -99,27 +99,27 @@ function renderChat(chatMessages){
     chatLog.scrollTop = chatLog.scrollHeight;
 }
 
-window.sendChat = async function(){
+window.sendChat = async function () {
     const now = Date.now()
 
-    if (now - lastMessageTime < messageCooldown){
+    if (now - lastMessageTime < messageCooldown) {
         chatStatus.textContent = "Please wait a moment before sending a new message";
         return;
     }
 
     const message = chatInput.value.trim();
-    if (message.length <1 || message.length > 64) {
+    if (message.length < 1 || message.length > 64) {
         chatStatus.textContent = 'Message must be between 1 and 64 characters';
         return;
     }
 
-    const response = await fetch(APIEndpoints.SendChatMessage.replace("{id}", gameId),{
+    const response = await fetch(APIEndpoints.SendChatMessage.replace("{id}", gameId), {
         method: 'POST',
-        headers: {'Content-Type': 'application/json','Authorization': `Bearer ${AuthenticationManager.Token}`},
+        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${AuthenticationManager.Token}`},
         body: JSON.stringify({playerId, message})
     });
-    if (response.ok){
-        chatInput.value=""
+    if (response.ok) {
+        chatInput.value = ""
         chatStatus.textContent = "";
         lastMessageTime = now;
         await loadChat();

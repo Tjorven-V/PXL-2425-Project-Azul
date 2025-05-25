@@ -1,4 +1,4 @@
-import { IncorrectCredentialsError } from "../../scripts/classes/AuthErrors.js";
+import {IncorrectCredentialsError} from "../../scripts/classes/AuthErrors.js";
 import Redirects from "../../scripts/util/Redirects.js";
 import {validateEmailFormat, validatePasswordFormat} from "../../scripts/util/Validation.js";
 import AuthenticationManager from "../../scripts/classes/AuthenticationManager.js";
@@ -13,7 +13,7 @@ function clearAllMessages() {
     loginMessage.replaceChildren();
 }
 
-function autoFillLogin () {
+function autoFillLogin() {
     if (sessionStorage.getItem("email")) {
         document.getElementById('email').value = sessionStorage.getItem("email");
     }
@@ -31,6 +31,7 @@ let textAfterLink = document.createTextNode(" to create an account.");
 registrationMessageElement.appendChild(textBeforeLink);
 registrationMessageElement.appendChild(registrationLink);
 registrationMessageElement.appendChild(textAfterLink);
+
 // ------
 
 

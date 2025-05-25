@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentGameTitleElement.textContent = `Loading: ${gameTitle}...`;
 
             if (!gameElement || !document.body.contains(gameElement)) {
-                if(gameElement) gameElement.remove();
+                if (gameElement) gameElement.remove();
                 gameElement = document.createElement('div');
                 gameElement.id = 'game';
                 if (gameContainerEJS) {
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentLoaderScript.onerror = () => {
                 console.error("Failed to load EmulatorJS loader.js from CDN. Check internet connection and ad-blockers.");
                 currentGameTitleElement.textContent = `Error: Could not load emulator for ${gameTitle}`;
-                if(gameElement) gameElement.innerHTML = '<p style="color:orange; text-align:center; padding: 20px;">Failed to load files components from CDN. Please check your internet connection.</p>';
+                if (gameElement) gameElement.innerHTML = '<p style="color:orange; text-align:center; padding: 20px;">Failed to load files components from CDN. Please check your internet connection.</p>';
             };
         });
     });

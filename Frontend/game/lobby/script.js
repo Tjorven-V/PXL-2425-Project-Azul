@@ -6,7 +6,8 @@ function RedirectToLogin() {
     window.location = Redirects.Login;
 }
 
-let gameFilterElement, aiPlayerCountSelectElement, joinBtnElement, leaveBtnElement, playerCountSelectElement, controlsElement, statusElement, browserElement, closeBrowserElement, browseButtonElement, availableGamesElement;
+let gameFilterElement, aiPlayerCountSelectElement, joinBtnElement, leaveBtnElement, playerCountSelectElement,
+    controlsElement, statusElement, browserElement, closeBrowserElement, browseButtonElement, availableGamesElement;
 document.addEventListener('DOMContentLoaded', async (event) => {
     if (!AuthenticationManager.LoggedInUser) {
         RedirectToLogin();
@@ -248,7 +249,10 @@ function JoinOrCreate(numberOfPlayers, numberOfAIPlayers = 0) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${AuthenticationManager.Token}`
         },
-        body: JSON.stringify({ numberOfPlayers: numberOfPlayers - numberOfAIPlayers, numberOfArtificialPlayers: numberOfAIPlayers })
+        body: JSON.stringify({
+            numberOfPlayers: numberOfPlayers - numberOfAIPlayers,
+            numberOfArtificialPlayers: numberOfAIPlayers
+        })
     }).then(async response => {
         SetControlsStatus(true);
         if (!response.ok) {
@@ -424,6 +428,7 @@ function SpectateGame(gameId) {
 }
 
 let tablePoll;
+
 function PollTable(tableId, callback) {
     if (tablePoll) {
         clearInterval(tablePoll);
@@ -467,6 +472,7 @@ function StopPollingTable() {
 }
 
 let gamesPoll;
+
 function PollGames(callback) {
     if (gamesPoll) {
         clearInterval(gamesPoll);
@@ -555,4 +561,5 @@ function updateFooter() {
         });
     }
 }
+
 updateFooter();
