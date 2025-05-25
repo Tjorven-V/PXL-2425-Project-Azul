@@ -7,7 +7,7 @@
     z-index: 998;
 }
 
-.easter-egg-mario-image {
+.easter-egg-image {
     display: none;
     position: absolute;
     bottom: 70px;
@@ -20,6 +20,6 @@
     transition: transform 0.1s ease-in-out;
 }
 
-.easter-egg-mario-image:hover {
+.easter-egg-image:hover {
     transform: scale(1.1);
 }

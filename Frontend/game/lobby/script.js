@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     }
 
 
-    if (currentTable !== null && currentTable.error) { // user likely not authenticated
+    if (currentTable !== null && currentTable.error) {
         SetStatusText("An error occurred determining if you are at a table or not. As this is likely an authentication error, you will be redirected to the login page. If this persists, please report it.");
 
         setTimeout(() => {
@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', async (event) => {
         return;
     }
 
-    if (currentTable) { // user at a table
+    if (currentTable) {
         ShowLobby(currentTable.id);
-    } else if (!currentTable) { // user not at a table
+    } else if (!currentTable) {
         ShowControls();
     }
 
@@ -85,24 +85,24 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     // Easter Egg
     const easterEggTrigger = document.getElementById('easter-egg-trigger-zone');
-    const easterEggMario = document.getElementById('easter-egg-mario-lobby');
+    const easterEgg = document.getElementById('easter-egg-lobby');
 
-    if (easterEggTrigger && easterEggMario) {
+    if (easterEggTrigger && easterEgg) {
         easterEggTrigger.addEventListener('mouseenter', () => {
-            easterEggMario.style.display = 'block';
+            easterEgg.style.display = 'block';
         });
 
         easterEggTrigger.addEventListener('mouseleave', (event) => {
-            if (!easterEggMario.contains(event.relatedTarget)) {
-                easterEggMario.style.display = 'none';
+            if (!easterEgg.contains(event.relatedTarget)) {
+                easterEgg.style.display = 'none';
             }
         });
 
-        easterEggMario.addEventListener('mouseleave', () => {
-            easterEggMario.style.display = 'none';
+        easterEgg.addEventListener('mouseleave', () => {
+            easterEgg.style.display = 'none';
         });
 
-        easterEggMario.addEventListener('click', () => {
+        easterEgg.addEventListener('click', () => {
             window.location.href = '../../user/me/retro/index.html';
         });
     } else {
@@ -110,9 +110,8 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     }
     // --- End Easter Egg ---
 
-    // Update het jaartal in de footer (als dit nog niet elders gebeurt)
     const currentYearSpan = document.getElementById('currentYear');
-    if (currentYearSpan && !currentYearSpan.textContent) { // Voorkom overschrijven als al ingesteld
+    if (currentYearSpan && !currentYearSpan.textContent) {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 })
@@ -131,7 +130,7 @@ function updateUserNavigation() {
 
         navLinksContainer.innerHTML = `
             <a href="../../index.html" title="Home" class="nav-link-item home-icon-link">
-                <span role="img" aria-label="Home" class="home-icon-symbol">&#x1F3E0;</span>
+                <span role="img" aria-label="Home" class="home-icon-symbol">&#x1F3E0;</span> Home
             </a>
             <span class="nav-username" style="margin-right: 15px; vertical-align: middle;">${userName}</span>
             <a href="#" id="logoutButton" class="nav-link-item register-btn" style="vertical-align: middle;">Logout</a>
@@ -143,7 +142,7 @@ function updateUserNavigation() {
                 event.preventDefault();
                 try {
                     await AuthenticationManager.logout();
-                    window.location.href = '../../index.html';
+                    window.location.href = '../../index.html'; // Of Redirects.Home
                 } catch (error) {
                     console.error("Logout failed:", error);
                 }
@@ -153,12 +152,14 @@ function updateUserNavigation() {
         }
     } else {
         navLinksContainer.innerHTML = `
-            <a href="../../user/login/index.html">Login</a>
-            <a href="../../user/register/index.html" class="register-btn">Sign Up</a>
+            <a href="../../index.html" title="Home" class="nav-link-item home-icon-link">
+                 <span role="img" aria-label="Home" class="home-icon-symbol">&#x1F3E0;</span> Home
+            </a>
+            <a href="../../user/login/index.html" class="nav-link-item">Login</a> 
+            <a href="../../user/register/index.html" class="nav-link-item register-btn">Sign Up</a>
         `;
     }
 }
-
 
 function SetControlsStatus(enabled, cursor = "blocked") {
     joinBtnElement.disabled = !enabled;
@@ -333,24 +334,20 @@ function ShowBrowser() {
             let entryElement = document.getElementById("game-" + game.id);
 
             if (!entryElement) {
-                // Create new game entry
                 entryElement = document.createElement("button");
                 entryElement.id = "game-" + game.id;
                 entryElement.classList.add("lobby-controls", "cta-button");
 
-                // Game header
                 const header = document.createElement("div");
                 header.id = "header_" + game.id;
                 header.textContent = game.id;
                 entryElement.appendChild(header);
 
-                // Player count
                 const playerCount = document.createElement("div");
                 playerCount.id = "playercount_" + game.id;
                 playerCount.textContent = `Seated Players (${game.seatedPlayers.length}/${game.preferences.numberOfPlayers}${game.preferences.numberOfArtificialPlayers !== 0 ? " + " + game.preferences.numberOfArtificialPlayers + " AI" : ""})`;
                 entryElement.appendChild(playerCount);
 
-                // Seated players
                 for (const player of game.seatedPlayers) {
                     const playerDiv = document.createElement("div");
                     playerDiv.id = "player_" + player.id;
@@ -385,23 +382,19 @@ function ShowBrowser() {
                     }).catch(APIError);
                 })
             } else {
-                // Update player count
                 const playerCount = entryElement.querySelector(`#playercount_${game.id}`);
                 if (playerCount) {
                     playerCount.textContent = `Seated Players (${game.seatedPlayers.length}/${game.preferences.numberOfPlayers}${game.preferences.numberOfArtificialPlayers !== 0 ? " + " + game.preferences.numberOfArtificialPlayers + " AI" : ""})`;
                 }
 
-                // Track existing players
                 const currentPlayerIds = new Set(game.seatedPlayers.map(player => "player_" + player.id));
 
-                // Remove players not in the current list
                 for (const child of Array.from(entryElement.children)) {
                     if (child.id?.startsWith("player_") && !currentPlayerIds.has(child.id)) {
                         child.remove();
                     }
                 }
 
-                // Add new players
                 for (const player of game.seatedPlayers) {
                     const playerId = "player_" + player.id;
                     if (!entryElement.querySelector(`#${playerId}`)) {
@@ -414,7 +407,6 @@ function ShowBrowser() {
             }
         }
 
-// Remove stale entries
         const currentGameIds = new Set(availableGames.map(game => "game-" + game.id));
         for (const child of Array.from(availableGamesElement.children)) {
             if (!currentGameIds.has(child.id)) {
@@ -423,7 +415,6 @@ function ShowBrowser() {
         }
 
     });
-
     SetStatusText("");
 }
 

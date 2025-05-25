@@ -2,7 +2,7 @@
     position: absolute;
     bottom: 20px;
     right: 20px;
-    width: 320px;
+    width: 450px;
     background: rgba(30, 45, 60, 0.90);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(245, 239, 224, 0.25);
@@ -19,7 +19,7 @@
     overflow-y: auto;
     margin-bottom: 10px;
     padding: 8px;
-    padding-right: 8px;
+    /*padding-right: 8px;*/
     font-size: 14px;
     word-wrap: break-word;
     background-color: rgba(0, 0, 0, 0.2);

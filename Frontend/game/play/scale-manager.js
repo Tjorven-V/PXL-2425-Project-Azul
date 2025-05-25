@@ -1,5 +1,5 @@
-const DESIGN_WIDTH = 1600; // Basisontwerp breedte van de game-inhoud
-const DESIGN_HEIGHT = 900;  // Basisontwerp hoogte van de game-inhoud
+const DESIGN_WIDTH = 1920; // Basisontwerp breedte van de game-inhoud
+const DESIGN_HEIGHT = 1080;  // Basisontwerp hoogte van de game-inhoud
 
 function scaleGame() {
     const gameViewport = document.getElementById('game-viewport');

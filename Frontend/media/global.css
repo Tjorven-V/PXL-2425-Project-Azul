@@ -34,7 +34,6 @@ a:hover {
     color: #0056b3;
 }
 
-
 .blurred-background {
     background-color: #00000030;
     backdrop-filter: blur(3px);
@@ -86,6 +85,7 @@ nav .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
 }
 
 nav .logo {
@@ -116,47 +116,43 @@ nav .nav-links .nav-link-item {
     align-items: center;
     vertical-align: middle;
 }
-
 nav .nav-links a:first-child,
 nav .nav-links .nav-link-item:first-child {
     margin-left: 0;
 }
-
 nav .nav-links a:hover,
 nav .nav-links .nav-link-item:hover {
     background-color: #D98244;
     color: #FFFFFF !important;
     border-color: transparent;
 }
-
 nav .nav-links .nav-username {
     font-weight: bold;
     padding: 8px 15px;
     color: #F5EFE0;
 }
-
-nav .nav-links .home-icon-link {
-    padding: 4px;
-    background-color: transparent !important;
-    border: none !important;
-    margin-left: 0;
-}
-
-nav .nav-links .home-icon-link:hover {
-    background-color: #D98244 !important;
-}
-
-nav .nav-links .home-icon-symbol {
-    font-size: 1.0em;
-    color: #F5EFE0;
-    line-height: 1;
-    display: block;
-}
-
 nav .nav-links a.register-btn {
     background-color: #E07A5F;
     color: #FFFFFF;
     border: 1px solid #C96A4F;
+}
+
+nav .nav-links .home-icon-link {
+    padding: 8px 10px;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+}
+nav .nav-links .home-icon-link:hover {
+    background-color: #D98244 !important;
+    color: #FFFFFF !important;
+}
+nav .nav-links .home-icon-link .home-icon-symbol {
+    font-size: 1.25em;
+    color: #F5EFE0;
+    line-height: 1;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 .cta-button {

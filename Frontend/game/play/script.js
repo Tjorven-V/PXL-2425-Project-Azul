@@ -30,26 +30,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
 function updateUserNavigation() {
-    const navLinksContainer = document.querySelector('.nav-links');
+    const navLinksContainer = document.querySelector('nav .nav-container .nav-links');
     const loggedInUser = AuthenticationManager.LoggedInUser;
 
     if (!navLinksContainer) {
-        console.error("Nav links container not found!");
+        console.error("Nav links container not found! Check selector.");
         return;
     }
 
+    const homeLinkHTML = `
+        <a href="../../index.html" class="nav-link-item home-icon-link" title="Home">
+            <span class="home-icon-symbol">&#x1F3E0;</span> Home
+        </a>`;
+
+    let userSpecificLinksHTML = '';
     if (loggedInUser) {
         const userName = loggedInUser.userName || loggedInUser.name || 'User';
-
-        navLinksContainer.innerHTML = `
-            <a href="../../index.html" title="Home" class="nav-link-item home-icon-link">
-                <span role="img" aria-label="Home" class="home-icon-symbol">&#x1F3E0;</span>
-            </a>
-            <span class="nav-username" style="font-size: 0.85em; margin-right: 15px; vertical-align: middle;">${userName}</span>
-            <a href="#" id="logoutButton" class="nav-link-item register-btn" style="font-size: 0.85em; vertical-align: middle;">Logout</a>
+        userSpecificLinksHTML = `
+            <span class="nav-username">${userName}</span>
+            <a href="#" id="logoutButton" class="nav-link-item game-logout-button">Logout</a>
         `;
+    } else {
+        userSpecificLinksHTML = `
+            <a href="../../user/login/index.html" class="nav-link-item game-login-button">Login</a>
+            <a href="../../user/register/index.html" class="nav-link-item register-btn">Sign Up</a>
+        `;
+    }
+    const navLinksLeftHTML = `<div class="nav-links-left">${homeLinkHTML}${userSpecificLinksHTML}</div>`;
 
+    const leaveButtonHTML = '<a href="#" id="leave-table-button" class="nav-link-item game-leave-button">Leave</a>';
+    const skinSelectorHTML = `
+        <div id="skin-selector-container-nav">
+            <label for="skin-selector">Skin:</label>
+            <select id="skin-selector">
+                <option value="azul">Azul (Default)</option>
+                <option value="minecraft">Minecraft</option>
+                <option value="goofy">goofy</option>
+            </select>
+        </div>`;
+    const navLinksRightHTML = `<div class="nav-links-right">${leaveButtonHTML}${skinSelectorHTML}</div>`;
+
+    navLinksContainer.innerHTML = navLinksLeftHTML + navLinksRightHTML;
+
+    const newSkinSelectorElement = document.getElementById("skin-selector");
+    if (newSkinSelectorElement) newSkinSelectorElement.addEventListener("change", changeSkin);
+
+    const newLeaveButtonElement = document.getElementById("leave-table-button");
+    if (newLeaveButtonElement) {
+        newLeaveButtonElement.addEventListener("click", async (event) => {
+            event.preventDefault();
+            await leaveTable();
+        });
+    }
+
+    if (loggedInUser) {
         const logoutButtonElement = document.getElementById('logoutButton');
         if (logoutButtonElement) {
             logoutButtonElement.addEventListener('click', async (event) => {
@@ -57,18 +93,9 @@ function updateUserNavigation() {
                 try {
                     await AuthenticationManager.logout();
                     window.location.href = '../../index.html';
-                } catch (error) {
-                    console.error("Logout failed:", error);
-                }
+                } catch (error) { console.error("Logout failed:", error); }
             });
-        } else {
-            console.error("Logout button not found after adding to DOM!");
         }
-    } else {
-        navLinksContainer.innerHTML = `
-            <a href="../../user/login/index.html">Login</a>
-            <a href="../../user/register/index.html" class="register-btn">Sign Up</a>
-        `;
     }
 }
 
