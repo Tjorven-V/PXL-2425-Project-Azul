@@ -12,7 +12,8 @@ export const gameState = {
     boards: {},
     currentGame: null,
     afkLastActive: 0,
-    afkWarningSent: false
+    afkWarningSent: false,
+    gameEndHandled: false
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -93,11 +94,41 @@ function updateUserNavigation() {
                 try {
                     await AuthenticationManager.logout();
                     window.location.href = '../../index.html';
-                } catch (error) {
-                    console.error("Logout failed:", error);
-                }
+                } catch (error) { console.error("Logout failed:", error); }
             });
         }
+    }
+}
+
+async function checkIfGameEnded() {
+    try {
+        const game = await getGame();
+        if (!game) return false;
+
+        return game.hasEnded === true;
+    } catch (error) {
+        console.error("Error checking game end status:", error);
+        return false;
+    }
+}
+
+function checkForTilesToPlace(game) {
+    const currentPlayerId = AuthenticationManager.LoggedInUser?.id;
+
+    if (game.playerToPlayId === currentPlayerId) {
+        const currentPlayer = game.players.find(p => p.id === currentPlayerId);
+        const tilesToPlace = currentPlayer?.tilesToPlace || [];
+
+        if (tilesToPlace.length > 0) {
+            gameState.hasTilesToPlace = true;
+            gameState.currentSelection = {
+                displayId: "00000000-0000-0000-0000-000000000000",
+                tileType: tilesToPlace[0],
+                tileCount: tilesToPlace.length
+            };
+            return true;
+        }
+        return false;
     }
 }
 
@@ -105,6 +136,13 @@ async function updateBoards() {
     try {
         const game = await getGame();
         if (!game) return;
+
+        if (gameState.gameEndHandled) {
+            handleGameEnd(game);
+            return;
+        }
+
+        checkForTilesToPlace(game);
 
         game.players?.forEach(player => {
             if (!gameState.boards[player.id]) {
@@ -142,27 +180,32 @@ async function updateBoards() {
             tableCenterContainer.appendChild(tableCenter.Canvas);
         }
 
-        if (game.playerToPlayId === AuthenticationManager.LoggedInUser?.id) {
-            if (!gameState.afkLastActive) {
-                gameState.afkLastActive = Date.now();
-                gameState.afkWarningSent = false;
-            } else {
-                const inactiveTime = Date.now() - gameState.afkLastActive;
-
-                if (inactiveTime > 90000) {
-                    handleAFKTimeout();
+        if (game.hasEnded) {
+            setTimeout(() => {
+                handleGameEnd(game);
+            }, 1000);
+        } else {
+            if (game.playerToPlayId === AuthenticationManager.LoggedInUser?.id) {
+                if (!gameState.afkLastActive) {
                     gameState.afkLastActive = Date.now();
                     gameState.afkWarningSent = false;
-                } else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
-                    displaySystemMessage("AFK detected! Auto-move in 10 seconds...");
-                    gameState.afkWarningSent = true;
-                }
-            }
-        } else {
-            gameState.afkLastActive = 0;
-            gameState.afkWarningSent = false;
-        }
+                } else {
+                    const inactiveTime = Date.now() - gameState.afkLastActive;
 
+                    if (inactiveTime > 90000) {
+                        handleAFKTimeout();
+                        gameState.afkLastActive = Date.now();
+                        gameState.afkWarningSent = false;
+                    } else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
+                        displaySystemMessage("AFK detected! Auto-move in 10 seconds...");
+                        gameState.afkWarningSent = true;
+                    }
+                }
+            } else {
+                gameState.afkLastActive = 0;
+                gameState.afkWarningSent = false;
+            }
+        }
     } catch (error) {
         console.log("Updating board error:" + error);
     }
@@ -193,9 +236,10 @@ async function handleAFKTimeout() {
             displayId = game.tileFactory.tableCenter.id;
             tileType = validCenterTiles[0];
         }
-
-        const takeResult = await takeTiles(displayId, tileType);
-        if (!takeResult.success) throw new Error("Failed to take tiles");
+        if (!checkForTilesToPlace(game)) {
+            const takeResult = await takeTiles(displayId, tileType);
+            if (!takeResult.success) throw new Error("Failed to take tiles");
+        }
 
         const placeResult = await placeTilesOnFloorLine();
         if (!placeResult.success) throw new Error("Failed to place tiles");
@@ -298,6 +342,16 @@ async function leaveTable() {
 // }
 
 async function handleFloorLineSelection(e) {
+    const gameId = sessionStorage.getItem('gameId');
+    if (!gameId) {
+        displaySystemMessage('No game ID found');
+        return { success: false };
+    }
+    const game = await getGame();
+    if (!game) {
+        console.log("Couldn't validate game state");
+        return { success: false };
+    }
 
     const currentPlayerId = AuthenticationManager.LoggedInUser?.id;
     if (!gameState.currentGame || gameState.currentGame.playerToPlayId !== currentPlayerId) {
@@ -311,8 +365,10 @@ async function handleFloorLineSelection(e) {
     }
 
     try {
-        const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
-        if (!takeResult.success) throw new Error("Failed to take tiles");
+        if (!checkForTilesToPlace(game)) {
+            const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
+            if (!takeResult.success) throw new Error("Failed to take tiles");
+        }
 
         const placeResult = await placeTilesOnFloorLine();
         if (placeResult.success) {
@@ -327,6 +383,7 @@ async function handleFloorLineSelection(e) {
 
 async function takeTiles(displayId, tileType) {
     try {
+        const chatStatus = document.getElementById("chat-status");
         const gameId = sessionStorage.getItem('gameId');
         const response = await fetch(APIEndpoints.TakeTiles.replace("{id}", gameId), {
             method: 'POST',
@@ -342,6 +399,7 @@ async function takeTiles(displayId, tileType) {
         });
 
         if (!response.ok) throw new Error(await response.text());
+        chatStatus.textContent = "";
         return {success: true};
 
     } catch (error) {
@@ -371,9 +429,10 @@ async function placeTilesOnPatternLine(patternLineIndex) {
             displaySystemMessage(validation.error);
             return {success: false};
         }
-
-        const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
-        if (!takeResult.success) throw new Error("Failed to take tiles");
+        if (!checkForTilesToPlace(game)) {
+            const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
+            if (!takeResult.success) throw new Error("Failed to take tiles");
+        }
 
         console.log("Sending placeTiles request...");
         const response = await fetch(APIEndpoints.PlaceTilesPatternLine.replace("{id}", gameId), {
@@ -568,6 +627,33 @@ function changeSkin() {
     const skin = document.getElementById("skin-selector").value;
     setSkin(skin, document.body);
     updateImagePaths(skin);
+}
+
+function handleGameEnd(game) {
+    if (gameState.gameEndHandled) return;
+    gameState.gameEndHandled = true;
+
+    const factoryContainer = document.getElementById("factory-displays-container");
+
+    const winnerDisplay = document.createElement('div');
+    winnerDisplay.className = 'winner-display';
+
+    let winnerText;
+    if (game.winningPlayers.length === 1) {
+        const winner = game.players.find(p => p.id === game.winningPlayers[0]);
+        winnerText = `Winner: ${winner.name}`;
+    } else {
+        const winnerNames = game.winningPlayers.map(p => p.name).join(' and ');
+        winnerText = `Winners: ${winnerNames}`;
+    }
+
+    winnerDisplay.innerHTML = `
+        <div id="winner-text">
+            <h2>!! Game Over !!</h2>
+            <p>${winnerText}</p>
+        </div>
+    `;
+    factoryContainer.appendChild(winnerDisplay);
 }
 
 function displaySystemMessage(text, isError = true) {
