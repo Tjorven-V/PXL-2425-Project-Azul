@@ -427,6 +427,7 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         const validation = board.validatePatternLinePlacement(patternLineIndex, gameState.currentSelection.tileType);
         if (!validation.valid) {
             displaySystemMessage(validation.error);
+            playSound("../../media/sounds/wrong.mp3");
             return {success: false};
         }
         if (!checkForTilesToPlace(game)) {
@@ -450,16 +451,12 @@ async function placeTilesOnPatternLine(patternLineIndex) {
             return {success: false, error: error.message};
         }
 
-        try {
-            const tilePlaceSound = new Audio("../../media/sounds/tilePlace.mp3");
-            tilePlaceSound.play();
-        } catch (soundError) {
-            console.error("Error playing sound:", soundError);
-        }
+        playSound("../../media/sounds/tilePlace.mp3");
 
         return {success: true};
     } catch (error) {
         console.log("PlaceTiles error:" + error);
+        playSound("../../media/sounds/wrong.mp3");
         return {success: false, error: error.message};
     }
 }
@@ -532,12 +529,14 @@ async function placeTilesOnFloorLine() {
         if (!response.ok) {
             const error = await response.json();
             console.log("PlaceTilesFloorLine failed:" + error.message);
+            playSound("../../media/sounds/wrong.mp3");
             return {success: false, error: error.message};
         }
-
+        playSound("../../media/sounds/tilePlace.mp3");
         return {success: true};
     } catch (error) {
         console.log("PlaceTilesFloorLine error: " + error);
+        playSound("../../media/sounds/wrong.mp3");
         return {success: false, error: error.message};
     }
 }
@@ -682,5 +681,16 @@ function displaySystemMessage(text, isError = true) {
             });
     } else {
         chatStatus.textContent = text;
+    }
+}
+
+function playSound(audioPath) {
+    try {
+        const sound = new Audio(audioPath);
+        sound.play().catch(playbackError => {
+            console.error(`Error playing ${audioPath}:`, playbackError);
+        });
+    } catch (setupError) {
+        console.error(`Error setting up sound from ${audioPath}:`, setupError);
     }
 }
