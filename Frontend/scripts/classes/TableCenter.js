@@ -25,13 +25,22 @@ class TableCenter extends ClickableCanvas {
 
         const tilesPerRow = 10;
         const padding = 10;
-        const maxTileSize = (this.Canvas.width - (tilesPerRow - 1) * padding) / tilesPerRow;
+        const desiredBorderWidth = 4;
 
-        const transX = (this.Canvas.width - (tilesPerRow * maxTileSize + (tilesPerRow - 1) * padding)) / 2;
+        const effectiveCanvasWidth = this.Canvas.width - desiredBorderWidth;
+
+        const maxTileSize = (effectiveCanvasWidth - (tilesPerRow - 1) * padding) / tilesPerRow;
+
+        const contentBlockWidth = tilesPerRow * maxTileSize + (tilesPerRow - 1) * padding;
+
+        let transX = desiredBorderWidth / 2;
+        transX += (effectiveCanvasWidth - contentBlockWidth) / 2;
+
         const transY = 20;
+        const actualTransY = transY;
 
         ctx.save();
-        ctx.translate(transX, transY);
+        ctx.translate(transX, actualTransY);
 
         const filteredTiles = this.tiles
             .map((tileType, originalIndex) => ({ tileType, originalIndex }))
@@ -47,7 +56,7 @@ class TableCenter extends ClickableCanvas {
             this.RegisterClickableRegion(
                 `tile_${originalIndex}`,
                 transX + x,
-                transY + y,
+                actualTransY + y,
                 maxTileSize,
                 maxTileSize,
                 () => this.handleTileClick(tileType)
@@ -56,16 +65,18 @@ class TableCenter extends ClickableCanvas {
             if (ResourceManager.Tiles[tileType]) {
                 ctx.drawImage(
                     ResourceManager.Tiles[tileType],
-                    x,
-                    y,
-                    maxTileSize,
-                    maxTileSize
+                    x, y, maxTileSize, maxTileSize
                 );
             }
         });
 
         if (gameState.currentSelection?.displayId === this.id) {
             const selectedType = gameState.currentSelection.tileType;
+
+            const originalLineWidth = ctx.lineWidth;
+            const originalStrokeStyle = ctx.strokeStyle;
+            ctx.lineWidth = desiredBorderWidth;
+            ctx.strokeStyle = 'yellow';
 
             filteredTiles.forEach(({ tileType, originalIndex }, filteredIndex) => {
                 if (tileType === selectedType) {
@@ -77,8 +88,10 @@ class TableCenter extends ClickableCanvas {
                     this.drawTileHighlight(ctx, x, y, maxTileSize, maxTileSize);
                 }
             });
-        }
 
+            ctx.lineWidth = originalLineWidth;
+            ctx.strokeStyle = originalStrokeStyle;
+        }
         ctx.restore();
     }
 

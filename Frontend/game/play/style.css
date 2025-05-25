@@ -230,9 +230,9 @@ nav .nav-container .nav-links {
 #table-center-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    /*align-items: center;*/
     width: 100%;
-    max-width: 420px;
+    max-width: 450px;
     padding: 6px;
     margin: 8px auto;
     min-height: 70px;
