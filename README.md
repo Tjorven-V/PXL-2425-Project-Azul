@@ -1,2 +1,5 @@
-# Azul
-Startcode voor het 1TIN project 2025: Azul
+# Project Azul - 1TIN 2425 - Team 51
+Ismael Ahaddour
+Maarten Smets
+Muhammed Col
+Tjorven Vannieuwenhuyse
