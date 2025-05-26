@@ -84,33 +84,6 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     SetControlsStatus(true);
 
-    // Easter Egg
-    const easterEggTrigger = document.getElementById('easter-egg-trigger-zone');
-    const easterEgg = document.getElementById('easter-egg-lobby');
-
-    if (easterEggTrigger && easterEgg) {
-        easterEggTrigger.addEventListener('mouseenter', () => {
-            easterEgg.style.display = 'block';
-        });
-
-        easterEggTrigger.addEventListener('mouseleave', (event) => {
-            if (!easterEgg.contains(event.relatedTarget)) {
-                easterEgg.style.display = 'none';
-            }
-        });
-
-        easterEgg.addEventListener('mouseleave', () => {
-            easterEgg.style.display = 'none';
-        });
-
-        easterEgg.addEventListener('click', () => {
-            window.location.href = '../../user/me/retro/index.html';
-        });
-    } else {
-        console.warn("Easter egg elements not found in the DOM. Check IDs in lobby HTML and script.");
-    }
-    // --- End Easter Egg ---
-
     const currentYearSpan = document.getElementById('currentYear');
     if (currentYearSpan && !currentYearSpan.textContent) {
         currentYearSpan.textContent = new Date().getFullYear();
