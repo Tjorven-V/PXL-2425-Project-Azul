@@ -158,7 +158,7 @@ internal class Game : IGame
             bool gameEndsThisRound = Players.Any(p => p.Board.HasCompletedHorizontalLine);
             if (gameEndsThisRound)
             {
-                _hasEnded = true;
+                
                 foreach (var player in Players)
                 {
                     player.Board.CalculateFinalBonusScores();
@@ -174,6 +174,7 @@ internal class Game : IGame
             {
                 Console.WriteLine($"Game {Id} has ended.");
                 _currentPlayerId = Guid.Empty;
+                _hasEnded = true;
                 return;
             }
 
