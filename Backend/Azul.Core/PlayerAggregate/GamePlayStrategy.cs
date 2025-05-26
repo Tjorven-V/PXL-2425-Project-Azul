@@ -266,34 +266,6 @@ internal class GamePlayStrategy : IGamePlayStrategy
         }
         Console.ResetColor();
 
-        Console.Write("- - - - - No empty pattern lines that can be filled partially without overflowing too much.\nLooking for any one tile to take.");
-        IFactoryDisplay preferedDisplay = null;
-        TileType preferedTileType = TileType.StartingTile;
-        int tilesThatWouldBeTaken = int.MaxValue;
-        foreach (var factoryDisplay in displaysToSearch)
-        {
-            foreach (var groupedTiles in factoryDisplay.Tiles.GroupBy(t => t))
-            {
-                if (groupedTiles.Count() < tilesThatWouldBeTaken)
-                {
-                    preferedDisplay = factoryDisplay;
-                    preferedTileType = groupedTiles.Key;
-                    tilesThatWouldBeTaken = groupedTiles.Count();
-                }
-            }
-        }
-        if (preferedDisplay != null && preferedTileType != TileType.StartingTile)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\tOK");
-            Console.ResetColor();
-            preferredPatternLine = -2;
-            return new(preferedDisplay, preferedTileType);
-        }
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("\tFAIL");
-        Console.WriteLine("Failed to find any move at all, zoinks.");
-        Console.ResetColor();
         preferredPatternLine = -1;
         return null;
     }
@@ -333,11 +305,38 @@ internal class GamePlayStrategy : IGamePlayStrategy
             }
         }
 
-        Console.WriteLine("No preferred pattern line found. Searching for any tile to take from the first display.");
-        // Welp, we tried everything. Just take the first tile from the first display. It'll most likely end up on the floor line.
-        displaysToSearch = [.. factoryDisplays, tableCenter];
-        var firstDisplay = displaysToSearch.FirstOrDefault();
-        return new TakeTilesMove(firstDisplay, firstDisplay.Tiles[0]);
+
+        Console.Write("- - - - - All failed!\nLooking for any one tile to take.");
+        IFactoryDisplay preferedDisplay = null;
+        TileType preferedTileType = TileType.StartingTile;
+        int tilesThatWouldBeTaken = int.MaxValue;
+        foreach (var factoryDisplay in displaysToSearch)
+        {
+            foreach (var groupedTiles in factoryDisplay.Tiles.GroupBy(t => t))
+            {
+                if (groupedTiles.Count() < tilesThatWouldBeTaken)
+                {
+                    preferedDisplay = factoryDisplay;
+                    preferedTileType = groupedTiles.Key;
+                    tilesThatWouldBeTaken = groupedTiles.Count();
+                }
+            }
+        }
+        if (preferedDisplay != null && preferedTileType != TileType.StartingTile)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\tOK");
+            Console.ResetColor();
+            _preferredPatternLineIndex = -2;
+            return new TakeTilesMove(preferedDisplay, preferedTileType);
+        }
+
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("\tFAIL");
+        Console.WriteLine("Failed to find any move at all, zoinks.");
+        Console.ResetColor();
+        _preferredPatternLineIndex = -1;
+        return null;
     }
 
     public IPlaceTilesMove GetBestPlaceTilesMove(Guid playerId, IGame game)
