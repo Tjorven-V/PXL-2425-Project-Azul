@@ -42,7 +42,7 @@ class FactoryDisplay extends ClickableCanvas {
         this.ClearClickableRegions();
     }
 
-    Paint(isPlayersTurn) {
+    Paint() {
         this.Clear();
 
         /**

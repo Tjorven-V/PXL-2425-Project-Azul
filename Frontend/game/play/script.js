@@ -46,7 +46,7 @@ function updateUserNavigation() {
             <span class="home-icon-symbol">&#x1F3E0;</span> Home
         </a>`;
 
-    let userSpecificLinksHTML = '';
+    let userSpecificLinksHTML;
     if (loggedInUser) {
         const userName = loggedInUser.userName || loggedInUser.name || 'User';
         userSpecificLinksHTML = `
@@ -97,18 +97,6 @@ function updateUserNavigation() {
                 } catch (error) { console.error("Logout failed:", error); }
             });
         }
-    }
-}
-
-async function checkIfGameEnded() {
-    try {
-        const game = await getGame();
-        if (!game) return false;
-
-        return game.hasEnded === true;
-    } catch (error) {
-        console.error("Error checking game end status:", error);
-        return false;
     }
 }
 
@@ -193,7 +181,7 @@ async function updateBoards() {
                     const inactiveTime = Date.now() - gameState.afkLastActive;
 
                     if (inactiveTime > 90000) {
-                        handleAFKTimeout();
+                        await handleAFKTimeout();
                         gameState.afkLastActive = Date.now();
                         gameState.afkWarningSent = false;
                     } else if (inactiveTime > 80000 && !gameState.afkWarningSent) {
@@ -207,7 +195,7 @@ async function updateBoards() {
             }
         }
     } catch (error) {
-        console.log("Updating board error:" + error);
+        console.error("Updating board error:" + error);
     }
 }
 
@@ -230,25 +218,31 @@ async function handleAFKTimeout() {
         } else {
             const validCenterTiles = game.tileFactory.tableCenter.tiles.filter(t => t !== 0);
             if (validCenterTiles.length === 0) {
-                console.log("No tiles available?");
-                return;
+                console.error("No tiles available?");
+                return {success: false};
             }
             displayId = game.tileFactory.tableCenter.id;
             tileType = validCenterTiles[0];
         }
         if (!checkForTilesToPlace(game)) {
             const takeResult = await takeTiles(displayId, tileType);
-            if (!takeResult.success) throw new Error("Failed to take tiles");
+            if (!takeResult.success) {
+                console.error("Failed to take tiles");
+                return {success: false};
+            }
         }
 
         const placeResult = await placeTilesOnFloorLine();
-        if (!placeResult.success) throw new Error("Failed to place tiles");
+        if (!placeResult.success) {
+            console.error("Failed to place tiles");
+            return {success: false};
+        }
 
         displaySystemMessage("AFK turn completed automatically...", false);
         await updateBoards();
 
     } catch (error) {
-        console.log("AFK handling failed: " + error.message);
+        console.error("AFK handling failed: " + error.message);
     }
 }
 
@@ -289,7 +283,8 @@ async function leaveTable() {
 
         if (!response.ok) {
             const err = await response.text();
-            throw new Error(err);
+            console.error("Leave table request failed:", err);
+            return { success: false, error: err };
         }
 
         sessionStorage.removeItem('gameId')
@@ -341,7 +336,7 @@ async function leaveTable() {
 //
 // }
 
-async function handleFloorLineSelection(e) {
+async function handleFloorLineSelection() {
     const gameId = sessionStorage.getItem('gameId');
     if (!gameId) {
         displaySystemMessage('No game ID found');
@@ -349,7 +344,7 @@ async function handleFloorLineSelection(e) {
     }
     const game = await getGame();
     if (!game) {
-        console.log("Couldn't validate game state");
+        console.error("Couldn't validate game state");
         return { success: false };
     }
 
@@ -367,7 +362,10 @@ async function handleFloorLineSelection(e) {
     try {
         if (!checkForTilesToPlace(game)) {
             const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
-            if (!takeResult.success) throw new Error("Failed to take tiles");
+            if (!takeResult.success) {
+                console.error("Failed to take tiles");
+                return {success: false};
+            }
         }
 
         const placeResult = await placeTilesOnFloorLine();
@@ -377,7 +375,7 @@ async function handleFloorLineSelection(e) {
             loadBoards();
         }
     } catch (error) {
-        console.log("Floor line placement failed:" + error.message);
+        console.error("Floor line placement failed:" + error.message);
     }
 }
 
@@ -398,12 +396,16 @@ async function takeTiles(displayId, tileType) {
             })
         });
 
-        if (!response.ok) throw new Error(await response.text());
+        if (!response.ok) {
+            console.error(await response.text());
+            return {success: false};
+        }
         chatStatus.textContent = "";
+        playSound("tilePlace");
         return {success: true};
 
     } catch (error) {
-        console.log("TakeTiles failed:" + error);
+        console.error("TakeTiles failed:" + error);
         return {success: false};
     }
 }
@@ -417,7 +419,7 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         }
         const game = await getGame();
         if (!game) {
-            console.log("Couldn't validate game state");
+            console.error("Couldn't validate game state");
             return {success: false};
         }
 
@@ -427,12 +429,15 @@ async function placeTilesOnPatternLine(patternLineIndex) {
         const validation = board.validatePatternLinePlacement(patternLineIndex, gameState.currentSelection.tileType);
         if (!validation.valid) {
             displaySystemMessage(validation.error);
-            playSound("../../media/sounds/wrong.mp3");
+            playSound("wrongMove");
             return {success: false};
         }
         if (!checkForTilesToPlace(game)) {
             const takeResult = await takeTiles(gameState.currentSelection.displayId, gameState.currentSelection.tileType);
-            if (!takeResult.success) throw new Error("Failed to take tiles");
+            if (!takeResult.success) {
+                console.error("Failed to take tiles");
+                return {success: false};
+            }
         }
 
         console.log("Sending placeTiles request...");
@@ -447,16 +452,13 @@ async function placeTilesOnPatternLine(patternLineIndex) {
 
         if (!response.ok) {
             const error = await response.json();
-            console.log("PlaceTiles failed:" + error.message);
+            console.error("PlaceTiles failed:" + error.message);
             return {success: false, error: error.message};
         }
-
-        playSound("../../media/sounds/tilePlace.mp3");
-
         return {success: true};
     } catch (error) {
-        console.log("PlaceTiles error:" + error);
-        playSound("../../media/sounds/wrong.mp3");
+        console.error("PlaceTiles error:" + error);
+        playSound("wrongMove");
         return {success: false, error: error.message};
     }
 }
@@ -482,7 +484,7 @@ async function handleFactorySelection(e) {
         };
         gameState.hasTilesToPlace = true;
     }
-    loadBoards();
+    await loadBoards();
 }
 
 async function handlePatternLineSelection(e) {
@@ -505,7 +507,7 @@ async function handlePatternLineSelection(e) {
             resetSelections();
         }
     } catch (error) {
-        console.log("Placement failed:" + error.message);
+        console.error("Placement failed:" + error.message);
     }
 }
 
@@ -528,15 +530,14 @@ async function placeTilesOnFloorLine() {
 
         if (!response.ok) {
             const error = await response.json();
-            console.log("PlaceTilesFloorLine failed:" + error.message);
-            playSound("../../media/sounds/wrong.mp3");
+            console.error("PlaceTilesFloorLine failed:" + error.message);
+            playSound("wrongMove");
             return {success: false, error: error.message};
         }
-        playSound("../../media/sounds/tilePlace.mp3");
         return {success: true};
     } catch (error) {
-        console.log("PlaceTilesFloorLine error: " + error);
-        playSound("../../media/sounds/wrong.mp3");
+        console.error("PlaceTilesFloorLine error: " + error);
+        playSound("wrongMove");
         return {success: false, error: error.message};
     }
 }
@@ -586,7 +587,7 @@ async function getGame() {
         }
         return null;
     } catch (error) {
-        console.log("Game fetch error: " + error);
+        console.error("Game fetch error: " + error);
         return null;
     }
 }
@@ -609,7 +610,7 @@ async function loadBoards() {
         });
         await updateBoards();
     } catch (error) {
-        console.log("Board loading error: " + error);
+        console.error("Board loading error: " + error);
     }
 }
 
@@ -684,13 +685,13 @@ function displaySystemMessage(text, isError = true) {
     }
 }
 
-function playSound(audioPath) {
+function playSound(soundName) {
     try {
-        const sound = new Audio(audioPath);
+        const sound = ResourceManager.Sounds[soundName];
         sound.play().catch(playbackError => {
-            console.error(`Error playing ${audioPath}:`, playbackError);
+            console.error(`Error playing ${soundName}:`, playbackError);
         });
     } catch (setupError) {
-        console.error(`Error setting up sound from ${audioPath}:`, setupError);
+        console.error(`Error setting up sound from ${soundName}:`, setupError);
     }
 }

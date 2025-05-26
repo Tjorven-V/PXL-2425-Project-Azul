@@ -18,6 +18,11 @@ const TileImages = {
     15: new Image()
 }
 
+const SoundEffects = {
+    tilePlace: new Audio(),
+    wrongMove: new Audio()
+};
+
 const BoardBackgroundImage = new Image();
 const FactoryBackground = new Image();
 
@@ -31,6 +36,9 @@ function updateImagePaths(selectedSkin) {
 
     BoardBackgroundImage.src = basePath + `/media/skins/${selectedSkin}/board_background.png`;
     FactoryBackground.src = basePath + `/media/skins/${selectedSkin}/factory_background.png`;
+
+    SoundEffects.tilePlace.src = basePath + `/media/skins/${selectedSkin}/sounds/tilePlace.mp3`;
+    SoundEffects.wrongMove.src = basePath + `/media/skins/${selectedSkin}/sounds/wrong.mp3`;
 }
 
 class ResourceManager {
@@ -54,6 +62,10 @@ class ResourceManager {
 
     static get FactoryBackground() {
         return FactoryBackground;
+    }
+
+    static get Sounds() {
+        return SoundEffects;
     }
 }
 

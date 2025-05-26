@@ -4,7 +4,6 @@ import ClickableCanvas from "./ClickableCanvas.js";
 class Board extends ClickableCanvas {
     constructor(playerId, playerName, isLocal) {
         super(`board-${playerId}`, 1200, 800, ["board", isLocal ? "local-board" : "remote-board"]);
-        this._playerId = playerId;
         this._playerName = playerName;
         this._isLocal = isLocal;
         this.Canvas.id = `board-${playerId}`;
@@ -38,41 +37,10 @@ class Board extends ClickableCanvas {
     }
 
     createBoardSection(size, callback) {
-        return Array(size).fill().map((_, i) => callback(i));
+        return Array(size).fill(undefined, undefined, undefined).map((_, i) => callback(i));
     }
 
-    validateBoardStructure() {
-        if (!this._patternLines) {
-            this._patternLines = this.createBoardSection(5, (i) => ({
-                length: i + 1,
-                tileType: null,
-                numberOfTiles: 0,
-                isComplete: false
-            }));
-        }
-        if (!this._wall) {
-            this._wall = this.createBoardSection(5, () =>
-                Array(5).fill({ type: null, hasTile: false })
-            );
-        }
-        if (!this._floorLine) {
-            this._floorLine = this.createBoardSection(7, () => ({
-                type: null,
-                hasTile: false
-            }));
-        }
-        this._score = this._score || 0;
-    }
-
-    getSafePatternLine(index) {
-        this.validateBoardStructure();
-        if (index < 0 || index >= this._patternLines.length) {
-            console.warn(`Invalid pattern line index: ${index}`);
-            return null;
-        }
-        return this._patternLines[index];
-    }
-
+    // IS IN USE DON'T TRUST THE WARNING
     set BoardData(data) {
         if (!data) return;
 
@@ -102,18 +70,6 @@ class Board extends ClickableCanvas {
         }
 
         this.Paint();
-    }
-
-    validateBoardData() {
-        if (!this._patternLines || !Array.isArray(this._patternLines)) {
-            console.warn("Pattern lines corrupted - reinitializing");
-            this._patternLines = Array(5).fill().map((_, i) => ({
-                length: i + 1,
-                tileType: null,
-                numberOfTiles: 0,
-                isComplete: false
-            }));
-        }
     }
 
     Clear() {
@@ -283,6 +239,7 @@ class Board extends ClickableCanvas {
         }
     }
 
+    // IS IN USE DON'T TRUST THE WARNING
     set IsCurrentPlayer(isCurrent) {
         this._isCurrentPlayer = isCurrent;
     }
@@ -302,9 +259,6 @@ class Board extends ClickableCanvas {
         return this._isLocal;
     }
 
-    get OwnerId() {
-        return this._playerId;
-    }
 
     validatePatternLinePlacement(patternLineIndex, tileType) {
         console.log(`[VALIDATE] PatternLineIndex: ${patternLineIndex}, TileType: ${tileType}`);
