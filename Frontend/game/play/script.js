@@ -292,49 +292,8 @@ async function leaveTable() {
     } catch (e) {
         console.error('Failed to leave the table:', e)
     }
-    await checkAmountOfPlayers()
 }
 
-//
-// async function checkAmountOfPlayers(){
-//     const gameId = sessionStorage.getItem("gameId")
-//     if(!gameId) return;
-//
-//     try{
-//         const response = fetch(APIEndpoints.GameInfo.replace("{id}", gameId), {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${AuthenticationManager.Token}`
-//             }
-//         })
-//
-//         if(!response.ok){
-//             throw new Error("Failed to fetch game info");
-//         }
-//
-//         const gameData = await response.json();
-//
-//         if (gameData.players === 1 && !gameData.hasEnded){
-//             const response = await fetch(APIEndpoints.GameInfo.replace("{id}", gameId), {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': `Bearer ${AuthenticationManager.Token}`
-//                 },
-//                 body: JSON.stringify({hasEnded: true})
-//             })
-//             if (!response.ok) {
-//                 throw new Error("Failed to fetch game info");
-//             }
-//         }
-//
-//     }catch(e){
-//         console.error(e)
-//     }
-//     return console.log('Enough players to continue.');
-//
-// }
 
 async function handleFloorLineSelection() {
     const gameId = sessionStorage.getItem('gameId');
