@@ -68,6 +68,7 @@ function updateUserNavigation() {
             <select id="skin-selector">
                 <option value="azul">Azul (Default)</option>
                 <option value="minecraft">Minecraft</option>
+                <option value="early-development">Early Dev</option>
                 <option value="goofy">goofy</option>
             </select>
         </div>`;
