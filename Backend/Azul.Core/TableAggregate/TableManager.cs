@@ -103,7 +103,10 @@ internal class TableManager : ITableManager
         }
 
         // 3. Create new game for this table
-        FillWithArtificialPlayers(tableId, new User());
+        if (table.Preferences.NumberOfArtificialPlayers > 0)
+        {
+            table.FillWithArtificialPlayers(_gamePlayStrategy);
+        }
         var game = _gameFactory.CreateNewForTable(table);
 
         // 4. Save the game in the repository
