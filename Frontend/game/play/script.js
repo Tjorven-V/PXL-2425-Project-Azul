@@ -584,9 +584,14 @@ function resetSelections() {
 }
 
 function changeSkin() {
-    const skin = document.getElementById("skin-selector").value;
-    setSkin(skin, document.body);
-    updateImagePaths(skin);
+    const skin = document.getElementById("skin-selector");
+
+    if (gameState.gameEndHandled === true) {
+        skin.disabled = true;
+        return;
+    }
+    setSkin(skin.value, document.body);
+    updateImagePaths(skin.value);
 }
 
 function handleGameEnd(game) {
